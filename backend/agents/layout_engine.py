@@ -62,14 +62,14 @@ REGION_TO_COUNTRIES: dict[str, list[str]] = {
 }
 
 BRAND_PALETTE = [
-    "#6366f1",  # Indigo
-    "#06b6d4",  # Cyan
-    "#10b981",  # Emerald
-    "#f59e0b",  # Amber
-    "#ec4899",  # Pink
-    "#8b5cf6",  # Violet
-    "#3b82f6",  # Blue
-    "#14b8a6",  # Teal
+    "#118DFF",  # Primary Blue
+    "#12239E",  # Deep Navy
+    "#E66C37",  # Orange
+    "#D9B300",  # Gold
+    "#1AAB40",  # Green
+    "#D64550",  # Red
+    "#197278",  # Teal
+    "#6B6B6B",  # Slate Grey
 ]
 
 

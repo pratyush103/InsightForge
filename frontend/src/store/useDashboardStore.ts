@@ -10,6 +10,7 @@ import type {
   PipelineManifest,
   PipelineSummaryItem,
   SchemaCatalog,
+  SQLDialectType,
 } from '../types/insightforge';
 
 interface PullProgressState {
@@ -19,7 +20,27 @@ interface PullProgressState {
   error?: string;
 }
 
+export type WorkspaceView = 'home' | 'report' | 'data' | 'lineage';
+export type GetDataSource = SQLDialectType | 'csv';
+export type SidePane = 'insights' | 'visualizations' | 'fields';
+
 interface DashboardStore {
+  // Workspace navigation
+  view: WorkspaceView;
+  getDataSource: GetDataSource | null;
+  openPanes: Record<SidePane, boolean>;
+  selectedWidgetId: string | null;
+  focusWidgetId: string | null;
+  dataViewTable: string | null;
+  setView: (view: WorkspaceView) => void;
+  openGetData: (source: GetDataSource | null) => void;
+  togglePane: (pane: SidePane) => void;
+  selectWidget: (id: string | null) => void;
+  setFocusWidget: (id: string | null) => void;
+  openTableInDataView: (table: string) => void;
+  openSampleDataset: () => Promise<void>;
+  closeReport: () => void;
+
   // Ollama State
   ollamaStatus: OllamaSystemStatus | null;
   isStartingOllama: boolean;
@@ -77,18 +98,44 @@ interface DashboardStore {
   ) => Promise<void>;
 }
 
+export const SAMPLE_CONNECTOR_ID = 'default_sqlite_commerce';
+
 export const useDashboardStore = create<DashboardStore>((set, get) => ({
+  view: 'home',
+  getDataSource: null,
+  openPanes: { insights: true, visualizations: true, fields: true },
+  selectedWidgetId: null,
+  focusWidgetId: null,
+  dataViewTable: null,
+  setView: (view) => set({ view }),
+  openGetData: (source) => set({ getDataSource: source }),
+  togglePane: (pane) => set((s) => ({ openPanes: { ...s.openPanes, [pane]: !s.openPanes[pane] } })),
+  selectWidget: (id) =>
+    set((s) => ({
+      selectedWidgetId: id,
+      openPanes: id ? { ...s.openPanes, visualizations: true } : s.openPanes,
+    })),
+  setFocusWidget: (id) => set({ focusWidgetId: id }),
+  openTableInDataView: (table) => set({ view: 'data', dataViewTable: table }),
+  openSampleDataset: async () => {
+    // The sample is opt-in: picking it opens an empty report page, it does not generate one.
+    set({ manifest: null, agentTraces: [], selectedWidgetId: null, crossFilter: null, promptInput: '', view: 'report' });
+    await get().selectConnector(SAMPLE_CONNECTOR_ID);
+  },
+  closeReport: () =>
+    set({ manifest: null, layouts: {}, agentTraces: [], selectedWidgetId: null, crossFilter: null, promptInput: '', view: 'home' }),
+
   ollamaStatus: null,
   isStartingOllama: false,
   pullProgress: null,
   isOllamaModalOpen: false,
 
   connectors: [],
-  activeConnectorId: 'default_sqlite_commerce',
+  activeConnectorId: SAMPLE_CONNECTOR_ID,
   schemaCatalog: null,
   isConnectorModalOpen: false,
 
-  promptInput: 'Analyze executive revenue trajectory, profit margins, regional share, and product performance',
+  promptInput: '',
   isAnalyzing: false,
   activeAgentNode: null,
   agentTraces: [],
@@ -250,6 +297,8 @@ export const useDashboardStore = create<DashboardStore>((set, get) => ({
       activeAgentNode: 'schema_profiler',
       agentTraces: [],
       crossFilter: null,
+      selectedWidgetId: null,
+      view: 'report',
     });
 
     try {
@@ -347,7 +396,11 @@ export const useDashboardStore = create<DashboardStore>((set, get) => ({
         promptInput: data.user_query,
         activeConnectorId: data.connector_id,
         crossFilter: null,
+        selectedWidgetId: null,
+        agentTraces: [],
+        view: 'report',
       });
+      await get().fetchSchema(data.connector_id);
     }
   },
 
@@ -418,7 +471,6 @@ export const useDashboardStore = create<DashboardStore>((set, get) => ({
       );
       set({
         manifest: { ...manifest, widgets: nextWidgets },
-        editingWidget: null,
       });
     }
   },

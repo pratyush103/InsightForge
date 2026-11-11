@@ -2,15 +2,110 @@
 @tailwind components;
 @tailwind utilities;
 
-/* react-grid-layout core & resize handle styling */
+/* ------------------------------------------------------------------ */
+/* Tokens: a report tool, not a landing page. Neutral chrome, a grey   */
+/* canvas, white pages. Gold marks identity, blue marks focus.         */
+/* ------------------------------------------------------------------ */
+:root {
+  --chrome: #201f1e;
+  --chrome-ink: #ffffff;
+  --chrome-muted: #c8c6c4;
+  --chrome-hover: #3b3a39;
+
+  --canvas: #e9e8e6;
+  --page: #ffffff;
+  --pane: #faf9f8;
+
+  --ink: #252423;
+  --muted: #605e5c;
+  --subtle: #8a8886;
+  --line: #e1dfdd;
+  --line-strong: #c8c6c4;
+  --hover: #f3f2f1;
+  --pressed: #edebe9;
+
+  --brand: #f2c811;
+  --focus: #0f6cbd;
+  --focus-tint: #ebf3fc;
+
+  --good: #107c10;
+  --bad: #c50f1f;
+  --warn: #8a5300;
+
+  /* Linework figures sit on white pages */
+  --hairline-plate: #ffffff;
+  --hairline-hi: #252423;
+  --hairline-edge: #8a8886;
+  --hairline-mid: #c8c6c4;
+  --hairline-lo: #e1dfdd;
+  --hairline-stroke: 0.9;
+
+  color-scheme: light;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: theme('fontFamily.sans');
+  font-size: 12px;
+  line-height: 16px;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: #fbe7a1;
+  color: var(--ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 1px;
+}
+
+.tnum {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Thin, quiet scrollbars like a desktop app */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #c8c6c4 transparent;
+}
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #c8c6c4;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: #a19f9d;
+}
+
+/* ------------------------------------------------------------------ */
+/* react-grid-layout on the report page                                */
+/* ------------------------------------------------------------------ */
 .react-grid-layout {
   position: relative;
-  transition: height 200ms ease;
+  transition: height 150ms ease;
 }
 
 .react-grid-item {
-  transition: all 200ms ease;
-  transition-property: left, top, width, height;
+  transition: left 150ms ease, top 150ms ease, width 150ms ease, height 150ms ease;
 }
 
 .react-grid-item.cssTransforms {
@@ -26,13 +121,13 @@
   transition: none;
   z-index: 40;
   will-change: transform;
-  box-shadow: 0 20px 50px rgba(79, 70, 229, 0.28);
+  box-shadow: 0 6.4px 14.4px rgba(0, 0, 0, 0.13), 0 1.2px 3.6px rgba(0, 0, 0, 0.11);
 }
 
 .react-grid-item.react-grid-placeholder {
-  background: rgba(99, 102, 241, 0.16);
-  border: 2px dashed rgba(99, 102, 241, 0.65);
-  border-radius: 0.75rem;
+  background: rgba(15, 108, 189, 0.06);
+  border: 1px dashed var(--focus);
+  border-radius: 2px;
   transition-duration: 100ms;
   z-index: 2;
   user-select: none;
@@ -40,43 +135,38 @@
 
 .react-grid-item > .react-resizable-handle {
   position: absolute;
-  width: 22px;
-  height: 22px;
-  bottom: 2px;
-  right: 2px;
+  width: 14px;
+  height: 14px;
+  bottom: 0;
+  right: 0;
   cursor: se-resize;
   z-index: 20;
-  opacity: 0.35;
-  transition: opacity 150ms ease;
+  opacity: 0;
+  transition: opacity 120ms ease;
 }
 
-.react-grid-item:hover > .react-resizable-handle {
-  opacity: 0.95;
+.react-grid-item:hover > .react-resizable-handle,
+.react-grid-item:focus-within > .react-resizable-handle {
+  opacity: 1;
 }
 
 .react-grid-item > .react-resizable-handle::after {
-  content: "";
+  content: '';
   position: absolute;
-  right: 5px;
-  bottom: 5px;
-  width: 8px;
-  height: 8px;
-  border-right: 2px solid #818cf8;
-  border-bottom: 2px solid #818cf8;
-}
-
-/* Custom sleek scrollbar */
-::-webkit-scrollbar {
+  right: 3px;
+  bottom: 3px;
   width: 6px;
   height: 6px;
+  border-right: 1px solid var(--subtle);
+  border-bottom: 1px solid var(--subtle);
 }
-::-webkit-scrollbar-track {
-  background: rgba(15, 23, 42, 0.6);
-}
-::-webkit-scrollbar-thumb {
-  background: rgba(71, 85, 105, 0.6);
-  border-radius: 9999px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(99, 102, 241, 0.7);
+
+@media (prefers-reduced-motion: reduce) {
+  .react-grid-layout,
+  .react-grid-item {
+    transition: none !important;
+  }
+  .animate-spin {
+    animation-duration: 2.4s;
+  }
 }

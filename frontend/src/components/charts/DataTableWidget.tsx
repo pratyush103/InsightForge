@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { ArrowUpDown, Code2, Download, Search, Table } from 'lucide-react';
+import { ArrowUpDown, Code2, Download, Search, Table2 } from 'lucide-react';
 import type { DashboardWidgetSpec } from '../../types/insightforge';
 import { useDashboardStore } from '../../store/useDashboardStore';
 
@@ -8,7 +8,7 @@ interface Props {
 }
 
 export const DataTableWidget: React.FC<Props> = ({ widget }) => {
-  const { crossFilter, setEditingWidget } = useDashboardStore();
+  const { crossFilter, setEditingWidget, selectedWidgetId, selectWidget } = useDashboardStore();
   const [search, setSearch] = useState('');
   const [sortCol, setSortCol] = useState<string | null>(null);
   const [sortAsc, setSortAsc] = useState(false);
@@ -71,79 +71,90 @@ export const DataTableWidget: React.FC<Props> = ({ widget }) => {
     URL.revokeObjectURL(url);
   };
 
+  const isSelected = selectedWidgetId === widget.id;
+
   return (
-    <div className="h-full w-full flex flex-col justify-between p-4 select-none">
+    <div
+      onClick={() => selectWidget(widget.id)}
+      className={`h-full w-full flex flex-col justify-between p-3 select-none bg-white rounded transition-shadow ${
+        isSelected ? 'ring-2 ring-focus' : ''
+      }`}
+    >
       {/* Header */}
-      <div className="flex flex-wrap items-center justify-between gap-2 pb-2.5 border-b border-slate-800">
-        <div className="drag-handle cursor-grab active:cursor-grabbing flex items-center gap-2">
-          <Table className="h-4 w-4 text-cyan-400" />
-          <div>
-            <h3 className="text-xs sm:text-sm font-semibold text-slate-100">{widget.title}</h3>
-            <p className="text-[11px] text-slate-400">
-              {filteredAndSortedRows.length} records • {widget.subtitle}
+      <div className="flex flex-wrap items-center justify-between gap-2 pb-1.5 border-b border-line">
+        <div className="drag-handle cursor-grab active:cursor-grabbing flex items-center gap-1.5 min-w-0">
+          <Table2 className="h-4 w-4 text-focus shrink-0" />
+          <div className="min-w-0">
+            <h3 className="text-xs font-semibold text-ink truncate">{widget.title}</h3>
+            <p className="text-2xs text-muted truncate">
+              {filteredAndSortedRows.length} rows • {widget.subtitle}
             </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5">
           <div className="relative">
-            <Search className="h-3.5 w-3.5 text-slate-500 absolute left-2.5 top-1/2 -translate-y-1/2" />
+            <Search className="h-3 w-3 text-muted absolute left-2 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Filter records..."
-              className="rounded-lg border border-slate-800 bg-slate-950 pl-8 pr-3 py-1 text-xs text-slate-200 placeholder:text-slate-600 focus:border-indigo-500 focus:outline-none w-44"
+              placeholder="Find in table..."
+              className="h-6 w-32 rounded border border-line-strong bg-white pl-6 pr-2 text-2xs text-ink placeholder:text-subtle focus:border-focus focus:outline-none"
             />
           </div>
 
           <button
             onClick={exportCsv}
-            className="inline-flex items-center gap-1 rounded-lg border border-slate-800 bg-slate-900 hover:bg-slate-800 px-2.5 py-1 text-xs text-slate-300 transition"
+            title="Export CSV"
+            className="inline-flex items-center gap-1 h-6 rounded border border-line-strong bg-white px-2 text-2xs font-medium text-ink hover:bg-hover transition"
           >
-            <Download className="h-3.5 w-3.5" /> CSV
+            <Download className="h-3 w-3" /> CSV
           </button>
 
           <button
-            onClick={() => setEditingWidget(widget)}
+            onClick={(e) => {
+              e.stopPropagation();
+              setEditingWidget(widget);
+            }}
             title="Inspect SQL"
-            className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-800 hover:text-indigo-300 transition"
+            className="rounded p-1 text-muted hover:bg-hover hover:text-ink transition"
           >
             <Code2 className="h-3.5 w-3.5" />
           </button>
         </div>
       </div>
 
-      {/* Scrollable Table */}
-      <div className="flex-1 min-h-0 overflow-auto my-2 rounded-lg border border-slate-800/80 bg-slate-950/60">
+      {/* Table grid */}
+      <div className="flex-1 min-h-0 overflow-auto my-1.5 rounded border border-line bg-white">
         <table className="w-full text-left border-collapse text-xs">
-          <thead className="bg-slate-900/95 sticky top-0 z-10">
+          <thead className="bg-[#f9f8f7] sticky top-0 z-10 border-b border-line">
             <tr>
               {visibleColumns.map((col) => (
                 <th
                   key={col}
                   onClick={() => handleSort(col)}
-                  className="cursor-pointer px-3 py-2 font-mono font-semibold text-slate-300 border-b border-slate-800 hover:text-indigo-300 whitespace-nowrap"
+                  className="cursor-pointer px-2.5 py-1.5 text-2xs font-semibold text-muted hover:text-ink whitespace-nowrap select-none"
                 >
                   <div className="inline-flex items-center gap-1">
                     {col.replace(/_/g, ' ')}
-                    <ArrowUpDown className="h-3 w-3 text-slate-500" />
+                    <ArrowUpDown className="h-2.5 w-2.5 text-subtle" />
                   </div>
                 </th>
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-800/50">
+          <tbody className="divide-y divide-line">
             {filteredAndSortedRows.map((row, idx) => (
-              <tr key={idx} className="hover:bg-slate-900/60 transition">
+              <tr key={idx} className="hover:bg-hover/60 transition-colors">
                 {visibleColumns.map((col) => {
                   const val = row[col];
                   const isNum = typeof val === 'number';
                   return (
                     <td
                       key={col}
-                      className={`px-3 py-1.5 whitespace-nowrap ${
-                        isNum ? 'font-mono text-slate-200' : 'text-slate-300'
+                      className={`px-2.5 py-1 whitespace-nowrap text-2xs ${
+                        isNum ? 'text-right font-mono tnum text-ink' : 'text-ink'
                       }`}
                     >
                       {isNum ? val.toLocaleString() : String(val ?? '—')}

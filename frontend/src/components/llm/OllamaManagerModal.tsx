@@ -56,44 +56,44 @@ export const OllamaManagerModal: React.FC = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4">
-      <div className="relative w-full max-w-4xl max-h-[90vh] overflow-hidden rounded-2xl border border-slate-800 bg-slate-900 shadow-2xl flex flex-col">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 p-4 select-none">
+      <div className="relative w-full max-w-4xl max-h-[90vh] overflow-hidden rounded bg-white border border-line-strong shadow-dialog flex flex-col text-xs">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-slate-800 px-6 py-4 bg-slate-900/90">
+        <div className="flex items-center justify-between border-b border-line px-6 py-4 bg-white">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-500/15 border border-indigo-500/30 text-indigo-400">
-              <Cpu className="h-5 w-5" />
+            <div className="w-9 h-9 rounded bg-focus-tint border border-focus/20 flex items-center justify-center text-focus">
+              <Cpu className="h-4 w-4" />
             </div>
             <div>
-              <h2 className="text-base font-semibold text-slate-100 flex items-center gap-2">
-                Local Ollama Runtime & Model Hub
+              <h2 className="text-base font-semibold text-ink flex items-center gap-2">
+                Local Ollama AI Engine & SQL Models
                 <span
-                  className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                  className={`inline-flex items-center gap-1 rounded px-2 py-0.5 text-2xs font-semibold ${
                     ollamaStatus.status === 'running'
-                      ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30'
+                      ? 'bg-[#f1faf1] text-good border border-good/30'
                       : ollamaStatus.status === 'installed_stopped'
-                      ? 'bg-amber-500/15 text-amber-300 border border-amber-500/30'
-                      : 'bg-rose-500/15 text-rose-300 border border-rose-500/30'
+                      ? 'bg-[#fff9e6] text-warn border border-[#c19c00]/30'
+                      : 'bg-[#fdf3f4] text-bad border border-bad/30'
                   }`}
                 >
                   <span
                     className={`h-1.5 w-1.5 rounded-full ${
                       ollamaStatus.status === 'running'
-                        ? 'bg-emerald-400 animate-pulse'
+                        ? 'bg-good'
                         : ollamaStatus.status === 'installed_stopped'
-                        ? 'bg-amber-400'
-                        : 'bg-rose-400'
+                        ? 'bg-warn'
+                        : 'bg-bad'
                     }`}
                   />
                   {ollamaStatus.status === 'running'
-                    ? 'Server Running'
+                    ? 'Online'
                     : ollamaStatus.status === 'installed_stopped'
                     ? 'Installed (Server Stopped)'
-                    : 'Not Installed'}
+                    : 'Not Detected'}
                 </span>
               </h2>
-              <p className="text-xs text-slate-400">
-                Auto-detects local Ollama installation, manages daemon lifecycle, and provisions recommended SQL/BI models.
+              <p className="text-2xs text-muted">
+                Run local open-weights LLMs for zero-cost, private SQL compilation and BI narration.
               </p>
             </div>
           </div>
@@ -101,57 +101,55 @@ export const OllamaManagerModal: React.FC = () => {
           <div className="flex items-center gap-2">
             <button
               onClick={handleRefresh}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-slate-700 bg-slate-800/80 px-3 py-1.5 text-xs font-medium text-slate-200 hover:bg-slate-700 transition"
+              className="inline-flex items-center gap-1.5 h-7 rounded border border-line bg-white px-2.5 text-2xs font-medium text-ink hover:bg-hover transition"
             >
-              <RefreshCw className={`h-3.5 w-3.5 ${isRefreshing ? 'animate-spin' : ''}`} />
+              <RefreshCw className={`h-3 w-3 ${isRefreshing ? 'animate-spin' : ''}`} />
               Re-Detect
             </button>
             <button
               onClick={() => setOllamaModalOpen(false)}
-              className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-800 hover:text-slate-200"
+              className="rounded p-1 text-muted hover:bg-hover hover:text-ink"
             >
-              <X className="h-5 w-5" />
+              <X className="h-4 w-4" />
             </button>
           </div>
         </div>
 
         {/* Body */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-6">
+        <div className="flex-1 overflow-y-auto p-6 space-y-5">
           {/* System Detection Banner */}
           {ollamaStatus.status === 'installed_stopped' && (
-            <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="rounded border border-[#c19c00]/40 bg-[#fff9e6] p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div className="space-y-1">
-                <div className="flex items-center gap-2 text-amber-300 font-medium text-sm">
+                <div className="flex items-center gap-1.5 text-warn font-semibold text-xs">
                   <AlertTriangle className="h-4 w-4 shrink-0" />
-                  Ollama is Installed on Your System, but the Server is Not Running
+                  Ollama is Installed, but Background Daemon is Stopped
                 </div>
-                <p className="text-xs text-slate-300">
-                  Detected binary:{' '}
-                  <code className="rounded bg-slate-950/70 px-1.5 py-0.5 font-mono text-amber-200">
+                <p className="text-2xs text-ink">
+                  Binary found at{' '}
+                  <code className="font-mono bg-white px-1 py-0.5 rounded border border-line">
                     {ollamaStatus.binary_path || 'ollama'}
-                  </code>{' '}
-                  {ollamaStatus.cli_version && <span>({ollamaStatus.cli_version})</span>}
+                  </code>
                 </p>
-                <p className="text-xs text-slate-400">
-                  Click <strong>Launch Ollama Server</strong> below to start the background service on{' '}
-                  <code className="font-mono">{ollamaStatus.base_url}</code>, or run{' '}
-                  <code className="font-mono text-slate-200">ollama serve</code> in your terminal.
+                <p className="text-2xs text-muted">
+                  Click Launch Server to start the daemon on{' '}
+                  <code className="font-mono text-ink">{ollamaStatus.base_url}</code>.
                 </p>
               </div>
               <button
                 onClick={startOllamaServer}
                 disabled={isStartingOllama}
-                className="shrink-0 inline-flex items-center gap-2 rounded-xl bg-amber-500 hover:bg-amber-400 disabled:opacity-60 px-4 py-2.5 text-xs font-semibold text-slate-950 shadow-lg shadow-amber-500/20 transition"
+                className="shrink-0 inline-flex items-center gap-1.5 h-8 rounded bg-focus hover:bg-[#0c5a9e] disabled:opacity-40 px-3.5 text-xs font-semibold text-white transition shadow-sm"
               >
                 {isStartingOllama ? (
                   <>
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    Starting Daemon...
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    Starting...
                   </>
                 ) : (
                   <>
-                    <Play className="h-4 w-4 fill-current" />
-                    Launch Ollama Server
+                    <Play className="h-3.5 w-3.5 fill-current" />
+                    Launch Server
                   </>
                 )}
               </button>
@@ -159,140 +157,118 @@ export const OllamaManagerModal: React.FC = () => {
           )}
 
           {ollamaStatus.status === 'not_installed' && (
-            <div className="rounded-xl border border-rose-500/30 bg-rose-500/10 p-5 space-y-4">
+            <div className="rounded border border-bad/30 bg-[#fdf3f4] p-4 space-y-3">
               <div className="flex items-start justify-between gap-4">
                 <div className="space-y-1">
-                  <div className="flex items-center gap-2 text-rose-300 font-semibold text-sm">
+                  <div className="flex items-center gap-1.5 text-bad font-semibold text-xs">
                     <AlertTriangle className="h-4 w-4 shrink-0" />
-                    Ollama Not Detected on This System
+                    Ollama is not installed on this machine
                   </div>
-                  <p className="text-xs text-slate-300">
-                    InsightForge uses Ollama to run local open-weights LLMs for private, zero-cost SQL generation and executive BI narration.
-                    (While Ollama is offline, InsightForge automatically uses its built-in Schema-Adaptive BI Engine so you can still explore dashboards.)
+                  <p className="text-2xs text-muted leading-relaxed">
+                    InsightForge automatically falls back to its built-in schema-adaptive BI heuristics engine when Ollama is offline.
                   </p>
                 </div>
                 <a
                   href={ollamaStatus.install_guide.windows_installer_url || 'https://ollama.com/download'}
                   target="_blank"
                   rel="noreferrer"
-                  className="shrink-0 inline-flex items-center gap-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 px-4 py-2.5 text-xs font-semibold text-white shadow-lg shadow-indigo-600/25 transition"
+                  className="shrink-0 inline-flex items-center gap-1.5 h-8 rounded bg-focus hover:bg-[#0c5a9e] px-3.5 text-xs font-semibold text-white transition"
                 >
-                  <Download className="h-4 w-4" />
-                  Download Ollama Installer
-                  <ExternalLink className="h-3.5 w-3.5" />
+                  <Download className="h-3.5 w-3.5" />
+                  Installer Download
+                  <ExternalLink className="h-3 w-3" />
                 </a>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
-                <div className="rounded-lg border border-slate-800 bg-slate-950/80 p-3">
-                  <div className="text-[11px] font-medium text-slate-400 mb-1 flex items-center justify-between">
-                    <span>Option 1: Install via Windows Winget</span>
-                    <button
-                      onClick={() =>
-                        copyText(ollamaStatus.install_guide.windows_winget_cmd || 'winget install -e --id Ollama.Ollama')
-                      }
-                      className="text-indigo-400 hover:text-indigo-300 inline-flex items-center gap-1"
-                    >
-                      <Copy className="h-3 w-3" />
-                      {copiedCmd?.includes('winget') ? 'Copied!' : 'Copy'}
-                    </button>
-                  </div>
-                  <code className="text-xs font-mono text-emerald-300">
-                    {ollamaStatus.install_guide.windows_winget_cmd || 'winget install -e --id Ollama.Ollama'}
-                  </code>
+              <div className="rounded border border-line bg-white p-2.5">
+                <div className="text-2xs font-semibold text-muted mb-1 flex items-center justify-between">
+                  <span>Terminal Install (Windows Winget)</span>
+                  <button
+                    onClick={() =>
+                      copyText(ollamaStatus.install_guide.windows_winget_cmd || 'winget install -e --id Ollama.Ollama')
+                    }
+                    className="text-focus hover:underline inline-flex items-center gap-1"
+                  >
+                    <Copy className="h-3 w-3" />
+                    {copiedCmd?.includes('winget') ? 'Copied' : 'Copy'}
+                  </button>
                 </div>
-
-                <div className="rounded-lg border border-slate-800 bg-slate-950/80 p-3">
-                  <div className="text-[11px] font-medium text-slate-400 mb-1 flex items-center justify-between">
-                    <span>Option 2: Start Server & Pull Recommended Model</span>
-                    <button
-                      onClick={() => copyText('ollama pull qwen2.5-coder:7b')}
-                      className="text-indigo-400 hover:text-indigo-300 inline-flex items-center gap-1"
-                    >
-                      <Copy className="h-3 w-3" />
-                      {copiedCmd?.includes('qwen') ? 'Copied!' : 'Copy'}
-                    </button>
-                  </div>
-                  <code className="text-xs font-mono text-indigo-300">ollama pull qwen2.5-coder:7b</code>
-                </div>
+                <code className="text-2xs font-mono text-ink">
+                  {ollamaStatus.install_guide.windows_winget_cmd || 'winget install -e --id Ollama.Ollama'}
+                </code>
               </div>
             </div>
           )}
 
           {/* Active Download Progress Bar */}
           {pullProgress && (
-            <div className="rounded-xl border border-indigo-500/30 bg-indigo-500/10 p-4 space-y-2">
-              <div className="flex items-center justify-between text-xs">
-                <span className="font-medium text-indigo-200 flex items-center gap-2">
-                  <Loader2 className="h-3.5 w-3.5 animate-spin text-indigo-400" />
-                  Pulling <code className="font-mono font-semibold">{pullProgress.model}</code> — {pullProgress.status}
+            <div className="rounded border border-focus/30 bg-focus-tint p-3 space-y-1.5">
+              <div className="flex items-center justify-between text-2xs">
+                <span className="font-semibold text-focus flex items-center gap-1.5">
+                  <Loader2 className="h-3 w-3 animate-spin" />
+                  Downloading <code className="font-mono">{pullProgress.model}</code>: {pullProgress.status}
                 </span>
                 {pullProgress.percent !== null && (
-                  <span className="font-mono font-semibold text-indigo-300">{pullProgress.percent}%</span>
+                  <span className="font-mono font-bold text-focus">{pullProgress.percent}%</span>
                 )}
               </div>
               {pullProgress.percent !== null && (
-                <div className="h-2 w-full overflow-hidden rounded-full bg-slate-950">
+                <div className="h-1.5 w-full overflow-hidden rounded bg-line">
                   <div
-                    className="h-full bg-gradient-to-r from-indigo-500 to-cyan-400 transition-all duration-300"
+                    className="h-full bg-focus transition-[width] duration-300"
                     style={{ width: `${Math.min(100, Math.max(2, pullProgress.percent))}%` }}
                   />
                 </div>
               )}
-              {pullProgress.error && (
-                <p className="text-xs text-rose-400 font-medium">{pullProgress.error}</p>
-              )}
             </div>
           )}
 
-          {/* Installed Models Section */}
-          <div className="space-y-3">
+          {/* Installed Models */}
+          <div className="space-y-2.5">
             <div className="flex items-center justify-between">
-              <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-2">
-                <HardDrive className="h-3.5 w-3.5 text-indigo-400" />
+              <h3 className="text-2xs font-bold uppercase tracking-wider text-muted flex items-center gap-1.5">
+                <HardDrive className="h-3.5 w-3.5 text-focus" />
                 Installed Local Models ({ollamaStatus.installed_models.length})
               </h3>
-              <span className="text-xs text-slate-500 font-mono">Endpoint: {ollamaStatus.base_url}</span>
+              <span className="text-2xs text-muted font-mono">{ollamaStatus.base_url}</span>
             </div>
 
             {ollamaStatus.installed_models.length === 0 ? (
-              <div className="rounded-xl border border-slate-800/80 bg-slate-950/50 p-4 text-center text-xs text-slate-400">
+              <div className="rounded border border-line bg-[#faf9f8] p-4 text-center text-2xs text-muted">
                 {ollamaStatus.status === 'running'
-                  ? 'No local models installed yet. Click "Pull Model" on any recommended model below to download it.'
-                  : 'Start or install Ollama above to inspect locally installed models.'}
+                  ? 'No local models downloaded yet. Click "Pull Model" on any curated model below.'
+                  : 'Start or install Ollama above to inspect local models.'}
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
                 {ollamaStatus.installed_models.map((m) => {
                   const isSelected = ollamaStatus.selected_model === m.name;
                   return (
                     <button
                       key={m.name}
                       onClick={() => selectOllamaModel(m.name)}
-                      className={`text-left rounded-xl border p-3.5 transition flex flex-col justify-between gap-2 ${
+                      className={`text-left rounded border p-3 transition flex flex-col justify-between gap-1.5 ${
                         isSelected
-                          ? 'border-indigo-500 bg-indigo-500/15 shadow-lg shadow-indigo-500/10'
-                          : 'border-slate-800 bg-slate-950/60 hover:border-slate-700'
+                          ? 'border-focus bg-focus-tint shadow-2xs'
+                          : 'border-line bg-white hover:bg-hover'
                       }`}
                     >
-                      <div className="flex items-start justify-between gap-2">
-                        <div className="font-mono text-xs font-semibold text-slate-100 truncate">{m.name}</div>
+                      <div className="flex items-start justify-between gap-1.5">
+                        <div className="font-mono text-xs font-semibold text-ink truncate">{m.name}</div>
                         {isSelected ? (
-                          <span className="inline-flex items-center gap-1 rounded-full bg-indigo-500/20 px-2 py-0.5 text-[10px] font-semibold text-indigo-300 border border-indigo-500/30">
-                            <CheckCircle2 className="h-3 w-3" />
-                            Active
+                          <span className="inline-flex items-center gap-1 rounded bg-[#f1faf1] px-1.5 py-0.2 text-[10px] font-semibold text-good border border-good/30">
+                            <CheckCircle2 className="h-2.5 w-2.5" /> Active
                           </span>
                         ) : (
-                          <span className="text-[10px] text-slate-500">Select</span>
+                          <span className="text-2xs text-muted">Select</span>
                         )}
                       </div>
-                      <div className="flex items-center gap-2 text-[11px] text-slate-400">
+                      <div className="flex items-center gap-2 text-2xs text-muted font-mono">
                         <span>{m.size_gb} GB</span>
                         {m.parameter_size && <span>• {m.parameter_size}</span>}
-                        {m.quantization_level && <span>• {m.quantization_level}</span>}
                         {m.is_running && (
-                          <span className="ml-auto inline-flex items-center gap-1 text-emerald-400 font-medium">
-                            <Activity className="h-3 w-3" /> Loaded
+                          <span className="ml-auto inline-flex items-center gap-1 text-good font-semibold">
+                            <Activity className="h-2.5 w-2.5" /> Loaded
                           </span>
                         )}
                       </div>
@@ -303,114 +279,93 @@ export const OllamaManagerModal: React.FC = () => {
             )}
           </div>
 
-          {/* Curated Recommended Models Catalog */}
-          <div className="space-y-3">
+          {/* Curated SQL Models */}
+          <div className="space-y-2.5">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div>
-                <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-2">
-                  <Sparkles className="h-3.5 w-3.5 text-amber-400" />
-                  Recommended Models for SQL & BI Generation
+                <h3 className="text-2xs font-bold uppercase tracking-wider text-muted flex items-center gap-1.5">
+                  <Sparkles className="h-3.5 w-3.5 text-brand" />
+                  Recommended SQL & BI Models
                 </h3>
-                <p className="text-xs text-slate-500">
-                  Benchmark-selected open models optimized for SQLite, MySQL, and MS SQL Server (T-SQL) query synthesis.
+                <p className="text-2xs text-muted">
+                  Open-weights models tested for SQLite, MySQL, and T-SQL synthesis.
                 </p>
               </div>
 
-              {/* Custom Model Pull Form */}
-              <form onSubmit={handleCustomPull} className="flex items-center gap-2">
+              {/* Custom tag pull */}
+              <form onSubmit={handleCustomPull} className="flex items-center gap-1.5">
                 <input
                   type="text"
                   value={customModelTag}
                   onChange={(e) => setCustomModelTag(e.target.value)}
-                  placeholder="Pull custom tag (e.g. mistral:7b)"
-                  className="rounded-lg border border-slate-800 bg-slate-950 px-3 py-1.5 text-xs text-slate-200 placeholder:text-slate-600 focus:border-indigo-500 focus:outline-none font-mono w-56"
+                  placeholder="Custom tag (e.g. mistral:7b)"
+                  className="h-7 w-44 rounded border border-line-strong bg-white px-2 text-2xs text-ink font-mono focus:border-focus focus:outline-none"
                 />
                 <button
                   type="submit"
                   disabled={!customModelTag.trim() || !!pullProgress}
-                  className="inline-flex items-center gap-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 disabled:opacity-50 px-3 py-1.5 text-xs font-medium text-slate-200 transition"
+                  className="h-7 px-2.5 rounded border border-line-strong bg-white hover:bg-hover text-ink text-2xs font-semibold transition"
                 >
-                  <Download className="h-3.5 w-3.5" />
                   Pull
                 </button>
               </form>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {ollamaStatus.recommended_models.map((rec) => (
                 <div
                   key={rec.id}
-                  className={`rounded-xl border p-4 flex flex-col justify-between gap-3 transition ${
-                    rec.is_top_pick
-                      ? 'border-indigo-500/40 bg-gradient-to-br from-slate-900 via-slate-900 to-indigo-950/30'
-                      : 'border-slate-800 bg-slate-950/60'
+                  className={`rounded border p-3.5 flex flex-col justify-between gap-2.5 bg-white ${
+                    rec.is_top_pick ? 'border-focus/50 shadow-2xs' : 'border-line'
                   }`}
                 >
-                  <div className="space-y-2">
+                  <div className="space-y-1.5">
                     <div className="flex items-start justify-between gap-2">
                       <div>
-                        <div className="flex items-center gap-2">
-                          <span className="font-semibold text-sm text-slate-100">{rec.name}</span>
+                        <div className="flex items-center gap-1.5">
+                          <span className="font-semibold text-xs text-ink">{rec.name}</span>
                           {rec.is_top_pick && (
-                            <span className="rounded-full bg-amber-500/15 border border-amber-500/30 px-2 py-0.5 text-[10px] font-semibold text-amber-300">
-                              ★ Top Pick
+                            <span className="rounded bg-[#fff9e6] border border-[#c19c00]/30 px-1.5 py-0.2 text-[10px] font-semibold text-warn">
+                              Top Pick
                             </span>
                           )}
                         </div>
-                        <div className="flex items-center gap-2 mt-0.5">
-                          <code className="text-xs font-mono text-indigo-400">{rec.tag}</code>
-                          <span className="text-[11px] text-slate-500">• {rec.category}</span>
-                        </div>
+                        <code className="text-2xs font-mono text-focus">{rec.tag}</code>
                       </div>
-
-                      <div className="text-right text-[11px] text-slate-400 shrink-0">
-                        <div className="font-mono font-medium text-slate-300">{rec.size_gb} GB</div>
+                      <div className="text-right text-2xs text-muted font-mono">
+                        <div>{rec.size_gb} GB</div>
                         <div>Min {rec.min_ram_gb}GB RAM</div>
                       </div>
                     </div>
 
-                    <p className="text-xs text-slate-300 leading-relaxed">{rec.description}</p>
-
-                    <div className="flex flex-wrap gap-1.5 pt-0.5">
-                      {rec.strengths.map((str) => (
-                        <span
-                          key={str}
-                          className="rounded-md bg-slate-800/90 border border-slate-700/70 px-2 py-0.5 text-[10px] text-slate-300"
-                        >
-                          {str}
-                        </span>
-                      ))}
-                    </div>
+                    <p className="text-2xs text-muted leading-relaxed">{rec.description}</p>
                   </div>
 
-                  <div className="flex items-center justify-between pt-2 border-t border-slate-800/80">
-                    <span className="text-[11px] text-slate-400">{rec.recommended_for}</span>
-
-                    <div className="flex items-center gap-2">
+                  <div className="flex items-center justify-between pt-2 border-t border-line">
+                    <span className="text-2xs text-subtle truncate max-w-[200px]">{rec.recommended_for}</span>
+                    <div className="flex items-center gap-1.5">
                       <button
                         onClick={() => copyText(`ollama pull ${rec.tag}`)}
-                        title="Copy terminal command"
-                        className="rounded-lg border border-slate-800 bg-slate-900 p-1.5 text-slate-400 hover:text-slate-200 hover:border-slate-700"
+                        title="Copy command"
+                        className="rounded p-1 border border-line bg-white hover:bg-hover text-muted hover:text-ink"
                       >
-                        <Terminal className="h-3.5 w-3.5" />
+                        <Terminal className="h-3 w-3" />
                       </button>
 
                       {rec.is_installed ? (
                         <button
                           onClick={() => selectOllamaModel(rec.tag)}
-                          className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-500/15 border border-emerald-500/30 px-3 py-1.5 text-xs font-medium text-emerald-300 hover:bg-emerald-500/25 transition"
+                          className="h-6 px-2.5 rounded bg-[#f1faf1] border border-good/30 text-good text-2xs font-semibold hover:bg-[#e4f7e4] transition"
                         >
-                          <CheckCircle2 className="h-3.5 w-3.5" />
-                          Installed (Use)
+                          Use
                         </button>
                       ) : (
                         <button
                           onClick={() => pullOllamaModel(rec.tag)}
                           disabled={!!pullProgress}
-                          className="inline-flex items-center gap-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 px-3 py-1.5 text-xs font-semibold text-white transition"
+                          className="h-6 px-2.5 rounded bg-focus hover:bg-[#0c5a9e] text-white text-2xs font-semibold transition"
                         >
-                          <Download className="h-3.5 w-3.5" />
-                          Pull Model
+                          Pull
                         </button>
                       )}
                     </div>

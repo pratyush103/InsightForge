@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import {
-  CheckCircle2,
   Database,
   FileSpreadsheet,
   KeyRound,
@@ -14,9 +13,11 @@ import {
   Trash2,
   Upload,
   X,
+  CheckCircle2,
 } from 'lucide-react';
 import { useDashboardStore } from '../../store/useDashboardStore';
 import type { SQLDialectType } from '../../types/insightforge';
+import { dialectLabel } from '../ui/primitives';
 
 export const ConnectorModal: React.FC = () => {
   const {
@@ -25,6 +26,8 @@ export const ConnectorModal: React.FC = () => {
     schemaCatalog,
     isConnectorModalOpen,
     setConnectorModalOpen,
+    getDataSource,
+    openGetData,
     fetchConnectors,
     selectConnector,
     fetchSchema,
@@ -33,7 +36,7 @@ export const ConnectorModal: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'connectors' | 'schema' | 'sandbox'>('connectors');
 
   // New connector form state
-  const [dialect, setDialect] = useState<SQLDialectType>('mysql');
+  const [dialect, setDialect] = useState<SQLDialectType>('sqlite');
   const [name, setName] = useState('');
   const [host, setHost] = useState('localhost');
   const [port, setPort] = useState('3306');
@@ -66,13 +69,23 @@ export const ConnectorModal: React.FC = () => {
   const [isRunningSql, setIsRunningSql] = useState(false);
 
   useEffect(() => {
-    if (isConnectorModalOpen) {
+    if (isConnectorModalOpen || getDataSource) {
       fetchConnectors();
       fetchSchema();
+      if (getDataSource && getDataSource !== 'csv') {
+        setDialect(getDataSource);
+      }
     }
-  }, [isConnectorModalOpen]);
+  }, [isConnectorModalOpen, getDataSource]);
 
-  if (!isConnectorModalOpen) return null;
+  const isOpen = isConnectorModalOpen || !!getDataSource;
+
+  if (!isOpen) return null;
+
+  const handleClose = () => {
+    setConnectorModalOpen(false);
+    openGetData(null);
+  };
 
   const handleDialectChange = (d: SQLDialectType) => {
     setDialect(d);
@@ -88,7 +101,7 @@ export const ConnectorModal: React.FC = () => {
     setIsSubmitting(true);
     try {
       const payload = {
-        name: name.trim() || `${dialect.toUpperCase()} Database`,
+        name: name.trim() || `${dialectLabel(dialect)} Database`,
         dialect,
         sqlite_path: dialect === 'sqlite' ? sqlitePath : undefined,
         host: dialect !== 'sqlite' ? host : undefined,
@@ -140,7 +153,7 @@ export const ConnectorModal: React.FC = () => {
         throw new Error(err.detail || 'CSV upload failed');
       }
       const data = await res.json();
-      setFormSuccess(`Imported CSV into SQLite table '${data.table.table_name}' (${data.table.row_count} rows)`);
+      setFormSuccess(`Imported CSV into table '${data.table.table_name}' (${data.table.row_count} rows)`);
       setCsvFile(null);
       setCsvTableName('');
       await fetchConnectors();
@@ -176,52 +189,51 @@ export const ConnectorModal: React.FC = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4">
-      <div className="relative w-full max-w-5xl max-h-[90vh] overflow-hidden rounded-2xl border border-slate-800 bg-slate-900 shadow-2xl flex flex-col">
-        {/* Header */}
-        <div className="flex items-center justify-between border-b border-slate-800 px-6 py-4 bg-slate-900">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 p-4 select-none">
+      <div className="relative w-full max-w-5xl max-h-[90vh] overflow-hidden rounded bg-white border border-line-strong shadow-dialog flex flex-col text-xs">
+        {/* Power BI Get Data Header */}
+        <div className="flex items-center justify-between border-b border-line px-6 py-4 bg-white">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-cyan-500/15 border border-cyan-500/30 text-cyan-400">
-              <Database className="h-5 w-5" />
+            <div className="w-9 h-9 rounded bg-focus-tint border border-focus/20 flex items-center justify-center text-focus">
+              <Database className="h-4 w-4" />
             </div>
             <div>
-              <h2 className="text-base font-semibold text-slate-100">
-                SQL Connectors & Schema Introspection
-              </h2>
-              <p className="text-xs text-slate-400">
-                Connect SQLite, MySQL, or Microsoft SQL Server (T-SQL) with read-only SQLGlot AST protection.
+              <h2 className="text-base font-semibold text-ink">Get Data & Manage SQL Connectors</h2>
+              <p className="text-2xs text-muted">
+                Connect SQLite, MySQL, or SQL Server databases with read-only SQLGlot AST verification.
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
-            <div className="flex rounded-lg bg-slate-950 p-1 border border-slate-800 text-xs">
+          <div className="flex items-center gap-3">
+            {/* View tabs */}
+            <div className="flex rounded border border-line bg-[#faf9f8] p-0.5 text-xs">
               <button
                 onClick={() => setActiveTab('connectors')}
-                className={`rounded-md px-3 py-1.5 font-medium transition ${
+                className={`px-3 py-1 rounded font-medium transition ${
                   activeTab === 'connectors'
-                    ? 'bg-indigo-600 text-white'
-                    : 'text-slate-400 hover:text-slate-200'
+                    ? 'bg-white text-ink shadow-sm font-semibold'
+                    : 'text-muted hover:text-ink'
                 }`}
               >
                 Connectors ({connectors.length})
               </button>
               <button
                 onClick={() => setActiveTab('schema')}
-                className={`rounded-md px-3 py-1.5 font-medium transition ${
+                className={`px-3 py-1 rounded font-medium transition ${
                   activeTab === 'schema'
-                    ? 'bg-indigo-600 text-white'
-                    : 'text-slate-400 hover:text-slate-200'
+                    ? 'bg-white text-ink shadow-sm font-semibold'
+                    : 'text-muted hover:text-ink'
                 }`}
               >
-                Schema Catalog ({schemaCatalog?.tables.length || 0} Tables)
+                Catalog ({schemaCatalog?.tables.length || 0})
               </button>
               <button
                 onClick={() => setActiveTab('sandbox')}
-                className={`rounded-md px-3 py-1.5 font-medium transition ${
+                className={`px-3 py-1 rounded font-medium transition ${
                   activeTab === 'sandbox'
-                    ? 'bg-indigo-600 text-white'
-                    : 'text-slate-400 hover:text-slate-200'
+                    ? 'bg-white text-ink shadow-sm font-semibold'
+                    : 'text-muted hover:text-ink'
                 }`}
               >
                 SQL Sandbox
@@ -229,23 +241,23 @@ export const ConnectorModal: React.FC = () => {
             </div>
 
             <button
-              onClick={() => setConnectorModalOpen(false)}
-              className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-800 hover:text-slate-200"
+              onClick={handleClose}
+              className="rounded p-1 text-muted hover:bg-hover hover:text-ink"
             >
-              <X className="h-5 w-5" />
+              <X className="h-4 w-4" />
             </button>
           </div>
         </div>
 
-        {/* Body */}
+        {/* Modal Body */}
         <div className="flex-1 overflow-y-auto p-6">
           {activeTab === 'connectors' && (
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-              {/* Left: Active Connectors + CSV Import */}
+              {/* Left Column: Registered Data Sources & CSV Import */}
               <div className="lg:col-span-5 space-y-5">
-                <div className="space-y-2.5">
-                  <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400">
-                    Registered Data Sources
+                <div className="space-y-2">
+                  <h3 className="text-2xs font-bold uppercase tracking-wider text-muted">
+                    Data Sources
                   </h3>
                   {connectors.map((c) => {
                     const isSelected = c.id === activeConnectorId;
@@ -253,31 +265,30 @@ export const ConnectorModal: React.FC = () => {
                       <div
                         key={c.id}
                         onClick={() => selectConnector(c.id)}
-                        className={`cursor-pointer rounded-xl border p-3.5 transition flex items-center justify-between gap-3 ${
+                        className={`cursor-pointer rounded border p-3 transition flex items-center justify-between gap-3 ${
                           isSelected
-                            ? 'border-indigo-500 bg-indigo-500/15 shadow-lg shadow-indigo-500/10'
-                            : 'border-slate-800 bg-slate-950/60 hover:border-slate-700'
+                            ? 'border-focus bg-focus-tint/50 shadow-2xs'
+                            : 'border-line bg-white hover:bg-[#faf9f8]'
                         }`}
                       >
-                        <div className="space-y-1 min-w-0">
-                          <div className="flex items-center gap-2">
-                            <span className="rounded bg-slate-800 px-1.5 py-0.5 font-mono text-[10px] font-bold uppercase text-cyan-300 border border-slate-700">
+                        <div className="space-y-0.5 min-w-0">
+                          <div className="flex items-center gap-1.5">
+                            <span className="font-mono text-2xs uppercase px-1.5 py-0.2 rounded bg-[#f3f2f1] border border-line text-ink font-semibold">
                               {c.dialect}
                             </span>
-                            <span className="font-semibold text-xs text-slate-100 truncate">
+                            <span className="font-semibold text-xs text-ink truncate">
                               {c.name}
                             </span>
                           </div>
-                          <div className="text-[11px] text-slate-400 flex items-center gap-2">
-                            <span className="font-mono truncate">{c.database_display}</span>
+                          <div className="text-2xs text-muted flex items-center gap-1.5 font-mono">
+                            <span className="truncate">{c.database_display}</span>
                             <span>• {c.table_count} tables</span>
-                            <span>• {c.total_rows.toLocaleString()} rows</span>
                           </div>
                         </div>
 
-                        <div className="flex items-center gap-2 shrink-0">
+                        <div className="flex items-center gap-1.5 shrink-0">
                           {isSelected && (
-                            <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-semibold text-emerald-300 border border-emerald-500/30">
+                            <span className="inline-flex items-center gap-1 rounded bg-[#f1faf1] border border-good/30 px-2 py-0.5 text-2xs font-semibold text-good">
                               <CheckCircle2 className="h-3 w-3" />
                               Active
                             </span>
@@ -288,9 +299,9 @@ export const ConnectorModal: React.FC = () => {
                                 e.stopPropagation();
                                 handleDeleteConnector(c.id);
                               }}
-                              className="rounded-lg p-1.5 text-slate-500 hover:bg-rose-500/15 hover:text-rose-400"
+                              className="rounded p-1 text-muted hover:bg-hover hover:text-bad"
                             >
-                              <Trash2 className="h-3.5 w-3.5" />
+                              <Trash2 className="h-3 w-3" />
                             </button>
                           )}
                         </div>
@@ -299,150 +310,154 @@ export const ConnectorModal: React.FC = () => {
                   })}
                 </div>
 
-                {/* Quick CSV to SQLite Table Uploader */}
+                {/* CSV to SQLite Table Uploader */}
                 <form
                   onSubmit={handleCsvUpload}
-                  className="rounded-xl border border-slate-800 bg-slate-950/60 p-4 space-y-3"
+                  className="rounded border border-line bg-[#faf9f8] p-4 space-y-3"
                 >
-                  <div className="flex items-center gap-2 text-xs font-semibold text-slate-200">
-                    <FileSpreadsheet className="h-4 w-4 text-emerald-400" />
-                    Import CSV into Active SQLite Database
+                  <div className="flex items-center gap-2 font-semibold text-ink">
+                    <FileSpreadsheet className="h-4 w-4 text-good" />
+                    <span>Import CSV to Active SQLite Database</span>
                   </div>
-                  <p className="text-[11px] text-slate-400">
-                    Upload any CSV file to mount it as an indexed SQL table inside your active SQLite database.
+                  <p className="text-2xs text-muted leading-relaxed">
+                    Upload a CSV file to index and query it as a relational table.
                   </p>
                   <input
                     type="text"
                     value={csvTableName}
                     onChange={(e) => setCsvTableName(e.target.value)}
-                    placeholder="Target table name (optional)"
-                    className="w-full rounded-lg border border-slate-800 bg-slate-900 px-3 py-1.5 text-xs text-slate-200 font-mono focus:border-indigo-500 focus:outline-none"
+                    placeholder="Custom table name (optional)"
+                    className="w-full h-8 rounded border border-line-strong bg-white px-3 text-xs text-ink font-mono focus:border-focus focus:outline-none"
                   />
                   <div className="flex items-center gap-2">
                     <input
                       type="file"
                       accept=".csv"
                       onChange={(e) => setCsvFile(e.target.files?.[0] || null)}
-                      className="text-xs text-slate-400 file:mr-2 file:rounded-lg file:border-0 file:bg-slate-800 file:px-3 file:py-1.5 file:text-xs file:font-medium file:text-slate-200 hover:file:bg-slate-700"
+                      className="text-2xs text-muted file:mr-2 file:h-7 file:rounded file:border-0 file:bg-white file:border-line file:border file:px-2.5 file:text-2xs file:font-semibold file:text-ink hover:file:bg-hover"
                     />
                     <button
                       type="submit"
                       disabled={!csvFile || isUploadingCsv}
-                      className="ml-auto shrink-0 inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 px-3 py-1.5 text-xs font-semibold text-white transition"
+                      className="ml-auto shrink-0 inline-flex items-center gap-1.5 h-7 rounded bg-good hover:bg-[#0c6b0c] disabled:opacity-40 px-3 text-2xs font-semibold text-white transition"
                     >
-                      {isUploadingCsv ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Upload className="h-3.5 w-3.5" />}
+                      {isUploadingCsv ? (
+                        <Loader2 className="h-3 w-3 animate-spin" />
+                      ) : (
+                        <Upload className="h-3 w-3" />
+                      )}
                       Import
                     </button>
                   </div>
                 </form>
               </div>
 
-              {/* Right: Add New SQLite / MySQL / MS SQL Server Connection */}
+              {/* Right Column: Add New SQL Connection */}
               <div className="lg:col-span-7">
                 <form
                   onSubmit={handleCreateConnector}
-                  className="rounded-xl border border-slate-800 bg-slate-950/60 p-5 space-y-4"
+                  className="rounded border border-line bg-white p-5 space-y-4"
                 >
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-sm font-semibold text-slate-100 flex items-center gap-2">
-                      <Plus className="h-4 w-4 text-indigo-400" />
-                      Add SQL Database Connector
+                  <div className="flex items-center justify-between pb-2 border-b border-line">
+                    <h3 className="font-semibold text-ink text-sm flex items-center gap-1.5">
+                      <Plus className="h-4 w-4 text-focus" />
+                      Add New Database Connection
                     </h3>
-                    <span className="inline-flex items-center gap-1 text-[11px] text-emerald-400">
-                      <ShieldCheck className="h-3.5 w-3.5" /> Read-Only AST Guard Active
+                    <span className="inline-flex items-center gap-1 text-2xs text-good font-medium">
+                      <ShieldCheck className="h-3.5 w-3.5" /> Read-Only AST Guard
                     </span>
                   </div>
 
-                  {/* Dialect Selector Tabs */}
-                  <div className="grid grid-cols-3 gap-2.5">
+                  {/* Dialect Selector */}
+                  <div className="grid grid-cols-3 gap-2">
                     {(
                       [
-                        { id: 'mysql', label: 'MySQL', sub: 'Port 3306 • mysql+pymysql' },
-                        { id: 'mssql', label: 'MS SQL Server', sub: 'Port 1433 • T-SQL Dialect' },
-                        { id: 'sqlite', label: 'SQLite', sub: 'Local .db / .sqlite File' },
+                        { id: 'sqlite', label: 'SQLite', sub: 'Local file' },
+                        { id: 'mysql', label: 'MySQL', sub: 'Port 3306' },
+                        { id: 'mssql', label: 'SQL Server', sub: 'T-SQL Dialect' },
                       ] as const
                     ).map((d) => (
                       <button
                         type="button"
                         key={d.id}
                         onClick={() => handleDialectChange(d.id)}
-                        className={`rounded-xl border p-3 text-left transition ${
+                        className={`rounded border p-2.5 text-left transition ${
                           dialect === d.id
-                            ? 'border-indigo-500 bg-indigo-500/15 text-slate-100'
-                            : 'border-slate-800 bg-slate-900/70 text-slate-400 hover:border-slate-700'
+                            ? 'border-focus bg-focus-tint text-ink font-semibold'
+                            : 'border-line bg-white text-muted hover:bg-hover'
                         }`}
                       >
-                        <div className="text-xs font-semibold">{d.label}</div>
-                        <div className="text-[10px] text-slate-400 mt-0.5">{d.sub}</div>
+                        <div className="text-xs">{d.label}</div>
+                        <div className="text-2xs text-muted mt-0.5">{d.sub}</div>
                       </button>
                     ))}
                   </div>
 
                   {formError && (
-                    <div className="rounded-lg border border-rose-500/40 bg-rose-500/10 p-3 text-xs text-rose-300">
+                    <div className="rounded border border-bad/40 bg-[#fdf3f4] p-2.5 text-xs text-bad">
                       {formError}
                     </div>
                   )}
                   {formSuccess && (
-                    <div className="rounded-lg border border-emerald-500/40 bg-emerald-500/10 p-3 text-xs text-emerald-300">
+                    <div className="rounded border border-good/40 bg-[#f1faf1] p-2.5 text-xs text-good">
                       {formSuccess}
                     </div>
                   )}
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div className="sm:col-span-2">
-                      <label className="block text-[11px] font-medium text-slate-400 mb-1">
-                        Connection Display Name
+                      <label className="block text-2xs font-semibold text-muted mb-1">
+                        Connection Name
                       </label>
                       <input
                         type="text"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        placeholder={`Production ${dialect.toUpperCase()} Warehouse`}
-                        className="w-full rounded-lg border border-slate-800 bg-slate-900 px-3 py-2 text-xs text-slate-100 focus:border-indigo-500 focus:outline-none"
+                        placeholder={`Production ${dialectLabel(dialect)} Database`}
+                        className="w-full h-8 rounded border border-line-strong bg-white px-2.5 text-xs text-ink focus:border-focus focus:outline-none"
                       />
                     </div>
 
                     {dialect === 'sqlite' ? (
                       <div className="sm:col-span-2">
-                        <label className="block text-[11px] font-medium text-slate-400 mb-1">
-                          SQLite Database File Path (.db / .sqlite)
+                        <label className="block text-2xs font-semibold text-muted mb-1">
+                          Database File Path (.db / .sqlite)
                         </label>
                         <input
                           type="text"
                           value={sqlitePath}
                           onChange={(e) => setSqlitePath(e.target.value)}
                           placeholder="data/insightforge_commerce.db"
-                          className="w-full rounded-lg border border-slate-800 bg-slate-900 px-3 py-2 text-xs font-mono text-slate-100 focus:border-indigo-500 focus:outline-none"
+                          className="w-full h-8 rounded border border-line-strong bg-white px-2.5 text-xs font-mono text-ink focus:border-focus focus:outline-none"
                         />
                       </div>
                     ) : (
                       <>
                         <div>
-                          <label className="block text-[11px] font-medium text-slate-400 mb-1">
-                            {dialect === 'mssql' ? 'SQL Server Host / Instance' : 'MySQL Host'}
+                          <label className="block text-2xs font-semibold text-muted mb-1">
+                            {dialect === 'mssql' ? 'Server / Host' : 'Host'}
                           </label>
                           <input
                             type="text"
                             value={host}
                             onChange={(e) => setHost(e.target.value)}
-                            placeholder="localhost or 10.0.0.15"
-                            className="w-full rounded-lg border border-slate-800 bg-slate-900 px-3 py-2 text-xs font-mono text-slate-100 focus:border-indigo-500 focus:outline-none"
+                            placeholder="localhost"
+                            className="w-full h-8 rounded border border-line-strong bg-white px-2.5 text-xs font-mono text-ink focus:border-focus focus:outline-none"
                           />
                         </div>
                         <div>
-                          <label className="block text-[11px] font-medium text-slate-400 mb-1">
+                          <label className="block text-2xs font-semibold text-muted mb-1">
                             Port
                           </label>
                           <input
                             type="text"
                             value={port}
                             onChange={(e) => setPort(e.target.value)}
-                            className="w-full rounded-lg border border-slate-800 bg-slate-900 px-3 py-2 text-xs font-mono text-slate-100 focus:border-indigo-500 focus:outline-none"
+                            className="w-full h-8 rounded border border-line-strong bg-white px-2.5 text-xs font-mono text-ink focus:border-focus focus:outline-none"
                           />
                         </div>
                         <div className="sm:col-span-2">
-                          <label className="block text-[11px] font-medium text-slate-400 mb-1">
+                          <label className="block text-2xs font-semibold text-muted mb-1">
                             Database Name
                           </label>
                           <input
@@ -450,23 +465,22 @@ export const ConnectorModal: React.FC = () => {
                             value={database}
                             onChange={(e) => setDatabase(e.target.value)}
                             placeholder="analytics_prod"
-                            className="w-full rounded-lg border border-slate-800 bg-slate-900 px-3 py-2 text-xs font-mono text-slate-100 focus:border-indigo-500 focus:outline-none"
+                            className="w-full h-8 rounded border border-line-strong bg-white px-2.5 text-xs font-mono text-ink focus:border-focus focus:outline-none"
                           />
                         </div>
                         <div>
-                          <label className="block text-[11px] font-medium text-slate-400 mb-1">
+                          <label className="block text-2xs font-semibold text-muted mb-1">
                             Username
                           </label>
                           <input
                             type="text"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
-                            placeholder={dialect === 'mssql' ? 'sa' : 'readonly_bi'}
-                            className="w-full rounded-lg border border-slate-800 bg-slate-900 px-3 py-2 text-xs font-mono text-slate-100 focus:border-indigo-500 focus:outline-none"
+                            className="w-full h-8 rounded border border-line-strong bg-white px-2.5 text-xs font-mono text-ink focus:border-focus focus:outline-none"
                           />
                         </div>
                         <div>
-                          <label className="block text-[11px] font-medium text-slate-400 mb-1">
+                          <label className="block text-2xs font-semibold text-muted mb-1">
                             Password
                           </label>
                           <input
@@ -474,40 +488,38 @@ export const ConnectorModal: React.FC = () => {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             placeholder="••••••••"
-                            className="w-full rounded-lg border border-slate-800 bg-slate-900 px-3 py-2 text-xs font-mono text-slate-100 focus:border-indigo-500 focus:outline-none"
+                            className="w-full h-8 rounded border border-line-strong bg-white px-2.5 text-xs font-mono text-ink focus:border-focus focus:outline-none"
                           />
                         </div>
                       </>
                     )}
 
                     <div className="sm:col-span-2 pt-1">
-                      <label className="block text-[11px] font-medium text-slate-500 mb-1">
+                      <label className="block text-2xs font-semibold text-muted mb-1">
                         Or Full SQLAlchemy URI Override (Optional)
                       </label>
                       <input
                         type="text"
                         value={connectionUri}
                         onChange={(e) => setConnectionUri(e.target.value)}
-                        placeholder={
-                          dialect === 'mysql'
-                            ? 'mysql+pymysql://user:pass@localhost:3306/dbname'
-                            : dialect === 'mssql'
-                            ? 'mssql+pymssql://sa:pass@localhost:1433/dbname'
-                            : 'sqlite:///path/to/database.db'
-                        }
-                        className="w-full rounded-lg border border-slate-800 bg-slate-900 px-3 py-1.5 text-xs font-mono text-slate-300 focus:border-indigo-500 focus:outline-none"
+                        placeholder="sqlite:///path/to/database.db"
+                        className="w-full h-8 rounded border border-line-strong bg-white px-2.5 text-xs font-mono text-ink focus:border-focus focus:outline-none"
                       />
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-end gap-3 pt-2">
+                  <div className="flex items-center justify-end gap-2 pt-3 border-t border-line">
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="inline-flex items-center gap-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 px-4 py-2 text-xs font-semibold text-white shadow-lg shadow-indigo-600/20 transition"
+                      className="inline-flex items-center gap-1.5 h-8 rounded bg-focus hover:bg-[#0c5a9e] disabled:opacity-40 px-4 text-xs font-semibold text-white transition"
                     >
-                      {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Server className="h-4 w-4" />}
-                      Test & Connect {dialect.toUpperCase()}
+                      {isSubmitting ? (
+                        <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                      ) : (
+                        <Server className="h-3.5 w-3.5" />
+                      )}
+                      Connect Database
                     </button>
                   </div>
                 </form>
@@ -517,16 +529,13 @@ export const ConnectorModal: React.FC = () => {
 
           {activeTab === 'schema' && schemaCatalog && (
             <div className="space-y-4">
-              <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-slate-800 bg-slate-950/60 p-3.5 text-xs">
-                <div className="flex items-center gap-3">
-                  <span className="rounded bg-indigo-500/20 border border-indigo-500/30 px-2 py-0.5 font-mono font-semibold uppercase text-indigo-300">
-                    {schemaCatalog.dialect}
-                  </span>
-                  <span className="font-semibold text-slate-100">{schemaCatalog.connector_name}</span>
-                  <span className="text-slate-500">•</span>
-                  <span className="font-mono text-slate-400">{schemaCatalog.schema_fingerprint}</span>
+              <div className="flex items-center justify-between rounded border border-line bg-[#faf9f8] p-3 text-xs">
+                <div className="flex items-center gap-2">
+                  <span className="font-semibold text-ink">{schemaCatalog.connector_name}</span>
+                  <span className="text-muted">•</span>
+                  <span className="font-mono text-muted text-2xs">{schemaCatalog.schema_fingerprint}</span>
                 </div>
-                <span className="text-slate-400">
+                <span className="text-muted">
                   {schemaCatalog.tables.length} tables •{' '}
                   {schemaCatalog.tables.reduce((acc, t) => acc + t.row_count, 0).toLocaleString()} total rows
                 </span>
@@ -534,52 +543,28 @@ export const ConnectorModal: React.FC = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {schemaCatalog.tables.map((tbl) => (
-                  <div
-                    key={tbl.table_name}
-                    className="rounded-xl border border-slate-800 bg-slate-950/60 p-4 space-y-3"
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <Table2 className="h-4 w-4 text-cyan-400" />
-                        <span className="font-mono text-sm font-semibold text-slate-100">
-                          {tbl.table_name}
-                        </span>
+                  <div key={tbl.table_name} className="rounded border border-line bg-white p-3.5 space-y-2">
+                    <div className="flex items-center justify-between pb-1.5 border-b border-line">
+                      <div className="flex items-center gap-1.5">
+                        <Table2 className="h-3.5 w-3.5 text-focus" />
+                        <span className="font-mono font-semibold text-xs text-ink">{tbl.table_name}</span>
                       </div>
-                      <span className="rounded-full bg-slate-800 px-2.5 py-0.5 text-[11px] font-mono text-slate-300">
-                        {tbl.row_count.toLocaleString()} rows
-                      </span>
+                      <span className="text-2xs text-muted font-mono">{tbl.row_count} rows</span>
                     </div>
-                    {tbl.description && (
-                      <p className="text-xs text-slate-400">{tbl.description}</p>
-                    )}
 
-                    <div className="divide-y divide-slate-800/70 border-t border-slate-800 pt-1">
+                    <div className="divide-y divide-line pt-0.5">
                       {tbl.columns.map((col) => (
-                        <div
-                          key={col.name}
-                          className="py-1.5 flex items-center justify-between text-xs gap-2"
-                        >
-                          <div className="flex items-center gap-1.5 min-w-0">
-                            <span className="font-mono text-slate-200 font-medium truncate">
-                              {col.name}
-                            </span>
-                            <span className="rounded bg-slate-900 px-1.5 py-0.5 font-mono text-[10px] text-slate-400">
-                              {col.data_type}
-                            </span>
+                        <div key={col.name} className="py-1 flex items-center justify-between text-2xs">
+                          <div className="flex items-center gap-1 font-mono">
                             {col.is_primary_key && (
-                              <span className="inline-flex items-center gap-0.5 rounded bg-amber-500/20 px-1.5 py-0.5 text-[10px] font-semibold text-amber-300">
-                                <KeyRound className="h-2.5 w-2.5" /> PK
-                              </span>
+                              <KeyRound className="h-2.5 w-2.5 text-[#c19c00]" />
                             )}
-                            {col.is_foreign_key && (
-                              <span className="rounded bg-indigo-500/20 px-1.5 py-0.5 text-[10px] font-mono text-indigo-300">
-                                FK → {col.foreign_key_target}
-                              </span>
-                            )}
+                            <span className="font-medium text-ink">{col.name}</span>
+                            <span className="text-muted">({col.data_type})</span>
                           </div>
-                          <div className="text-[11px] text-slate-500 font-mono truncate max-w-[200px]">
-                            {col.distinct_count !== null && `${col.distinct_count} distinct`}
-                          </div>
+                          <span className="text-muted font-mono text-[10px]">
+                            {col.distinct_count ? `${col.distinct_count} distinct` : ''}
+                          </span>
                         </div>
                       ))}
                     </div>
@@ -593,60 +578,64 @@ export const ConnectorModal: React.FC = () => {
             <div className="space-y-4">
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <label className="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-2">
-                    <Layers className="h-3.5 w-3.5 text-indigo-400" />
+                  <label className="text-2xs font-bold uppercase tracking-wider text-muted flex items-center gap-1.5">
+                    <Layers className="h-3.5 w-3.5 text-focus" />
                     Read-Only SQL Query Runner ({schemaCatalog?.dialect.toUpperCase()})
                   </label>
                   <button
                     onClick={handleRunSandboxSql}
                     disabled={isRunningSql}
-                    className="inline-flex items-center gap-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 px-3.5 py-1.5 text-xs font-semibold text-white transition"
+                    className="inline-flex items-center gap-1.5 h-7 rounded bg-focus hover:bg-[#0c5a9e] px-3 text-xs font-semibold text-white transition"
                   >
-                    {isRunningSql ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Play className="h-3.5 w-3.5 fill-current" />}
-                    Execute SELECT
+                    {isRunningSql ? (
+                      <Loader2 className="h-3 w-3 animate-spin" />
+                    ) : (
+                      <Play className="h-3 w-3 fill-current" />
+                    )}
+                    Execute Query
                   </button>
                 </div>
                 <textarea
                   rows={4}
                   value={sandboxSql}
                   onChange={(e) => setSandboxSql(e.target.value)}
-                  className="w-full rounded-xl border border-slate-800 bg-slate-950 p-3 font-mono text-xs text-emerald-300 focus:border-indigo-500 focus:outline-none"
+                  className="w-full rounded border border-line-strong bg-white p-2.5 font-mono text-xs text-ink focus:border-focus focus:outline-none"
                 />
               </div>
 
               {sandboxResult && (
-                <div className="space-y-3">
+                <div className="space-y-2">
                   {sandboxResult.error ? (
-                    <div className="rounded-xl border border-rose-500/40 bg-rose-500/10 p-3 text-xs text-rose-300 font-mono">
+                    <div className="rounded border border-bad/40 bg-[#fdf3f4] p-3 text-xs text-bad font-mono">
                       {sandboxResult.error}
                     </div>
                   ) : (
                     <>
-                      <div className="flex items-center justify-between text-xs text-slate-400">
+                      <div className="flex items-center justify-between text-2xs text-muted">
                         <span>
-                          Transpiled SQL:{' '}
-                          <code className="font-mono text-indigo-300">{sandboxResult.executed_sql}</code>
+                          Transpiled:{' '}
+                          <code className="font-mono text-ink">{sandboxResult.executed_sql}</code>
                         </span>
-                        <span className="font-mono">
+                        <span className="font-mono tnum">
                           {sandboxResult.rows.length} rows in {sandboxResult.execution_ms} ms
                         </span>
                       </div>
-                      <div className="max-h-72 overflow-auto rounded-xl border border-slate-800 bg-slate-950">
+                      <div className="max-h-60 overflow-auto rounded border border-line bg-white">
                         <table className="w-full text-left border-collapse text-xs">
-                          <thead className="bg-slate-900/90 sticky top-0">
+                          <thead className="bg-[#faf9f8] sticky top-0 border-b border-line">
                             <tr>
                               {sandboxResult.columns.map((c) => (
-                                <th key={c} className="px-3 py-2 font-mono font-semibold text-slate-300 border-b border-slate-800">
+                                <th key={c} className="px-3 py-1.5 text-2xs font-semibold text-muted border-r border-line">
                                   {c}
                                 </th>
                               ))}
                             </tr>
                           </thead>
-                          <tbody className="divide-y divide-slate-800/60">
+                          <tbody className="divide-y divide-line">
                             {sandboxResult.rows.map((r, i) => (
-                              <tr key={i} className="hover:bg-slate-900/50">
+                              <tr key={i} className="hover:bg-hover">
                                 {sandboxResult.columns.map((c) => (
-                                  <td key={c} className="px-3 py-1.5 font-mono text-slate-300 whitespace-nowrap">
+                                  <td key={c} className="px-3 py-1 font-mono text-2xs text-ink border-r border-line whitespace-nowrap">
                                     {String(r[c] ?? '')}
                                   </td>
                                 ))}
