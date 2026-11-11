@@ -1,0 +1,3302 @@
+{
+  "pipeline_id": "pipe_ef41fc0313",
+  "title": "Marketing Attribution, Funnel Conversion & Channel ROI",
+  "user_query": "Analyse top performing marketing channels by regions (plot on map)",
+  "created_at": "2026-11-11T19:44:16.568584+00:00",
+  "last_replayed_at": null,
+  "connector_id": "default_sqlite_commerce",
+  "connector_name": "InsightForge SaaS & Commerce (SQLite)",
+  "dialect": "sqlite",
+  "schema_fingerprint": "sha256:c70ce3f139616544",
+  "model_used": "qwen3:4b",
+  "steps": [
+    {
+      "step_id": "step_1_kpi_pipeline_val",
+      "step_number": 1,
+      "title": "Attributed Marketing Pipeline",
+      "kind": "sql_extraction",
+      "sql_query": "SELECT campaign_month, ROUND(SUM(pipeline_value_usd), 2) AS pipeline_value_usd FROM marketing_campaigns GROUP BY campaign_month ORDER BY campaign_month",
+      "executed_sql": "SELECT campaign_month, ROUND(SUM(pipeline_value_usd), 2) AS pipeline_value_usd FROM marketing_campaigns GROUP BY campaign_month ORDER BY campaign_month LIMIT 2000",
+      "depends_on": [],
+      "operation": "SQLITE SELECT + Z-Score & Moving Average Enrichment",
+      "row_count": 22,
+      "columns": [
+        "campaign_month",
+        "pipeline_value_usd"
+      ],
+      "output_hash": "sha256:1010420310303859",
+      "execution_ms": 8.54,
+      "anomalies_detected": [
+        {
+          "row_index": 0,
+          "dimension_label": "2025-01",
+          "metric_name": "pipeline_value_usd",
+          "value": 975583.98,
+          "z_score": -1.84,
+          "direction": "drop"
+        }
+      ],
+      "summary_stats": {
+        "metric": "pipeline_value_usd",
+        "count": 22,
+        "sum": 26858359.1,
+        "mean": 1220834.5,
+        "median": 1254012.71,
+        "min": 975583.98,
+        "max": 1449935.45,
+        "std": 133226.57,
+        "period_delta_pct": 42.35,
+        "anomaly_count": 1
+      }
+    },
+    {
+      "step_id": "step_2_kpi_ad_spend",
+      "step_number": 2,
+      "title": "Total Campaign Spend",
+      "kind": "sql_extraction",
+      "sql_query": "SELECT campaign_month, ROUND(SUM(spend_usd), 2) AS spend_usd FROM marketing_campaigns GROUP BY campaign_month ORDER BY campaign_month",
+      "executed_sql": "SELECT campaign_month, ROUND(SUM(spend_usd), 2) AS spend_usd FROM marketing_campaigns GROUP BY campaign_month ORDER BY campaign_month LIMIT 2000",
+      "depends_on": [],
+      "operation": "SQLITE SELECT + Z-Score & Moving Average Enrichment",
+      "row_count": 22,
+      "columns": [
+        "campaign_month",
+        "spend_usd"
+      ],
+      "output_hash": "sha256:9eef3006aef568a8",
+      "execution_ms": 5.58,
+      "anomalies_detected": [],
+      "summary_stats": {
+        "metric": "spend_usd",
+        "count": 22,
+        "sum": 6607633.18,
+        "mean": 300346.96,
+        "median": 303543.34,
+        "min": 245728.43,
+        "max": 353492.1,
+        "std": 32549.85,
+        "period_delta_pct": 39.09,
+        "anomaly_count": 0
+      }
+    },
+    {
+      "step_id": "step_3_kpi_total_leads",
+      "step_number": 3,
+      "title": "Qualified Leads Generated",
+      "kind": "sql_extraction",
+      "sql_query": "SELECT campaign_month, SUM(leads_generated) AS leads_generated FROM marketing_campaigns GROUP BY campaign_month ORDER BY campaign_month",
+      "executed_sql": "SELECT campaign_month, SUM(leads_generated) AS leads_generated FROM marketing_campaigns GROUP BY campaign_month ORDER BY campaign_month LIMIT 2000",
+      "depends_on": [],
+      "operation": "SQLITE SELECT + Z-Score & Moving Average Enrichment",
+      "row_count": 22,
+      "columns": [
+        "campaign_month",
+        "leads_generated"
+      ],
+      "output_hash": "sha256:9122e8da74321e2c",
+      "execution_ms": 4.68,
+      "anomalies_detected": [
+        {
+          "row_index": 21,
+          "dimension_label": "2026-10",
+          "metric_name": "leads_generated",
+          "value": 40238.0,
+          "z_score": 1.88,
+          "direction": "spike"
+        }
+      ],
+      "summary_stats": {
+        "metric": "leads_generated",
+        "count": 22,
+        "sum": 686212.0,
+        "mean": 31191.45,
+        "median": 31288.0,
+        "min": 23360.0,
+        "max": 40238.0,
+        "std": 4812.23,
+        "period_delta_pct": 72.25,
+        "anomaly_count": 1
+      }
+    },
+    {
+      "step_id": "step_4_kpi_conversions",
+      "step_number": 4,
+      "title": "Closed-Won Conversions",
+      "kind": "sql_extraction",
+      "sql_query": "SELECT campaign_month, SUM(conversions) AS conversions FROM marketing_campaigns GROUP BY campaign_month ORDER BY campaign_month",
+      "executed_sql": "SELECT campaign_month, SUM(conversions) AS conversions FROM marketing_campaigns GROUP BY campaign_month ORDER BY campaign_month LIMIT 2000",
+      "depends_on": [],
+      "operation": "SQLITE SELECT + Z-Score & Moving Average Enrichment",
+      "row_count": 22,
+      "columns": [
+        "campaign_month",
+        "conversions"
+      ],
+      "output_hash": "sha256:46b224104bffec8c",
+      "execution_ms": 5.45,
+      "anomalies_detected": [
+        {
+          "row_index": 21,
+          "dimension_label": "2026-10",
+          "metric_name": "conversions",
+          "value": 10610.0,
+          "z_score": 2.48,
+          "direction": "spike"
+        }
+      ],
+      "summary_stats": {
+        "metric": "conversions",
+        "count": 22,
+        "sum": 158378.0,
+        "mean": 7199.0,
+        "median": 7236.0,
+        "min": 5472.0,
+        "max": 10610.0,
+        "std": 1373.36,
+        "period_delta_pct": 93.9,
+        "anomaly_count": 1
+      }
+    },
+    {
+      "step_id": "step_5_chart_roi_trend",
+      "step_number": 5,
+      "title": "Monthly Pipeline Generated vs Marketing Spend",
+      "kind": "sql_extraction",
+      "sql_query": "SELECT campaign_month, ROUND(SUM(pipeline_value_usd), 2) AS pipeline_value_usd, ROUND(SUM(spend_usd), 2) AS spend_usd FROM marketing_campaigns GROUP BY campaign_month ORDER BY campaign_month",
+      "executed_sql": "SELECT campaign_month, ROUND(SUM(pipeline_value_usd), 2) AS pipeline_value_usd, ROUND(SUM(spend_usd), 2) AS spend_usd FROM marketing_campaigns GROUP BY campaign_month ORDER BY campaign_month LIMIT 2000",
+      "depends_on": [],
+      "operation": "SQLITE SELECT + Z-Score & Moving Average Enrichment",
+      "row_count": 22,
+      "columns": [
+        "campaign_month",
+        "pipeline_value_usd",
+        "spend_usd"
+      ],
+      "output_hash": "sha256:7ae37b2aef7b6459",
+      "execution_ms": 6.65,
+      "anomalies_detected": [
+        {
+          "row_index": 0,
+          "dimension_label": "2025-01",
+          "metric_name": "pipeline_value_usd",
+          "value": 975583.98,
+          "z_score": -1.84,
+          "direction": "drop"
+        }
+      ],
+      "summary_stats": {
+        "metric": "pipeline_value_usd",
+        "count": 22,
+        "sum": 26858359.1,
+        "mean": 1220834.5,
+        "median": 1254012.71,
+        "min": 975583.98,
+        "max": 1449935.45,
+        "std": 133226.57,
+        "period_delta_pct": 42.35,
+        "anomaly_count": 1
+      }
+    },
+    {
+      "step_id": "step_6_chart_channel_funnel",
+      "step_number": 6,
+      "title": "Pipeline Value by Acquisition Channel",
+      "kind": "sql_extraction",
+      "sql_query": "SELECT channel, ROUND(SUM(pipeline_value_usd), 2) AS pipeline_value_usd FROM marketing_campaigns GROUP BY channel ORDER BY pipeline_value_usd DESC",
+      "executed_sql": "SELECT channel, ROUND(SUM(pipeline_value_usd), 2) AS pipeline_value_usd FROM marketing_campaigns GROUP BY channel ORDER BY pipeline_value_usd DESC LIMIT 2000",
+      "depends_on": [],
+      "operation": "SQLITE SELECT + Z-Score & Moving Average Enrichment",
+      "row_count": 6,
+      "columns": [
+        "channel",
+        "pipeline_value_usd"
+      ],
+      "output_hash": "sha256:1a82840b60b9b218",
+      "execution_ms": 4.86,
+      "anomalies_detected": [],
+      "summary_stats": {
+        "metric": "pipeline_value_usd",
+        "count": 6,
+        "sum": 26858359.1,
+        "mean": 4476393.18,
+        "median": 4542368.11,
+        "min": 2649537.52,
+        "max": 6627047.16,
+        "std": 1286130.65,
+        "period_delta_pct": -60.02,
+        "anomaly_count": 0
+      }
+    },
+    {
+      "step_id": "step_7_chart_channel_efficiency",
+      "step_number": 7,
+      "title": "Channel Spend vs Pipeline Value & Conversions",
+      "kind": "sql_extraction",
+      "sql_query": "SELECT channel, ROUND(SUM(spend_usd), 2) AS total_spend_usd, ROUND(SUM(pipeline_value_usd), 2) AS pipeline_value_usd FROM marketing_campaigns GROUP BY channel ORDER BY pipeline_value_usd DESC",
+      "executed_sql": "SELECT channel, ROUND(SUM(spend_usd), 2) AS total_spend_usd, ROUND(SUM(pipeline_value_usd), 2) AS pipeline_value_usd FROM marketing_campaigns GROUP BY channel ORDER BY pipeline_value_usd DESC LIMIT 2000",
+      "depends_on": [],
+      "operation": "SQLITE SELECT + Z-Score & Moving Average Enrichment",
+      "row_count": 6,
+      "columns": [
+        "channel",
+        "total_spend_usd",
+        "pipeline_value_usd"
+      ],
+      "output_hash": "sha256:688e5cb431f52964",
+      "execution_ms": 6.06,
+      "anomalies_detected": [],
+      "summary_stats": {
+        "metric": "pipeline_value_usd",
+        "count": 6,
+        "sum": 26858359.1,
+        "mean": 4476393.18,
+        "median": 4542368.11,
+        "min": 2649537.52,
+        "max": 6627047.16,
+        "std": 1286130.65,
+        "period_delta_pct": -60.02,
+        "anomaly_count": 0
+      }
+    },
+    {
+      "step_id": "step_8_chart_heatmap_region_channel",
+      "step_number": 8,
+      "title": "Regional Channel Conversion Matrix",
+      "kind": "sql_extraction",
+      "sql_query": "SELECT channel, region, SUM(conversions) AS conversions FROM marketing_campaigns GROUP BY channel, region",
+      "executed_sql": "SELECT channel, region, SUM(conversions) AS conversions FROM marketing_campaigns GROUP BY channel, region LIMIT 2000",
+      "depends_on": [],
+      "operation": "SQLITE SELECT + Z-Score & Moving Average Enrichment",
+      "row_count": 24,
+      "columns": [
+        "channel",
+        "region",
+        "conversions"
+      ],
+      "output_hash": "sha256:6205f0b0cacc42b4",
+      "execution_ms": 4.9,
+      "anomalies_detected": [
+        {
+          "row_index": 3,
+          "dimension_label": "LinkedIn Ads",
+          "metric_name": "conversions",
+          "value": 15142.0,
+          "z_score": 2.29,
+          "direction": "spike"
+        }
+      ],
+      "summary_stats": {
+        "metric": "conversions",
+        "count": 24,
+        "sum": 158378.0,
+        "mean": 6599.08,
+        "median": 5664.0,
+        "min": 1339.0,
+        "max": 15142.0,
+        "std": 3730.58,
+        "period_delta_pct": -54.18,
+        "anomaly_count": 1
+      }
+    },
+    {
+      "step_id": "step_9_table_campaigns_top",
+      "step_number": 9,
+      "title": "Top Performing Campaign Cohorts",
+      "kind": "sql_extraction",
+      "sql_query": "SELECT campaign_name, channel, region, campaign_month, spend_usd, clicks, leads_generated, conversions, pipeline_value_usd, ROUND(pipeline_value_usd / NULLIF(spend_usd, 0), 2) AS roas_multiplier FROM marketing_campaigns ORDER BY pipeline_value_usd DESC LIMIT 50",
+      "executed_sql": "SELECT campaign_name, channel, region, campaign_month, spend_usd, clicks, leads_generated, conversions, pipeline_value_usd, ROUND(pipeline_value_usd / NULLIF(spend_usd, 0), 2) AS roas_multiplier FROM marketing_campaigns ORDER BY pipeline_value_usd DESC LIMIT 50",
+      "depends_on": [],
+      "operation": "SQLITE SELECT + Z-Score & Moving Average Enrichment",
+      "row_count": 50,
+      "columns": [
+        "campaign_name",
+        "channel",
+        "region",
+        "campaign_month",
+        "spend_usd",
+        "clicks",
+        "leads_generated",
+        "conversions",
+        "pipeline_value_usd",
+        "roas_multiplier"
+      ],
+      "output_hash": "sha256:adb06e00b538cff3",
+      "execution_ms": 5.59,
+      "anomalies_detected": [
+        {
+          "row_index": 0,
+          "dimension_label": "LinkedIn Ads - North America (2026-09)",
+          "metric_name": "pipeline_value_usd",
+          "value": 145494.15,
+          "z_score": 2.89,
+          "direction": "spike"
+        },
+        {
+          "row_index": 1,
+          "dimension_label": "LinkedIn Ads - North America (2026-03)",
+          "metric_name": "pipeline_value_usd",
+          "value": 137532.77,
+          "z_score": 2.38,
+          "direction": "spike"
+        },
+        {
+          "row_index": 2,
+          "dimension_label": "LinkedIn Ads - North America (2025-09)",
+          "metric_name": "pipeline_value_usd",
+          "value": 132813.98,
+          "z_score": 2.07,
+          "direction": "spike"
+        },
+        {
+          "row_index": 3,
+          "dimension_label": "LinkedIn Ads - North America (2025-10)",
+          "metric_name": "pipeline_value_usd",
+          "value": 128467.47,
+          "z_score": 1.79,
+          "direction": "spike"
+        }
+      ],
+      "summary_stats": {
+        "metric": "pipeline_value_usd",
+        "count": 50,
+        "sum": 5040330.38,
+        "mean": 100806.61,
+        "median": 95537.36,
+        "min": 82487.57,
+        "max": 145494.15,
+        "std": 15436.78,
+        "period_delta_pct": -43.31,
+        "anomaly_count": 4
+      }
+    }
+  ],
+  "widgets": [
+    {
+      "id": "widget_kpi_pipeline_val",
+      "title": "Attributed Marketing Pipeline",
+      "subtitle": "Total Generated Pipeline Value",
+      "widget_type": "kpi",
+      "chart_type": "kpi",
+      "step_id": "step_1_kpi_pipeline_val",
+      "sql_query": "SELECT campaign_month, ROUND(SUM(pipeline_value_usd), 2) AS pipeline_value_usd FROM marketing_campaigns GROUP BY campaign_month ORDER BY campaign_month LIMIT 2000",
+      "data_hash": "sha256:1010420310303859",
+      "columns": [
+        "campaign_month",
+        "pipeline_value_usd"
+      ],
+      "rows": [
+        {
+          "campaign_month": "2025-01",
+          "pipeline_value_usd": 975583.98,
+          "pipeline_value_usd_ma3": 975583.98,
+          "pipeline_value_usd_zscore": -1.84
+        },
+        {
+          "campaign_month": "2025-02",
+          "pipeline_value_usd": 1041224.92,
+          "pipeline_value_usd_ma3": 1008404.45,
+          "pipeline_value_usd_zscore": -1.35
+        },
+        {
+          "campaign_month": "2025-03",
+          "pipeline_value_usd": 1059820.87,
+          "pipeline_value_usd_ma3": 1025543.26,
+          "pipeline_value_usd_zscore": -1.21
+        },
+        {
+          "campaign_month": "2025-04",
+          "pipeline_value_usd": 1046128.08,
+          "pipeline_value_usd_ma3": 1049057.96,
+          "pipeline_value_usd_zscore": -1.31
+        },
+        {
+          "campaign_month": "2025-05",
+          "pipeline_value_usd": 1098098.46,
+          "pipeline_value_usd_ma3": 1068015.8,
+          "pipeline_value_usd_zscore": -0.92
+        },
+        {
+          "campaign_month": "2025-06",
+          "pipeline_value_usd": 1112786.74,
+          "pipeline_value_usd_ma3": 1085671.09,
+          "pipeline_value_usd_zscore": -0.81
+        },
+        {
+          "campaign_month": "2025-07",
+          "pipeline_value_usd": 1065669.36,
+          "pipeline_value_usd_ma3": 1092184.85,
+          "pipeline_value_usd_zscore": -1.16
+        },
+        {
+          "campaign_month": "2025-08",
+          "pipeline_value_usd": 1165634.56,
+          "pipeline_value_usd_ma3": 1114696.89,
+          "pipeline_value_usd_zscore": -0.41
+        },
+        {
+          "campaign_month": "2025-09",
+          "pipeline_value_usd": 1254012.71,
+          "pipeline_value_usd_ma3": 1161772.21,
+          "pipeline_value_usd_zscore": 0.25
+        },
+        {
+          "campaign_month": "2025-10",
+          "pipeline_value_usd": 1264575.53,
+          "pipeline_value_usd_ma3": 1228074.27,
+          "pipeline_value_usd_zscore": 0.33
+        },
+        {
+          "campaign_month": "2025-11",
+          "pipeline_value_usd": 1173673.0,
+          "pipeline_value_usd_ma3": 1230753.75,
+          "pipeline_value_usd_zscore": -0.35
+        },
+        {
+          "campaign_month": "2025-12",
+          "pipeline_value_usd": 1244085.61,
+          "pipeline_value_usd_ma3": 1227444.71,
+          "pipeline_value_usd_zscore": 0.17
+        },
+        {
+          "campaign_month": "2026-01",
+          "pipeline_value_usd": 1247557.34,
+          "pipeline_value_usd_ma3": 1221771.98,
+          "pipeline_value_usd_zscore": 0.2
+        },
+        {
+          "campaign_month": "2026-02",
+          "pipeline_value_usd": 1325157.76,
+          "pipeline_value_usd_ma3": 1272266.9,
+          "pipeline_value_usd_zscore": 0.78
+        },
+        {
+          "campaign_month": "2026-03",
+          "pipeline_value_usd": 1263536.97,
+          "pipeline_value_usd_ma3": 1278750.69,
+          "pipeline_value_usd_zscore": 0.32
+        },
+        {
+          "campaign_month": "2026-04",
+          "pipeline_value_usd": 1308812.59,
+          "pipeline_value_usd_ma3": 1299169.11,
+          "pipeline_value_usd_zscore": 0.66
+        },
+        {
+          "campaign_month": "2026-05",
+          "pipeline_value_usd": 1313738.67,
+          "pipeline_value_usd_ma3": 1295362.74,
+          "pipeline_value_usd_zscore": 0.7
+        },
+        {
+          "campaign_month": "2026-06",
+          "pipeline_value_usd": 1335254.45,
+          "pipeline_value_usd_ma3": 1319268.57,
+          "pipeline_value_usd_zscore": 0.86
+        },
+        {
+          "campaign_month": "2026-07",
+          "pipeline_value_usd": 1343099.36,
+          "pipeline_value_usd_ma3": 1330697.49,
+          "pipeline_value_usd_zscore": 0.92
+        },
+        {
+          "campaign_month": "2026-08",
+          "pipeline_value_usd": 1381235.81,
+          "pipeline_value_usd_ma3": 1353196.54,
+          "pipeline_value_usd_zscore": 1.2
+        },
+        {
+          "campaign_month": "2026-09",
+          "pipeline_value_usd": 1449935.45,
+          "pipeline_value_usd_ma3": 1391423.54,
+          "pipeline_value_usd_zscore": 1.72
+        },
+        {
+          "campaign_month": "2026-10",
+          "pipeline_value_usd": 1388736.88,
+          "pipeline_value_usd_ma3": 1406636.05,
+          "pipeline_value_usd_zscore": 1.26
+        }
+      ],
+      "x_field": "campaign_month",
+      "y_fields": [
+        "pipeline_value_usd"
+      ],
+      "series_field": null,
+      "kpi_payload": {
+        "formatted_value": "$26.86M",
+        "raw_value": 26858359.1,
+        "metric_label": "Pipeline Value Usd",
+        "delta_pct": 42.35,
+        "delta_direction": "up",
+        "sparkline": [
+          975583.98,
+          1041224.92,
+          1059820.87,
+          1046128.08,
+          1098098.46,
+          1112786.74,
+          1065669.36,
+          1165634.56,
+          1254012.71,
+          1264575.53,
+          1173673.0,
+          1244085.61,
+          1247557.34,
+          1325157.76,
+          1263536.97,
+          1308812.59,
+          1313738.67,
+          1335254.45,
+          1343099.36,
+          1381235.81,
+          1449935.45,
+          1388736.88
+        ],
+        "subtext": "Across 22 periods"
+      },
+      "echarts_option": null,
+      "insight_summary": "Pipeline Value Usd ranges from $975.6K to $1.45M (+42.35% trajectory). Outlier drop at 2025-01 (Z=-1.84).",
+      "anomalies": [
+        {
+          "row_index": 0,
+          "dimension_label": "2025-01",
+          "metric_name": "pipeline_value_usd",
+          "value": 975583.98,
+          "z_score": -1.84,
+          "direction": "drop"
+        }
+      ]
+    },
+    {
+      "id": "widget_kpi_ad_spend",
+      "title": "Total Campaign Spend",
+      "subtitle": "Cumulative Acquisition Investment",
+      "widget_type": "kpi",
+      "chart_type": "kpi",
+      "step_id": "step_2_kpi_ad_spend",
+      "sql_query": "SELECT campaign_month, ROUND(SUM(spend_usd), 2) AS spend_usd FROM marketing_campaigns GROUP BY campaign_month ORDER BY campaign_month LIMIT 2000",
+      "data_hash": "sha256:9eef3006aef568a8",
+      "columns": [
+        "campaign_month",
+        "spend_usd"
+      ],
+      "rows": [
+        {
+          "campaign_month": "2025-01",
+          "spend_usd": 246531.94,
+          "spend_usd_ma3": 246531.94,
+          "spend_usd_zscore": -1.65
+        },
+        {
+          "campaign_month": "2025-02",
+          "spend_usd": 265360.25,
+          "spend_usd_ma3": 255946.1,
+          "spend_usd_zscore": -1.07
+        },
+        {
+          "campaign_month": "2025-03",
+          "spend_usd": 245728.43,
+          "spend_usd_ma3": 252540.21,
+          "spend_usd_zscore": -1.68
+        },
+        {
+          "campaign_month": "2025-04",
+          "spend_usd": 260504.03,
+          "spend_usd_ma3": 257197.57,
+          "spend_usd_zscore": -1.22
+        },
+        {
+          "campaign_month": "2025-05",
+          "spend_usd": 268630.93,
+          "spend_usd_ma3": 258287.8,
+          "spend_usd_zscore": -0.97
+        },
+        {
+          "campaign_month": "2025-06",
+          "spend_usd": 269517.36,
+          "spend_usd_ma3": 266217.44,
+          "spend_usd_zscore": -0.95
+        },
+        {
+          "campaign_month": "2025-07",
+          "spend_usd": 270967.31,
+          "spend_usd_ma3": 269705.2,
+          "spend_usd_zscore": -0.9
+        },
+        {
+          "campaign_month": "2025-08",
+          "spend_usd": 283946.01,
+          "spend_usd_ma3": 274810.23,
+          "spend_usd_zscore": -0.5
+        },
+        {
+          "campaign_month": "2025-09",
+          "spend_usd": 303543.34,
+          "spend_usd_ma3": 286152.22,
+          "spend_usd_zscore": 0.1
+        },
+        {
+          "campaign_month": "2025-10",
+          "spend_usd": 302822.06,
+          "spend_usd_ma3": 296770.47,
+          "spend_usd_zscore": 0.08
+        },
+        {
+          "campaign_month": "2025-11",
+          "spend_usd": 298055.7,
+          "spend_usd_ma3": 301473.7,
+          "spend_usd_zscore": -0.07
+        },
+        {
+          "campaign_month": "2025-12",
+          "spend_usd": 306110.05,
+          "spend_usd_ma3": 302329.27,
+          "spend_usd_zscore": 0.18
+        },
+        {
+          "campaign_month": "2026-01",
+          "spend_usd": 298539.36,
+          "spend_usd_ma3": 300901.7,
+          "spend_usd_zscore": -0.06
+        },
+        {
+          "campaign_month": "2026-02",
+          "spend_usd": 319771.05,
+          "spend_usd_ma3": 308140.15,
+          "spend_usd_zscore": 0.6
+        },
+        {
+          "campaign_month": "2026-03",
+          "spend_usd": 317949.07,
+          "spend_usd_ma3": 312086.49,
+          "spend_usd_zscore": 0.54
+        },
+        {
+          "campaign_month": "2026-04",
+          "spend_usd": 323479.42,
+          "spend_usd_ma3": 320399.85,
+          "spend_usd_zscore": 0.71
+        },
+        {
+          "campaign_month": "2026-05",
+          "spend_usd": 327731.23,
+          "spend_usd_ma3": 323053.24,
+          "spend_usd_zscore": 0.84
+        },
+        {
+          "campaign_month": "2026-06",
+          "spend_usd": 320969.46,
+          "spend_usd_ma3": 324060.04,
+          "spend_usd_zscore": 0.63
+        },
+        {
+          "campaign_month": "2026-07",
+          "spend_usd": 331938.14,
+          "spend_usd_ma3": 326879.61,
+          "spend_usd_zscore": 0.97
+        },
+        {
+          "campaign_month": "2026-08",
+          "spend_usd": 349149.48,
+          "spend_usd_ma3": 334019.03,
+          "spend_usd_zscore": 1.5
+        },
+        {
+          "campaign_month": "2026-09",
+          "spend_usd": 353492.1,
+          "spend_usd_ma3": 344859.91,
+          "spend_usd_zscore": 1.63
+        },
+        {
+          "campaign_month": "2026-10",
+          "spend_usd": 342896.46,
+          "spend_usd_ma3": 348512.68,
+          "spend_usd_zscore": 1.31
+        }
+      ],
+      "x_field": "campaign_month",
+      "y_fields": [
+        "spend_usd"
+      ],
+      "series_field": null,
+      "kpi_payload": {
+        "formatted_value": "$6.61M",
+        "raw_value": 6607633.18,
+        "metric_label": "Spend Usd",
+        "delta_pct": 39.09,
+        "delta_direction": "up",
+        "sparkline": [
+          246531.94,
+          265360.25,
+          245728.43,
+          260504.03,
+          268630.93,
+          269517.36,
+          270967.31,
+          283946.01,
+          303543.34,
+          302822.06,
+          298055.7,
+          306110.05,
+          298539.36,
+          319771.05,
+          317949.07,
+          323479.42,
+          327731.23,
+          320969.46,
+          331938.14,
+          349149.48,
+          353492.1,
+          342896.46
+        ],
+        "subtext": "Across 22 periods"
+      },
+      "echarts_option": null,
+      "insight_summary": "Spend Usd ranges from $245.7K to $353.5K (+39.09% trajectory).",
+      "anomalies": []
+    },
+    {
+      "id": "widget_kpi_total_leads",
+      "title": "Qualified Leads Generated",
+      "subtitle": "Across All Regions & Channels",
+      "widget_type": "kpi",
+      "chart_type": "kpi",
+      "step_id": "step_3_kpi_total_leads",
+      "sql_query": "SELECT campaign_month, SUM(leads_generated) AS leads_generated FROM marketing_campaigns GROUP BY campaign_month ORDER BY campaign_month LIMIT 2000",
+      "data_hash": "sha256:9122e8da74321e2c",
+      "columns": [
+        "campaign_month",
+        "leads_generated"
+      ],
+      "rows": [
+        {
+          "campaign_month": "2025-01",
+          "leads_generated": 23360,
+          "leads_generated_ma3": 23360.0,
+          "leads_generated_zscore": -1.63
+        },
+        {
+          "campaign_month": "2025-02",
+          "leads_generated": 27560,
+          "leads_generated_ma3": 25460.0,
+          "leads_generated_zscore": -0.75
+        },
+        {
+          "campaign_month": "2025-03",
+          "leads_generated": 27806,
+          "leads_generated_ma3": 26242.0,
+          "leads_generated_zscore": -0.7
+        },
+        {
+          "campaign_month": "2025-04",
+          "leads_generated": 24719,
+          "leads_generated_ma3": 26695.0,
+          "leads_generated_zscore": -1.35
+        },
+        {
+          "campaign_month": "2025-05",
+          "leads_generated": 24806,
+          "leads_generated_ma3": 25777.0,
+          "leads_generated_zscore": -1.33
+        },
+        {
+          "campaign_month": "2025-06",
+          "leads_generated": 26748,
+          "leads_generated_ma3": 25424.33,
+          "leads_generated_zscore": -0.92
+        },
+        {
+          "campaign_month": "2025-07",
+          "leads_generated": 26453,
+          "leads_generated_ma3": 26002.33,
+          "leads_generated_zscore": -0.98
+        },
+        {
+          "campaign_month": "2025-08",
+          "leads_generated": 31288,
+          "leads_generated_ma3": 28163.0,
+          "leads_generated_zscore": 0.02
+        },
+        {
+          "campaign_month": "2025-09",
+          "leads_generated": 30499,
+          "leads_generated_ma3": 29413.33,
+          "leads_generated_zscore": -0.14
+        },
+        {
+          "campaign_month": "2025-10",
+          "leads_generated": 28833,
+          "leads_generated_ma3": 30206.67,
+          "leads_generated_zscore": -0.49
+        },
+        {
+          "campaign_month": "2025-11",
+          "leads_generated": 32430,
+          "leads_generated_ma3": 30587.33,
+          "leads_generated_zscore": 0.26
+        },
+        {
+          "campaign_month": "2025-12",
+          "leads_generated": 30101,
+          "leads_generated_ma3": 30454.67,
+          "leads_generated_zscore": -0.23
+        },
+        {
+          "campaign_month": "2026-01",
+          "leads_generated": 32055,
+          "leads_generated_ma3": 31528.67,
+          "leads_generated_zscore": 0.18
+        },
+        {
+          "campaign_month": "2026-02",
+          "leads_generated": 32153,
+          "leads_generated_ma3": 31436.33,
+          "leads_generated_zscore": 0.2
+        },
+        {
+          "campaign_month": "2026-03",
+          "leads_generated": 32376,
+          "leads_generated_ma3": 32194.67,
+          "leads_generated_zscore": 0.25
+        },
+        {
+          "campaign_month": "2026-04",
+          "leads_generated": 37568,
+          "leads_generated_ma3": 34032.33,
+          "leads_generated_zscore": 1.33
+        },
+        {
+          "campaign_month": "2026-05",
+          "leads_generated": 30894,
+          "leads_generated_ma3": 33612.67,
+          "leads_generated_zscore": -0.06
+        },
+        {
+          "campaign_month": "2026-06",
+          "leads_generated": 32311,
+          "leads_generated_ma3": 33591.0,
+          "leads_generated_zscore": 0.23
+        },
+        {
+          "campaign_month": "2026-07",
+          "leads_generated": 38576,
+          "leads_generated_ma3": 33927.0,
+          "leads_generated_zscore": 1.53
+        },
+        {
+          "campaign_month": "2026-08",
+          "leads_generated": 37833,
+          "leads_generated_ma3": 36240.0,
+          "leads_generated_zscore": 1.38
+        },
+        {
+          "campaign_month": "2026-09",
+          "leads_generated": 37605,
+          "leads_generated_ma3": 38004.67,
+          "leads_generated_zscore": 1.33
+        },
+        {
+          "campaign_month": "2026-10",
+          "leads_generated": 40238,
+          "leads_generated_ma3": 38558.67,
+          "leads_generated_zscore": 1.88
+        }
+      ],
+      "x_field": "campaign_month",
+      "y_fields": [
+        "leads_generated"
+      ],
+      "series_field": null,
+      "kpi_payload": {
+        "formatted_value": "31.2K%",
+        "raw_value": 31191.45,
+        "metric_label": "Leads Generated",
+        "delta_pct": 72.25,
+        "delta_direction": "up",
+        "sparkline": [
+          23360.0,
+          27560.0,
+          27806.0,
+          24719.0,
+          24806.0,
+          26748.0,
+          26453.0,
+          31288.0,
+          30499.0,
+          28833.0,
+          32430.0,
+          30101.0,
+          32055.0,
+          32153.0,
+          32376.0,
+          37568.0,
+          30894.0,
+          32311.0,
+          38576.0,
+          37833.0,
+          37605.0,
+          40238.0
+        ],
+        "subtext": "Across 22 periods"
+      },
+      "echarts_option": null,
+      "insight_summary": "Leads Generated ranges from 23.4K% to 40.2K% (+72.25% trajectory). Outlier spike at 2026-10 (Z=1.88).",
+      "anomalies": [
+        {
+          "row_index": 21,
+          "dimension_label": "2026-10",
+          "metric_name": "leads_generated",
+          "value": 40238.0,
+          "z_score": 1.88,
+          "direction": "spike"
+        }
+      ]
+    },
+    {
+      "id": "widget_kpi_conversions",
+      "title": "Closed-Won Conversions",
+      "subtitle": "Marketing Attributed Deals",
+      "widget_type": "kpi",
+      "chart_type": "kpi",
+      "step_id": "step_4_kpi_conversions",
+      "sql_query": "SELECT campaign_month, SUM(conversions) AS conversions FROM marketing_campaigns GROUP BY campaign_month ORDER BY campaign_month LIMIT 2000",
+      "data_hash": "sha256:46b224104bffec8c",
+      "columns": [
+        "campaign_month",
+        "conversions"
+      ],
+      "rows": [
+        {
+          "campaign_month": "2025-01",
+          "conversions": 5472,
+          "conversions_ma3": 5472.0,
+          "conversions_zscore": -1.26
+        },
+        {
+          "campaign_month": "2025-02",
+          "conversions": 6328,
+          "conversions_ma3": 5900.0,
+          "conversions_zscore": -0.63
+        },
+        {
+          "campaign_month": "2025-03",
+          "conversions": 6511,
+          "conversions_ma3": 6103.67,
+          "conversions_zscore": -0.5
+        },
+        {
+          "campaign_month": "2025-04",
+          "conversions": 5618,
+          "conversions_ma3": 6152.33,
+          "conversions_zscore": -1.15
+        },
+        {
+          "campaign_month": "2025-05",
+          "conversions": 5911,
+          "conversions_ma3": 6013.33,
+          "conversions_zscore": -0.94
+        },
+        {
+          "campaign_month": "2025-06",
+          "conversions": 5775,
+          "conversions_ma3": 5768.0,
+          "conversions_zscore": -1.04
+        },
+        {
+          "campaign_month": "2025-07",
+          "conversions": 6016,
+          "conversions_ma3": 5900.67,
+          "conversions_zscore": -0.86
+        },
+        {
+          "campaign_month": "2025-08",
+          "conversions": 7582,
+          "conversions_ma3": 6457.67,
+          "conversions_zscore": 0.28
+        },
+        {
+          "campaign_month": "2025-09",
+          "conversions": 6584,
+          "conversions_ma3": 6727.33,
+          "conversions_zscore": -0.45
+        },
+        {
+          "campaign_month": "2025-10",
+          "conversions": 5830,
+          "conversions_ma3": 6665.33,
+          "conversions_zscore": -1.0
+        },
+        {
+          "campaign_month": "2025-11",
+          "conversions": 7926,
+          "conversions_ma3": 6780.0,
+          "conversions_zscore": 0.53
+        },
+        {
+          "campaign_month": "2025-12",
+          "conversions": 5835,
+          "conversions_ma3": 6530.33,
+          "conversions_zscore": -0.99
+        },
+        {
+          "campaign_month": "2026-01",
+          "conversions": 7090,
+          "conversions_ma3": 6950.33,
+          "conversions_zscore": -0.08
+        },
+        {
+          "campaign_month": "2026-02",
+          "conversions": 7934,
+          "conversions_ma3": 6953.0,
+          "conversions_zscore": 0.54
+        },
+        {
+          "campaign_month": "2026-03",
+          "conversions": 7716,
+          "conversions_ma3": 7580.0,
+          "conversions_zscore": 0.38
+        },
+        {
+          "campaign_month": "2026-04",
+          "conversions": 8351,
+          "conversions_ma3": 8000.33,
+          "conversions_zscore": 0.84
+        },
+        {
+          "campaign_month": "2026-05",
+          "conversions": 7236,
+          "conversions_ma3": 7767.67,
+          "conversions_zscore": 0.03
+        },
+        {
+          "campaign_month": "2026-06",
+          "conversions": 7306,
+          "conversions_ma3": 7631.0,
+          "conversions_zscore": 0.08
+        },
+        {
+          "campaign_month": "2026-07",
+          "conversions": 9002,
+          "conversions_ma3": 7848.0,
+          "conversions_zscore": 1.31
+        },
+        {
+          "campaign_month": "2026-08",
+          "conversions": 9305,
+          "conversions_ma3": 8537.67,
+          "conversions_zscore": 1.53
+        },
+        {
+          "campaign_month": "2026-09",
+          "conversions": 8440,
+          "conversions_ma3": 8915.67,
+          "conversions_zscore": 0.9
+        },
+        {
+          "campaign_month": "2026-10",
+          "conversions": 10610,
+          "conversions_ma3": 9451.67,
+          "conversions_zscore": 2.48
+        }
+      ],
+      "x_field": "campaign_month",
+      "y_fields": [
+        "conversions"
+      ],
+      "series_field": null,
+      "kpi_payload": {
+        "formatted_value": "158.4K%",
+        "raw_value": 158378.0,
+        "metric_label": "Conversions",
+        "delta_pct": 93.9,
+        "delta_direction": "up",
+        "sparkline": [
+          5472.0,
+          6328.0,
+          6511.0,
+          5618.0,
+          5911.0,
+          5775.0,
+          6016.0,
+          7582.0,
+          6584.0,
+          5830.0,
+          7926.0,
+          5835.0,
+          7090.0,
+          7934.0,
+          7716.0,
+          8351.0,
+          7236.0,
+          7306.0,
+          9002.0,
+          9305.0,
+          8440.0,
+          10610.0
+        ],
+        "subtext": "Across 22 periods"
+      },
+      "echarts_option": null,
+      "insight_summary": "Conversions ranges from 5,472% to 10.6K% (+93.9% trajectory). Outlier spike at 2026-10 (Z=2.48).",
+      "anomalies": [
+        {
+          "row_index": 21,
+          "dimension_label": "2026-10",
+          "metric_name": "conversions",
+          "value": 10610.0,
+          "z_score": 2.48,
+          "direction": "spike"
+        }
+      ]
+    },
+    {
+      "id": "widget_chart_roi_trend",
+      "title": "Monthly Pipeline Generated vs Marketing Spend",
+      "subtitle": "Dual-Axis Investment Efficiency Trajectory",
+      "widget_type": "echarts",
+      "chart_type": "combo_dual_axis",
+      "step_id": "step_5_chart_roi_trend",
+      "sql_query": "SELECT campaign_month, ROUND(SUM(pipeline_value_usd), 2) AS pipeline_value_usd, ROUND(SUM(spend_usd), 2) AS spend_usd FROM marketing_campaigns GROUP BY campaign_month ORDER BY campaign_month LIMIT 2000",
+      "data_hash": "sha256:7ae37b2aef7b6459",
+      "columns": [
+        "campaign_month",
+        "pipeline_value_usd",
+        "spend_usd"
+      ],
+      "rows": [
+        {
+          "campaign_month": "2025-01",
+          "pipeline_value_usd": 975583.98,
+          "spend_usd": 246531.94,
+          "pipeline_value_usd_ma3": 975583.98,
+          "pipeline_value_usd_zscore": -1.84
+        },
+        {
+          "campaign_month": "2025-02",
+          "pipeline_value_usd": 1041224.92,
+          "spend_usd": 265360.25,
+          "pipeline_value_usd_ma3": 1008404.45,
+          "pipeline_value_usd_zscore": -1.35
+        },
+        {
+          "campaign_month": "2025-03",
+          "pipeline_value_usd": 1059820.87,
+          "spend_usd": 245728.43,
+          "pipeline_value_usd_ma3": 1025543.26,
+          "pipeline_value_usd_zscore": -1.21
+        },
+        {
+          "campaign_month": "2025-04",
+          "pipeline_value_usd": 1046128.08,
+          "spend_usd": 260504.03,
+          "pipeline_value_usd_ma3": 1049057.96,
+          "pipeline_value_usd_zscore": -1.31
+        },
+        {
+          "campaign_month": "2025-05",
+          "pipeline_value_usd": 1098098.46,
+          "spend_usd": 268630.93,
+          "pipeline_value_usd_ma3": 1068015.8,
+          "pipeline_value_usd_zscore": -0.92
+        },
+        {
+          "campaign_month": "2025-06",
+          "pipeline_value_usd": 1112786.74,
+          "spend_usd": 269517.36,
+          "pipeline_value_usd_ma3": 1085671.09,
+          "pipeline_value_usd_zscore": -0.81
+        },
+        {
+          "campaign_month": "2025-07",
+          "pipeline_value_usd": 1065669.36,
+          "spend_usd": 270967.31,
+          "pipeline_value_usd_ma3": 1092184.85,
+          "pipeline_value_usd_zscore": -1.16
+        },
+        {
+          "campaign_month": "2025-08",
+          "pipeline_value_usd": 1165634.56,
+          "spend_usd": 283946.01,
+          "pipeline_value_usd_ma3": 1114696.89,
+          "pipeline_value_usd_zscore": -0.41
+        },
+        {
+          "campaign_month": "2025-09",
+          "pipeline_value_usd": 1254012.71,
+          "spend_usd": 303543.34,
+          "pipeline_value_usd_ma3": 1161772.21,
+          "pipeline_value_usd_zscore": 0.25
+        },
+        {
+          "campaign_month": "2025-10",
+          "pipeline_value_usd": 1264575.53,
+          "spend_usd": 302822.06,
+          "pipeline_value_usd_ma3": 1228074.27,
+          "pipeline_value_usd_zscore": 0.33
+        },
+        {
+          "campaign_month": "2025-11",
+          "pipeline_value_usd": 1173673.0,
+          "spend_usd": 298055.7,
+          "pipeline_value_usd_ma3": 1230753.75,
+          "pipeline_value_usd_zscore": -0.35
+        },
+        {
+          "campaign_month": "2025-12",
+          "pipeline_value_usd": 1244085.61,
+          "spend_usd": 306110.05,
+          "pipeline_value_usd_ma3": 1227444.71,
+          "pipeline_value_usd_zscore": 0.17
+        },
+        {
+          "campaign_month": "2026-01",
+          "pipeline_value_usd": 1247557.34,
+          "spend_usd": 298539.36,
+          "pipeline_value_usd_ma3": 1221771.98,
+          "pipeline_value_usd_zscore": 0.2
+        },
+        {
+          "campaign_month": "2026-02",
+          "pipeline_value_usd": 1325157.76,
+          "spend_usd": 319771.05,
+          "pipeline_value_usd_ma3": 1272266.9,
+          "pipeline_value_usd_zscore": 0.78
+        },
+        {
+          "campaign_month": "2026-03",
+          "pipeline_value_usd": 1263536.97,
+          "spend_usd": 317949.07,
+          "pipeline_value_usd_ma3": 1278750.69,
+          "pipeline_value_usd_zscore": 0.32
+        },
+        {
+          "campaign_month": "2026-04",
+          "pipeline_value_usd": 1308812.59,
+          "spend_usd": 323479.42,
+          "pipeline_value_usd_ma3": 1299169.11,
+          "pipeline_value_usd_zscore": 0.66
+        },
+        {
+          "campaign_month": "2026-05",
+          "pipeline_value_usd": 1313738.67,
+          "spend_usd": 327731.23,
+          "pipeline_value_usd_ma3": 1295362.74,
+          "pipeline_value_usd_zscore": 0.7
+        },
+        {
+          "campaign_month": "2026-06",
+          "pipeline_value_usd": 1335254.45,
+          "spend_usd": 320969.46,
+          "pipeline_value_usd_ma3": 1319268.57,
+          "pipeline_value_usd_zscore": 0.86
+        },
+        {
+          "campaign_month": "2026-07",
+          "pipeline_value_usd": 1343099.36,
+          "spend_usd": 331938.14,
+          "pipeline_value_usd_ma3": 1330697.49,
+          "pipeline_value_usd_zscore": 0.92
+        },
+        {
+          "campaign_month": "2026-08",
+          "pipeline_value_usd": 1381235.81,
+          "spend_usd": 349149.48,
+          "pipeline_value_usd_ma3": 1353196.54,
+          "pipeline_value_usd_zscore": 1.2
+        },
+        {
+          "campaign_month": "2026-09",
+          "pipeline_value_usd": 1449935.45,
+          "spend_usd": 353492.1,
+          "pipeline_value_usd_ma3": 1391423.54,
+          "pipeline_value_usd_zscore": 1.72
+        },
+        {
+          "campaign_month": "2026-10",
+          "pipeline_value_usd": 1388736.88,
+          "spend_usd": 342896.46,
+          "pipeline_value_usd_ma3": 1406636.05,
+          "pipeline_value_usd_zscore": 1.26
+        }
+      ],
+      "x_field": "campaign_month",
+      "y_fields": [
+        "pipeline_value_usd",
+        "spend_usd"
+      ],
+      "series_field": null,
+      "kpi_payload": null,
+      "echarts_option": {
+        "color": [
+          "#6366f1",
+          "#06b6d4",
+          "#10b981",
+          "#f59e0b",
+          "#ec4899",
+          "#8b5cf6",
+          "#3b82f6",
+          "#14b8a6"
+        ],
+        "tooltip": {
+          "trigger": "axis",
+          "backgroundColor": "rgba(15, 23, 42, 0.94)",
+          "borderColor": "rgba(99, 102, 241, 0.35)",
+          "borderWidth": 1,
+          "textStyle": {
+            "color": "#f8fafc",
+            "fontSize": 12
+          },
+          "confine": true
+        },
+        "legend": {
+          "top": 0,
+          "right": 8,
+          "textStyle": {
+            "color": "#94a3b8",
+            "fontSize": 11
+          }
+        },
+        "grid": {
+          "top": 34,
+          "right": 48,
+          "bottom": 46,
+          "left": 16,
+          "containLabel": true
+        },
+        "xAxis": {
+          "type": "category",
+          "data": [
+            "2025-01",
+            "2025-02",
+            "2025-03",
+            "2025-04",
+            "2025-05",
+            "2025-06",
+            "2025-07",
+            "2025-08",
+            "2025-09",
+            "2025-10",
+            "2025-11",
+            "2025-12",
+            "2026-01",
+            "2026-02",
+            "2026-03",
+            "2026-04",
+            "2026-05",
+            "2026-06",
+            "2026-07",
+            "2026-08",
+            "2026-09",
+            "2026-10"
+          ],
+          "boundaryGap": true,
+          "axisLabel": {
+            "color": "#94a3b8",
+            "fontSize": 11
+          },
+          "axisLine": {
+            "lineStyle": {
+              "color": "rgba(148,163,184,0.2)"
+            }
+          }
+        },
+        "yAxis": [
+          {
+            "type": "value",
+            "axisLabel": {
+              "color": "#94a3b8",
+              "fontSize": 11
+            },
+            "splitLine": {
+              "lineStyle": {
+                "color": "rgba(148,163,184,0.12)",
+                "type": "dashed"
+              }
+            }
+          },
+          {
+            "type": "value",
+            "axisLabel": {
+              "color": "#10b981",
+              "fontSize": 11
+            },
+            "splitLine": {
+              "show": false
+            }
+          }
+        ],
+        "series": [
+          {
+            "name": "Pipeline Value Usd",
+            "type": "bar",
+            "barMaxWidth": 28,
+            "itemStyle": {
+              "borderRadius": [
+                5,
+                5,
+                0,
+                0
+              ],
+              "color": "#6366f1"
+            },
+            "data": [
+              975583.98,
+              1041224.92,
+              1059820.87,
+              1046128.08,
+              1098098.46,
+              1112786.74,
+              1065669.36,
+              1165634.56,
+              1254012.71,
+              1264575.53,
+              1173673.0,
+              1244085.61,
+              1247557.34,
+              1325157.76,
+              1263536.97,
+              1308812.59,
+              1313738.67,
+              1335254.45,
+              1343099.36,
+              1381235.81,
+              1449935.45,
+              1388736.88
+            ]
+          },
+          {
+            "name": "Spend Usd",
+            "type": "line",
+            "yAxisIndex": 1,
+            "smooth": true,
+            "symbol": "circle",
+            "symbolSize": 7,
+            "lineStyle": {
+              "width": 3,
+              "color": "#10b981"
+            },
+            "itemStyle": {
+              "color": "#10b981"
+            },
+            "data": [
+              246531.94,
+              265360.25,
+              245728.43,
+              260504.03,
+              268630.93,
+              269517.36,
+              270967.31,
+              283946.01,
+              303543.34,
+              302822.06,
+              298055.7,
+              306110.05,
+              298539.36,
+              319771.05,
+              317949.07,
+              323479.42,
+              327731.23,
+              320969.46,
+              331938.14,
+              349149.48,
+              353492.1,
+              342896.46
+            ]
+          }
+        ],
+        "dataZoom": [
+          {
+            "type": "inside",
+            "start": 0,
+            "end": 100
+          },
+          {
+            "type": "slider",
+            "height": 16,
+            "bottom": 6,
+            "borderColor": "rgba(148,163,184,0.15)",
+            "fillerColor": "rgba(99, 102, 241, 0.2)",
+            "textStyle": {
+              "color": "#94a3b8",
+              "fontSize": 10
+            }
+          }
+        ]
+      },
+      "insight_summary": "Pipeline Value Usd ranges from $975.6K to $1.45M (+42.35% trajectory). Outlier drop at 2025-01 (Z=-1.84).",
+      "anomalies": [
+        {
+          "row_index": 0,
+          "dimension_label": "2025-01",
+          "metric_name": "pipeline_value_usd",
+          "value": 975583.98,
+          "z_score": -1.84,
+          "direction": "drop"
+        }
+      ]
+    },
+    {
+      "id": "widget_chart_channel_funnel",
+      "title": "Pipeline Value by Acquisition Channel",
+      "subtitle": "Conversion Funnel Ranking",
+      "widget_type": "echarts",
+      "chart_type": "funnel",
+      "step_id": "step_6_chart_channel_funnel",
+      "sql_query": "SELECT channel, ROUND(SUM(pipeline_value_usd), 2) AS pipeline_value_usd FROM marketing_campaigns GROUP BY channel ORDER BY pipeline_value_usd DESC LIMIT 2000",
+      "data_hash": "sha256:1a82840b60b9b218",
+      "columns": [
+        "channel",
+        "pipeline_value_usd"
+      ],
+      "rows": [
+        {
+          "channel": "LinkedIn Ads",
+          "pipeline_value_usd": 6627047.16,
+          "pipeline_value_usd_ma3": 6627047.16,
+          "pipeline_value_usd_zscore": 1.67
+        },
+        {
+          "channel": "Product-Led",
+          "pipeline_value_usd": 4608065.97,
+          "pipeline_value_usd_ma3": 5617556.56,
+          "pipeline_value_usd_zscore": 0.1
+        },
+        {
+          "channel": "Partner Referral",
+          "pipeline_value_usd": 4542368.11,
+          "pipeline_value_usd_ma3": 5259160.41,
+          "pipeline_value_usd_zscore": 0.05
+        },
+        {
+          "channel": "Paid Search",
+          "pipeline_value_usd": 4489807.7,
+          "pipeline_value_usd_ma3": 4546747.26,
+          "pipeline_value_usd_zscore": 0.01
+        },
+        {
+          "channel": "Outbound Sales",
+          "pipeline_value_usd": 3941532.64,
+          "pipeline_value_usd_ma3": 4324569.48,
+          "pipeline_value_usd_zscore": -0.42
+        },
+        {
+          "channel": "Organic Search",
+          "pipeline_value_usd": 2649537.52,
+          "pipeline_value_usd_ma3": 3693625.95,
+          "pipeline_value_usd_zscore": -1.42
+        }
+      ],
+      "x_field": "channel",
+      "y_fields": [
+        "pipeline_value_usd"
+      ],
+      "series_field": null,
+      "kpi_payload": null,
+      "echarts_option": {
+        "color": [
+          "#6366f1",
+          "#06b6d4",
+          "#10b981",
+          "#f59e0b",
+          "#ec4899",
+          "#8b5cf6",
+          "#3b82f6",
+          "#14b8a6"
+        ],
+        "tooltip": {
+          "trigger": "item",
+          "backgroundColor": "rgba(15, 23, 42, 0.94)",
+          "borderColor": "rgba(99, 102, 241, 0.35)",
+          "borderWidth": 1,
+          "textStyle": {
+            "color": "#f8fafc",
+            "fontSize": 12
+          },
+          "confine": true
+        },
+        "legend": {
+          "bottom": 0,
+          "textStyle": {
+            "color": "#94a3b8",
+            "fontSize": 11
+          }
+        },
+        "series": [
+          {
+            "name": "Pipeline Value Usd",
+            "type": "funnel",
+            "left": "10%",
+            "top": 16,
+            "bottom": 36,
+            "width": "80%",
+            "sort": "descending",
+            "gap": 4,
+            "label": {
+              "show": true,
+              "position": "inside",
+              "color": "#fff",
+              "fontSize": 11
+            },
+            "itemStyle": {
+              "borderColor": "#0f172a",
+              "borderWidth": 1,
+              "borderRadius": 4
+            },
+            "data": [
+              {
+                "name": "LinkedIn Ads",
+                "value": 6627047.16
+              },
+              {
+                "name": "Product-Led",
+                "value": 4608065.97
+              },
+              {
+                "name": "Partner Referral",
+                "value": 4542368.11
+              },
+              {
+                "name": "Paid Search",
+                "value": 4489807.7
+              },
+              {
+                "name": "Outbound Sales",
+                "value": 3941532.64
+              },
+              {
+                "name": "Organic Search",
+                "value": 2649537.52
+              }
+            ]
+          }
+        ]
+      },
+      "insight_summary": "Pipeline Value Usd ranges from $2.65M to $6.63M (-60.02% trajectory).",
+      "anomalies": []
+    },
+    {
+      "id": "widget_chart_channel_efficiency",
+      "title": "Channel Spend vs Pipeline Value & Conversions",
+      "subtitle": "Multi-Metric Channel Comparison",
+      "widget_type": "echarts",
+      "chart_type": "grouped_bar",
+      "step_id": "step_7_chart_channel_efficiency",
+      "sql_query": "SELECT channel, ROUND(SUM(spend_usd), 2) AS total_spend_usd, ROUND(SUM(pipeline_value_usd), 2) AS pipeline_value_usd FROM marketing_campaigns GROUP BY channel ORDER BY pipeline_value_usd DESC LIMIT 2000",
+      "data_hash": "sha256:688e5cb431f52964",
+      "columns": [
+        "channel",
+        "total_spend_usd",
+        "pipeline_value_usd"
+      ],
+      "rows": [
+        {
+          "channel": "LinkedIn Ads",
+          "total_spend_usd": 1847453.46,
+          "pipeline_value_usd": 6627047.16,
+          "pipeline_value_usd_ma3": 6627047.16,
+          "pipeline_value_usd_zscore": 1.67
+        },
+        {
+          "channel": "Product-Led",
+          "total_spend_usd": 691403.22,
+          "pipeline_value_usd": 4608065.97,
+          "pipeline_value_usd_ma3": 5617556.56,
+          "pipeline_value_usd_zscore": 0.1
+        },
+        {
+          "channel": "Partner Referral",
+          "total_spend_usd": 963365.81,
+          "pipeline_value_usd": 4542368.11,
+          "pipeline_value_usd_ma3": 5259160.41,
+          "pipeline_value_usd_zscore": 0.05
+        },
+        {
+          "channel": "Paid Search",
+          "total_spend_usd": 1461951.4,
+          "pipeline_value_usd": 4489807.7,
+          "pipeline_value_usd_ma3": 4546747.26,
+          "pipeline_value_usd_zscore": 0.01
+        },
+        {
+          "channel": "Outbound Sales",
+          "total_spend_usd": 1211762.78,
+          "pipeline_value_usd": 3941532.64,
+          "pipeline_value_usd_ma3": 4324569.48,
+          "pipeline_value_usd_zscore": -0.42
+        },
+        {
+          "channel": "Organic Search",
+          "total_spend_usd": 431696.51,
+          "pipeline_value_usd": 2649537.52,
+          "pipeline_value_usd_ma3": 3693625.95,
+          "pipeline_value_usd_zscore": -1.42
+        }
+      ],
+      "x_field": "channel",
+      "y_fields": [
+        "pipeline_value_usd",
+        "total_spend_usd"
+      ],
+      "series_field": null,
+      "kpi_payload": null,
+      "echarts_option": {
+        "color": [
+          "#6366f1",
+          "#06b6d4",
+          "#10b981",
+          "#f59e0b",
+          "#ec4899",
+          "#8b5cf6",
+          "#3b82f6",
+          "#14b8a6"
+        ],
+        "tooltip": {
+          "trigger": "axis",
+          "backgroundColor": "rgba(15, 23, 42, 0.94)",
+          "borderColor": "rgba(99, 102, 241, 0.35)",
+          "borderWidth": 1,
+          "textStyle": {
+            "color": "#f8fafc",
+            "fontSize": 12
+          },
+          "confine": true
+        },
+        "legend": {
+          "top": 0,
+          "right": 8,
+          "textStyle": {
+            "color": "#94a3b8",
+            "fontSize": 11
+          }
+        },
+        "grid": {
+          "top": 34,
+          "right": 24,
+          "bottom": 24,
+          "left": 16,
+          "containLabel": true
+        },
+        "xAxis": {
+          "type": "category",
+          "data": [
+            "LinkedIn Ads",
+            "Product-Led",
+            "Partner Referral",
+            "Paid Search",
+            "Outbound Sales",
+            "Organic Search"
+          ],
+          "boundaryGap": true,
+          "axisLabel": {
+            "color": "#94a3b8",
+            "fontSize": 11
+          },
+          "axisLine": {
+            "lineStyle": {
+              "color": "rgba(148,163,184,0.2)"
+            }
+          }
+        },
+        "yAxis": {
+          "type": "value",
+          "axisLabel": {
+            "color": "#94a3b8",
+            "fontSize": 11
+          },
+          "splitLine": {
+            "lineStyle": {
+              "color": "rgba(148,163,184,0.12)",
+              "type": "dashed"
+            }
+          }
+        },
+        "series": [
+          {
+            "name": "Pipeline Value Usd",
+            "type": "bar",
+            "data": [
+              6627047.16,
+              4608065.97,
+              4542368.11,
+              4489807.7,
+              3941532.64,
+              2649537.52
+            ],
+            "itemStyle": {
+              "color": "#6366f1",
+              "borderRadius": [
+                5,
+                5,
+                0,
+                0
+              ]
+            },
+            "barMaxWidth": 30
+          },
+          {
+            "name": "Total Spend Usd",
+            "type": "bar",
+            "data": [
+              1847453.46,
+              691403.22,
+              963365.81,
+              1461951.4,
+              1211762.78,
+              431696.51
+            ],
+            "itemStyle": {
+              "color": "#06b6d4",
+              "borderRadius": [
+                5,
+                5,
+                0,
+                0
+              ]
+            },
+            "barMaxWidth": 30
+          }
+        ]
+      },
+      "insight_summary": "Pipeline Value Usd ranges from $2.65M to $6.63M (-60.02% trajectory).",
+      "anomalies": []
+    },
+    {
+      "id": "widget_chart_heatmap_region_channel",
+      "title": "Regional Channel Conversion Matrix",
+      "subtitle": "Conversions Heatmap by Channel x Region",
+      "widget_type": "echarts",
+      "chart_type": "heatmap",
+      "step_id": "step_8_chart_heatmap_region_channel",
+      "sql_query": "SELECT channel, region, SUM(conversions) AS conversions FROM marketing_campaigns GROUP BY channel, region LIMIT 2000",
+      "data_hash": "sha256:6205f0b0cacc42b4",
+      "columns": [
+        "channel",
+        "region",
+        "conversions"
+      ],
+      "rows": [
+        {
+          "channel": "LinkedIn Ads",
+          "region": "APAC",
+          "conversions": 12362,
+          "conversions_ma3": 12362.0,
+          "conversions_zscore": 1.54
+        },
+        {
+          "channel": "LinkedIn Ads",
+          "region": "Europe",
+          "conversions": 11398,
+          "conversions_ma3": 11880.0,
+          "conversions_zscore": 1.29
+        },
+        {
+          "channel": "LinkedIn Ads",
+          "region": "LATAM",
+          "conversions": 5402,
+          "conversions_ma3": 9720.67,
+          "conversions_zscore": -0.32
+        },
+        {
+          "channel": "LinkedIn Ads",
+          "region": "North America",
+          "conversions": 15142,
+          "conversions_ma3": 10647.33,
+          "conversions_zscore": 2.29
+        },
+        {
+          "channel": "Organic Search",
+          "region": "APAC",
+          "conversions": 2650,
+          "conversions_ma3": 7731.33,
+          "conversions_zscore": -1.06
+        },
+        {
+          "channel": "Organic Search",
+          "region": "Europe",
+          "conversions": 2501,
+          "conversions_ma3": 6764.33,
+          "conversions_zscore": -1.1
+        },
+        {
+          "channel": "Organic Search",
+          "region": "LATAM",
+          "conversions": 1339,
+          "conversions_ma3": 2163.33,
+          "conversions_zscore": -1.41
+        },
+        {
+          "channel": "Organic Search",
+          "region": "North America",
+          "conversions": 3243,
+          "conversions_ma3": 2361.0,
+          "conversions_zscore": -0.9
+        },
+        {
+          "channel": "Outbound Sales",
+          "region": "APAC",
+          "conversions": 6408,
+          "conversions_ma3": 3663.33,
+          "conversions_zscore": -0.05
+        },
+        {
+          "channel": "Outbound Sales",
+          "region": "Europe",
+          "conversions": 7878,
+          "conversions_ma3": 5843.0,
+          "conversions_zscore": 0.34
+        },
+        {
+          "channel": "Outbound Sales",
+          "region": "LATAM",
+          "conversions": 3866,
+          "conversions_ma3": 6050.67,
+          "conversions_zscore": -0.73
+        },
+        {
+          "channel": "Outbound Sales",
+          "region": "North America",
+          "conversions": 11849,
+          "conversions_ma3": 7864.33,
+          "conversions_zscore": 1.41
+        },
+        {
+          "channel": "Paid Search",
+          "region": "APAC",
+          "conversions": 9212,
+          "conversions_ma3": 8309.0,
+          "conversions_zscore": 0.7
+        },
+        {
+          "channel": "Paid Search",
+          "region": "Europe",
+          "conversions": 8491,
+          "conversions_ma3": 9850.67,
+          "conversions_zscore": 0.51
+        },
+        {
+          "channel": "Paid Search",
+          "region": "LATAM",
+          "conversions": 4626,
+          "conversions_ma3": 7443.0,
+          "conversions_zscore": -0.53
+        },
+        {
+          "channel": "Paid Search",
+          "region": "North America",
+          "conversions": 11964,
+          "conversions_ma3": 8360.33,
+          "conversions_zscore": 1.44
+        },
+        {
+          "channel": "Partner Referral",
+          "region": "APAC",
+          "conversions": 5582,
+          "conversions_ma3": 7390.67,
+          "conversions_zscore": -0.27
+        },
+        {
+          "channel": "Partner Referral",
+          "region": "Europe",
+          "conversions": 5946,
+          "conversions_ma3": 7830.67,
+          "conversions_zscore": -0.18
+        },
+        {
+          "channel": "Partner Referral",
+          "region": "LATAM",
+          "conversions": 2981,
+          "conversions_ma3": 4836.33,
+          "conversions_zscore": -0.97
+        },
+        {
+          "channel": "Partner Referral",
+          "region": "North America",
+          "conversions": 7412,
+          "conversions_ma3": 5446.33,
+          "conversions_zscore": 0.22
+        },
+        {
+          "channel": "Product-Led",
+          "region": "APAC",
+          "conversions": 4211,
+          "conversions_ma3": 4868.0,
+          "conversions_zscore": -0.64
+        },
+        {
+          "channel": "Product-Led",
+          "region": "Europe",
+          "conversions": 5593,
+          "conversions_ma3": 5738.67,
+          "conversions_zscore": -0.27
+        },
+        {
+          "channel": "Product-Led",
+          "region": "LATAM",
+          "conversions": 2658,
+          "conversions_ma3": 4154.0,
+          "conversions_zscore": -1.06
+        },
+        {
+          "channel": "Product-Led",
+          "region": "North America",
+          "conversions": 5664,
+          "conversions_ma3": 4638.33,
+          "conversions_zscore": -0.25
+        }
+      ],
+      "x_field": "channel",
+      "y_fields": [
+        "conversions"
+      ],
+      "series_field": null,
+      "kpi_payload": null,
+      "echarts_option": {
+        "tooltip": {
+          "position": "top",
+          "trigger": "axis",
+          "backgroundColor": "rgba(15, 23, 42, 0.94)",
+          "borderColor": "rgba(99, 102, 241, 0.35)",
+          "borderWidth": 1,
+          "textStyle": {
+            "color": "#f8fafc",
+            "fontSize": 12
+          },
+          "confine": true
+        },
+        "grid": {
+          "top": 20,
+          "bottom": 50,
+          "left": 85,
+          "right": 24
+        },
+        "xAxis": {
+          "type": "category",
+          "data": [
+            "LinkedIn Ads",
+            "Organic Search",
+            "Outbound Sales",
+            "Paid Search",
+            "Partner Referral",
+            "Product-Led"
+          ],
+          "axisLabel": {
+            "color": "#94a3b8",
+            "fontSize": 10
+          }
+        },
+        "yAxis": {
+          "type": "category",
+          "data": [
+            "APAC",
+            "Europe",
+            "LATAM",
+            "North America"
+          ],
+          "axisLabel": {
+            "color": "#94a3b8",
+            "fontSize": 10
+          }
+        },
+        "visualMap": {
+          "min": 0,
+          "max": 15142.0,
+          "calculable": true,
+          "orient": "horizontal",
+          "left": "center",
+          "bottom": 0,
+          "inRange": {
+            "color": [
+              "#1e1b4b",
+              "#4f46e5",
+              "#06b6d4",
+              "#10b981"
+            ]
+          },
+          "textStyle": {
+            "color": "#94a3b8",
+            "fontSize": 10
+          }
+        },
+        "series": [
+          {
+            "name": "Conversions",
+            "type": "heatmap",
+            "data": [
+              [
+                0,
+                0,
+                12362.0
+              ],
+              [
+                0,
+                1,
+                11398.0
+              ],
+              [
+                0,
+                2,
+                5402.0
+              ],
+              [
+                0,
+                3,
+                15142.0
+              ],
+              [
+                1,
+                0,
+                2650.0
+              ],
+              [
+                1,
+                1,
+                2501.0
+              ],
+              [
+                1,
+                2,
+                1339.0
+              ],
+              [
+                1,
+                3,
+                3243.0
+              ],
+              [
+                2,
+                0,
+                6408.0
+              ],
+              [
+                2,
+                1,
+                7878.0
+              ],
+              [
+                2,
+                2,
+                3866.0
+              ],
+              [
+                2,
+                3,
+                11849.0
+              ],
+              [
+                3,
+                0,
+                9212.0
+              ],
+              [
+                3,
+                1,
+                8491.0
+              ],
+              [
+                3,
+                2,
+                4626.0
+              ],
+              [
+                3,
+                3,
+                11964.0
+              ],
+              [
+                4,
+                0,
+                5582.0
+              ],
+              [
+                4,
+                1,
+                5946.0
+              ],
+              [
+                4,
+                2,
+                2981.0
+              ],
+              [
+                4,
+                3,
+                7412.0
+              ],
+              [
+                5,
+                0,
+                4211.0
+              ],
+              [
+                5,
+                1,
+                5593.0
+              ],
+              [
+                5,
+                2,
+                2658.0
+              ],
+              [
+                5,
+                3,
+                5664.0
+              ]
+            ],
+            "label": {
+              "show": true,
+              "color": "#f8fafc",
+              "fontSize": 10
+            }
+          }
+        ]
+      },
+      "insight_summary": "Conversions ranges from 1,339% to 15.1K% (-54.18% trajectory). Outlier spike at LinkedIn Ads (Z=2.29).",
+      "anomalies": [
+        {
+          "row_index": 3,
+          "dimension_label": "LinkedIn Ads",
+          "metric_name": "conversions",
+          "value": 15142.0,
+          "z_score": 2.29,
+          "direction": "spike"
+        }
+      ]
+    },
+    {
+      "id": "widget_table_campaigns_top",
+      "title": "Top Performing Campaign Cohorts",
+      "subtitle": "Ranked by Pipeline ROI Multiplier",
+      "widget_type": "table",
+      "chart_type": "table",
+      "step_id": "step_9_table_campaigns_top",
+      "sql_query": "SELECT campaign_name, channel, region, campaign_month, spend_usd, clicks, leads_generated, conversions, pipeline_value_usd, ROUND(pipeline_value_usd / NULLIF(spend_usd, 0), 2) AS roas_multiplier FROM marketing_campaigns ORDER BY pipeline_value_usd DESC LIMIT 50",
+      "data_hash": "sha256:adb06e00b538cff3",
+      "columns": [
+        "campaign_name",
+        "channel",
+        "region",
+        "campaign_month",
+        "spend_usd",
+        "clicks",
+        "leads_generated",
+        "conversions",
+        "pipeline_value_usd",
+        "roas_multiplier"
+      ],
+      "rows": [
+        {
+          "campaign_name": "LinkedIn Ads - North America (2026-09)",
+          "channel": "LinkedIn Ads",
+          "region": "North America",
+          "campaign_month": "2026-09",
+          "spend_usd": 34619.26,
+          "clicks": 31440,
+          "leads_generated": 3729,
+          "conversions": 1026,
+          "pipeline_value_usd": 145494.15,
+          "roas_multiplier": 4.2,
+          "pipeline_value_usd_ma3": 145494.15,
+          "pipeline_value_usd_zscore": 2.89
+        },
+        {
+          "campaign_name": "LinkedIn Ads - North America (2026-03)",
+          "channel": "LinkedIn Ads",
+          "region": "North America",
+          "campaign_month": "2026-03",
+          "spend_usd": 36622.77,
+          "clicks": 29460,
+          "leads_generated": 4291,
+          "conversions": 1133,
+          "pipeline_value_usd": 137532.77,
+          "roas_multiplier": 3.76,
+          "pipeline_value_usd_ma3": 141513.46,
+          "pipeline_value_usd_zscore": 2.38
+        },
+        {
+          "campaign_name": "LinkedIn Ads - North America (2025-09)",
+          "channel": "LinkedIn Ads",
+          "region": "North America",
+          "campaign_month": "2025-09",
+          "spend_usd": 32448.38,
+          "clicks": 28917,
+          "leads_generated": 2633,
+          "conversions": 538,
+          "pipeline_value_usd": 132813.98,
+          "roas_multiplier": 4.09,
+          "pipeline_value_usd_ma3": 138613.63,
+          "pipeline_value_usd_zscore": 2.07
+        },
+        {
+          "campaign_name": "LinkedIn Ads - North America (2025-10)",
+          "channel": "LinkedIn Ads",
+          "region": "North America",
+          "campaign_month": "2025-10",
+          "spend_usd": 33054.44,
+          "clicks": 25280,
+          "leads_generated": 3133,
+          "conversions": 440,
+          "pipeline_value_usd": 128467.47,
+          "roas_multiplier": 3.89,
+          "pipeline_value_usd_ma3": 132938.07,
+          "pipeline_value_usd_zscore": 1.79
+        },
+        {
+          "campaign_name": "LinkedIn Ads - North America (2026-10)",
+          "channel": "LinkedIn Ads",
+          "region": "North America",
+          "campaign_month": "2026-10",
+          "spend_usd": 35135.36,
+          "clicks": 28179,
+          "leads_generated": 3727,
+          "conversions": 724,
+          "pipeline_value_usd": 125831.99,
+          "roas_multiplier": 3.58,
+          "pipeline_value_usd_ma3": 129037.81,
+          "pipeline_value_usd_zscore": 1.62
+        },
+        {
+          "campaign_name": "LinkedIn Ads - Europe (2026-08)",
+          "channel": "LinkedIn Ads",
+          "region": "Europe",
+          "campaign_month": "2026-08",
+          "spend_usd": 30373.78,
+          "clicks": 26791,
+          "leads_generated": 2567,
+          "conversions": 596,
+          "pipeline_value_usd": 119552.49,
+          "roas_multiplier": 3.94,
+          "pipeline_value_usd_ma3": 124617.32,
+          "pipeline_value_usd_zscore": 1.21
+        },
+        {
+          "campaign_name": "LinkedIn Ads - North America (2025-06)",
+          "channel": "LinkedIn Ads",
+          "region": "North America",
+          "campaign_month": "2025-06",
+          "spend_usd": 30553.1,
+          "clicks": 32741,
+          "leads_generated": 3226,
+          "conversions": 598,
+          "pipeline_value_usd": 117841.69,
+          "roas_multiplier": 3.86,
+          "pipeline_value_usd_ma3": 121075.39,
+          "pipeline_value_usd_zscore": 1.1
+        },
+        {
+          "campaign_name": "LinkedIn Ads - North America (2025-12)",
+          "channel": "LinkedIn Ads",
+          "region": "North America",
+          "campaign_month": "2025-12",
+          "spend_usd": 28699.5,
+          "clicks": 21295,
+          "leads_generated": 3204,
+          "conversions": 660,
+          "pipeline_value_usd": 116284.11,
+          "roas_multiplier": 4.05,
+          "pipeline_value_usd_ma3": 117892.76,
+          "pipeline_value_usd_zscore": 1.0
+        },
+        {
+          "campaign_name": "LinkedIn Ads - North America (2026-08)",
+          "channel": "LinkedIn Ads",
+          "region": "North America",
+          "campaign_month": "2026-08",
+          "spend_usd": 35684.6,
+          "clicks": 44440,
+          "leads_generated": 5285,
+          "conversions": 1613,
+          "pipeline_value_usd": 115549.31,
+          "roas_multiplier": 3.24,
+          "pipeline_value_usd_ma3": 116558.37,
+          "pipeline_value_usd_zscore": 0.96
+        },
+        {
+          "campaign_name": "LinkedIn Ads - North America (2026-01)",
+          "channel": "LinkedIn Ads",
+          "region": "North America",
+          "campaign_month": "2026-01",
+          "spend_usd": 30853.47,
+          "clicks": 26259,
+          "leads_generated": 2423,
+          "conversions": 649,
+          "pipeline_value_usd": 115387.56,
+          "roas_multiplier": 3.74,
+          "pipeline_value_usd_ma3": 115740.33,
+          "pipeline_value_usd_zscore": 0.94
+        },
+        {
+          "campaign_name": "LinkedIn Ads - North America (2026-07)",
+          "channel": "LinkedIn Ads",
+          "region": "North America",
+          "campaign_month": "2026-07",
+          "spend_usd": 28682.54,
+          "clicks": 36153,
+          "leads_generated": 5562,
+          "conversions": 1223,
+          "pipeline_value_usd": 115174.86,
+          "roas_multiplier": 4.02,
+          "pipeline_value_usd_ma3": 115370.58,
+          "pipeline_value_usd_zscore": 0.93
+        },
+        {
+          "campaign_name": "LinkedIn Ads - North America (2026-02)",
+          "channel": "LinkedIn Ads",
+          "region": "North America",
+          "campaign_month": "2026-02",
+          "spend_usd": 28526.56,
+          "clicks": 13169,
+          "leads_generated": 1181,
+          "conversions": 221,
+          "pipeline_value_usd": 114917.36,
+          "roas_multiplier": 4.03,
+          "pipeline_value_usd_ma3": 115159.93,
+          "pipeline_value_usd_zscore": 0.91
+        },
+        {
+          "campaign_name": "LinkedIn Ads - North America (2026-04)",
+          "channel": "LinkedIn Ads",
+          "region": "North America",
+          "campaign_month": "2026-04",
+          "spend_usd": 34272.79,
+          "clicks": 25329,
+          "leads_generated": 3896,
+          "conversions": 843,
+          "pipeline_value_usd": 107882.39,
+          "roas_multiplier": 3.15,
+          "pipeline_value_usd_ma3": 112658.2,
+          "pipeline_value_usd_zscore": 0.46
+        },
+        {
+          "campaign_name": "LinkedIn Ads - North America (2025-03)",
+          "channel": "LinkedIn Ads",
+          "region": "North America",
+          "campaign_month": "2025-03",
+          "spend_usd": 25329.2,
+          "clicks": 26866,
+          "leads_generated": 2908,
+          "conversions": 505,
+          "pipeline_value_usd": 106320.68,
+          "roas_multiplier": 4.2,
+          "pipeline_value_usd_ma3": 109706.81,
+          "pipeline_value_usd_zscore": 0.36
+        },
+        {
+          "campaign_name": "Paid Search - North America (2026-06)",
+          "channel": "Paid Search",
+          "region": "North America",
+          "campaign_month": "2026-06",
+          "spend_usd": 29849.16,
+          "clicks": 40455,
+          "leads_generated": 2584,
+          "conversions": 719,
+          "pipeline_value_usd": 105259.15,
+          "roas_multiplier": 3.53,
+          "pipeline_value_usd_ma3": 106487.41,
+          "pipeline_value_usd_zscore": 0.29
+        },
+        {
+          "campaign_name": "LinkedIn Ads - Europe (2026-06)",
+          "channel": "LinkedIn Ads",
+          "region": "Europe",
+          "campaign_month": "2026-06",
+          "spend_usd": 25117.7,
+          "clicks": 36535,
+          "leads_generated": 2203,
+          "conversions": 615,
+          "pipeline_value_usd": 103864.6,
+          "roas_multiplier": 4.14,
+          "pipeline_value_usd_ma3": 105148.14,
+          "pipeline_value_usd_zscore": 0.2
+        },
+        {
+          "campaign_name": "Outbound Sales - North America (2026-09)",
+          "channel": "Outbound Sales",
+          "region": "North America",
+          "campaign_month": "2026-09",
+          "spend_usd": 27139.53,
+          "clicks": 17327,
+          "leads_generated": 2381,
+          "conversions": 419,
+          "pipeline_value_usd": 103798.0,
+          "roas_multiplier": 3.82,
+          "pipeline_value_usd_ma3": 104307.25,
+          "pipeline_value_usd_zscore": 0.19
+        },
+        {
+          "campaign_name": "LinkedIn Ads - North America (2026-06)",
+          "channel": "LinkedIn Ads",
+          "region": "North America",
+          "campaign_month": "2026-06",
+          "spend_usd": 28306.68,
+          "clicks": 19816,
+          "leads_generated": 2934,
+          "conversions": 866,
+          "pipeline_value_usd": 102997.13,
+          "roas_multiplier": 3.64,
+          "pipeline_value_usd_ma3": 103553.24,
+          "pipeline_value_usd_zscore": 0.14
+        },
+        {
+          "campaign_name": "LinkedIn Ads - North America (2025-04)",
+          "channel": "LinkedIn Ads",
+          "region": "North America",
+          "campaign_month": "2025-04",
+          "spend_usd": 31146.84,
+          "clicks": 15785,
+          "leads_generated": 1018,
+          "conversions": 233,
+          "pipeline_value_usd": 102563.21,
+          "roas_multiplier": 3.29,
+          "pipeline_value_usd_ma3": 103119.45,
+          "pipeline_value_usd_zscore": 0.11
+        },
+        {
+          "campaign_name": "Paid Search - North America (2026-10)",
+          "channel": "Paid Search",
+          "region": "North America",
+          "campaign_month": "2026-10",
+          "spend_usd": 28389.14,
+          "clicks": 23588,
+          "leads_generated": 3419,
+          "conversions": 970,
+          "pipeline_value_usd": 102545.35,
+          "roas_multiplier": 3.61,
+          "pipeline_value_usd_ma3": 102701.9,
+          "pipeline_value_usd_zscore": 0.11
+        },
+        {
+          "campaign_name": "LinkedIn Ads - Europe (2026-01)",
+          "channel": "LinkedIn Ads",
+          "region": "Europe",
+          "campaign_month": "2026-01",
+          "spend_usd": 24669.06,
+          "clicks": 30655,
+          "leads_generated": 1899,
+          "conversions": 436,
+          "pipeline_value_usd": 101749.79,
+          "roas_multiplier": 4.12,
+          "pipeline_value_usd_ma3": 102286.12,
+          "pipeline_value_usd_zscore": 0.06
+        },
+        {
+          "campaign_name": "LinkedIn Ads - Europe (2026-05)",
+          "channel": "LinkedIn Ads",
+          "region": "Europe",
+          "campaign_month": "2026-05",
+          "spend_usd": 29875.86,
+          "clicks": 16885,
+          "leads_generated": 1079,
+          "conversions": 202,
+          "pipeline_value_usd": 101543.3,
+          "roas_multiplier": 3.4,
+          "pipeline_value_usd_ma3": 101946.15,
+          "pipeline_value_usd_zscore": 0.05
+        },
+        {
+          "campaign_name": "Partner Referral - North America (2026-06)",
+          "channel": "Partner Referral",
+          "region": "North America",
+          "campaign_month": "2026-06",
+          "spend_usd": 19492.52,
+          "clicks": 17494,
+          "leads_generated": 1391,
+          "conversions": 240,
+          "pipeline_value_usd": 101222.65,
+          "roas_multiplier": 5.19,
+          "pipeline_value_usd_ma3": 101505.25,
+          "pipeline_value_usd_zscore": 0.03
+        },
+        {
+          "campaign_name": "LinkedIn Ads - Europe (2025-11)",
+          "channel": "LinkedIn Ads",
+          "region": "Europe",
+          "campaign_month": "2025-11",
+          "spend_usd": 26565.78,
+          "clicks": 24237,
+          "leads_generated": 3422,
+          "conversions": 745,
+          "pipeline_value_usd": 97970.95,
+          "roas_multiplier": 3.69,
+          "pipeline_value_usd_ma3": 100245.63,
+          "pipeline_value_usd_zscore": -0.18
+        },
+        {
+          "campaign_name": "Outbound Sales - North America (2026-05)",
+          "channel": "Outbound Sales",
+          "region": "North America",
+          "campaign_month": "2026-05",
+          "spend_usd": 25662.37,
+          "clicks": 18409,
+          "leads_generated": 2599,
+          "conversions": 545,
+          "pipeline_value_usd": 95537.36,
+          "roas_multiplier": 3.72,
+          "pipeline_value_usd_ma3": 98243.65,
+          "pipeline_value_usd_zscore": -0.34
+        },
+        {
+          "campaign_name": "LinkedIn Ads - APAC (2026-07)",
+          "channel": "LinkedIn Ads",
+          "region": "APAC",
+          "campaign_month": "2026-07",
+          "spend_usd": 23552.58,
+          "clicks": 41178,
+          "leads_generated": 6033,
+          "conversions": 1783,
+          "pipeline_value_usd": 95506.01,
+          "roas_multiplier": 4.06,
+          "pipeline_value_usd_ma3": 96338.11,
+          "pipeline_value_usd_zscore": -0.34
+        },
+        {
+          "campaign_name": "LinkedIn Ads - Europe (2025-09)",
+          "channel": "LinkedIn Ads",
+          "region": "Europe",
+          "campaign_month": "2025-09",
+          "spend_usd": 26283.97,
+          "clicks": 32271,
+          "leads_generated": 2167,
+          "conversions": 319,
+          "pipeline_value_usd": 95035.46,
+          "roas_multiplier": 3.62,
+          "pipeline_value_usd_ma3": 95359.61,
+          "pipeline_value_usd_zscore": -0.37
+        },
+        {
+          "campaign_name": "LinkedIn Ads - North America (2025-05)",
+          "channel": "LinkedIn Ads",
+          "region": "North America",
+          "campaign_month": "2025-05",
+          "spend_usd": 24371.91,
+          "clicks": 18413,
+          "leads_generated": 1208,
+          "conversions": 352,
+          "pipeline_value_usd": 94290.44,
+          "roas_multiplier": 3.87,
+          "pipeline_value_usd_ma3": 94943.97,
+          "pipeline_value_usd_zscore": -0.42
+        },
+        {
+          "campaign_name": "LinkedIn Ads - Europe (2026-02)",
+          "channel": "LinkedIn Ads",
+          "region": "Europe",
+          "campaign_month": "2026-02",
+          "spend_usd": 24753.41,
+          "clicks": 17808,
+          "leads_generated": 1763,
+          "conversions": 365,
+          "pipeline_value_usd": 94152.37,
+          "roas_multiplier": 3.8,
+          "pipeline_value_usd_ma3": 94492.76,
+          "pipeline_value_usd_zscore": -0.43
+        },
+        {
+          "campaign_name": "Paid Search - North America (2026-08)",
+          "channel": "Paid Search",
+          "region": "North America",
+          "campaign_month": "2026-08",
+          "spend_usd": 28103.08,
+          "clicks": 24672,
+          "leads_generated": 2222,
+          "conversions": 635,
+          "pipeline_value_usd": 93979.2,
+          "roas_multiplier": 3.34,
+          "pipeline_value_usd_ma3": 94140.67,
+          "pipeline_value_usd_zscore": -0.44
+        },
+        {
+          "campaign_name": "LinkedIn Ads - Europe (2025-07)",
+          "channel": "LinkedIn Ads",
+          "region": "Europe",
+          "campaign_month": "2025-07",
+          "spend_usd": 24968.75,
+          "clicks": 22154,
+          "leads_generated": 1642,
+          "conversions": 336,
+          "pipeline_value_usd": 93131.34,
+          "roas_multiplier": 3.73,
+          "pipeline_value_usd_ma3": 93754.3,
+          "pipeline_value_usd_zscore": -0.5
+        },
+        {
+          "campaign_name": "Paid Search - North America (2026-09)",
+          "channel": "Paid Search",
+          "region": "North America",
+          "campaign_month": "2026-09",
+          "spend_usd": 25429.7,
+          "clicks": 23353,
+          "leads_generated": 3349,
+          "conversions": 788,
+          "pipeline_value_usd": 92087.48,
+          "roas_multiplier": 3.62,
+          "pipeline_value_usd_ma3": 93066.01,
+          "pipeline_value_usd_zscore": -0.56
+        },
+        {
+          "campaign_name": "LinkedIn Ads - Europe (2026-09)",
+          "channel": "LinkedIn Ads",
+          "region": "Europe",
+          "campaign_month": "2026-09",
+          "spend_usd": 25088.99,
+          "clicks": 22057,
+          "leads_generated": 2474,
+          "conversions": 430,
+          "pipeline_value_usd": 92051.22,
+          "roas_multiplier": 3.67,
+          "pipeline_value_usd_ma3": 92423.35,
+          "pipeline_value_usd_zscore": -0.57
+        },
+        {
+          "campaign_name": "Partner Referral - North America (2026-04)",
+          "channel": "Partner Referral",
+          "region": "North America",
+          "campaign_month": "2026-04",
+          "spend_usd": 19317.51,
+          "clicks": 14523,
+          "leads_generated": 1672,
+          "conversions": 478,
+          "pipeline_value_usd": 91740.74,
+          "roas_multiplier": 4.75,
+          "pipeline_value_usd_ma3": 91959.81,
+          "pipeline_value_usd_zscore": -0.59
+        },
+        {
+          "campaign_name": "LinkedIn Ads - APAC (2025-08)",
+          "channel": "LinkedIn Ads",
+          "region": "APAC",
+          "campaign_month": "2025-08",
+          "spend_usd": 21616.34,
+          "clicks": 21562,
+          "leads_generated": 2766,
+          "conversions": 749,
+          "pipeline_value_usd": 91729.03,
+          "roas_multiplier": 4.24,
+          "pipeline_value_usd_ma3": 91840.33,
+          "pipeline_value_usd_zscore": -0.59
+        },
+        {
+          "campaign_name": "LinkedIn Ads - APAC (2025-10)",
+          "channel": "LinkedIn Ads",
+          "region": "APAC",
+          "campaign_month": "2025-10",
+          "spend_usd": 22499.45,
+          "clicks": 23647,
+          "leads_generated": 1920,
+          "conversions": 403,
+          "pipeline_value_usd": 91186.44,
+          "roas_multiplier": 4.05,
+          "pipeline_value_usd_ma3": 91552.07,
+          "pipeline_value_usd_zscore": -0.62
+        },
+        {
+          "campaign_name": "Product-Led - North America (2026-09)",
+          "channel": "Product-Led",
+          "region": "North America",
+          "campaign_month": "2026-09",
+          "spend_usd": 12558.74,
+          "clicks": 5274,
+          "leads_generated": 781,
+          "conversions": 163,
+          "pipeline_value_usd": 90255.09,
+          "roas_multiplier": 7.19,
+          "pipeline_value_usd_ma3": 91056.85,
+          "pipeline_value_usd_zscore": -0.68
+        },
+        {
+          "campaign_name": "Product-Led - North America (2026-05)",
+          "channel": "Product-Led",
+          "region": "North America",
+          "campaign_month": "2026-05",
+          "spend_usd": 13347.4,
+          "clicks": 7942,
+          "leads_generated": 724,
+          "conversions": 187,
+          "pipeline_value_usd": 90036.7,
+          "roas_multiplier": 6.75,
+          "pipeline_value_usd_ma3": 90492.74,
+          "pipeline_value_usd_zscore": -0.7
+        },
+        {
+          "campaign_name": "LinkedIn Ads - APAC (2026-02)",
+          "channel": "LinkedIn Ads",
+          "region": "APAC",
+          "campaign_month": "2026-02",
+          "spend_usd": 23020.54,
+          "clicks": 38479,
+          "leads_generated": 5454,
+          "conversions": 1603,
+          "pipeline_value_usd": 88812.15,
+          "roas_multiplier": 3.86,
+          "pipeline_value_usd_ma3": 89701.31,
+          "pipeline_value_usd_zscore": -0.78
+        },
+        {
+          "campaign_name": "Partner Referral - North America (2026-01)",
+          "channel": "Partner Referral",
+          "region": "North America",
+          "campaign_month": "2026-01",
+          "spend_usd": 17927.06,
+          "clicks": 9179,
+          "leads_generated": 1410,
+          "conversions": 425,
+          "pipeline_value_usd": 88121.78,
+          "roas_multiplier": 4.92,
+          "pipeline_value_usd_ma3": 88990.21,
+          "pipeline_value_usd_zscore": -0.82
+        },
+        {
+          "campaign_name": "LinkedIn Ads - North America (2025-02)",
+          "channel": "LinkedIn Ads",
+          "region": "North America",
+          "campaign_month": "2025-02",
+          "spend_usd": 29355.12,
+          "clicks": 39355,
+          "leads_generated": 2899,
+          "conversions": 777,
+          "pipeline_value_usd": 86361.44,
+          "roas_multiplier": 2.94,
+          "pipeline_value_usd_ma3": 87765.12,
+          "pipeline_value_usd_zscore": -0.94
+        },
+        {
+          "campaign_name": "Outbound Sales - North America (2026-10)",
+          "channel": "Outbound Sales",
+          "region": "North America",
+          "campaign_month": "2026-10",
+          "spend_usd": 23396.83,
+          "clicks": 24809,
+          "leads_generated": 2739,
+          "conversions": 876,
+          "pipeline_value_usd": 85894.51,
+          "roas_multiplier": 3.67,
+          "pipeline_value_usd_ma3": 86792.58,
+          "pipeline_value_usd_zscore": -0.97
+        },
+        {
+          "campaign_name": "LinkedIn Ads - North America (2025-11)",
+          "channel": "LinkedIn Ads",
+          "region": "North America",
+          "campaign_month": "2025-11",
+          "spend_usd": 24719.29,
+          "clicks": 21853,
+          "leads_generated": 2001,
+          "conversions": 307,
+          "pipeline_value_usd": 84706.12,
+          "roas_multiplier": 3.43,
+          "pipeline_value_usd_ma3": 85654.02,
+          "pipeline_value_usd_zscore": -1.04
+        },
+        {
+          "campaign_name": "LinkedIn Ads - Europe (2026-10)",
+          "channel": "LinkedIn Ads",
+          "region": "Europe",
+          "campaign_month": "2026-10",
+          "spend_usd": 25981.4,
+          "clicks": 51826,
+          "leads_generated": 6571,
+          "conversions": 1881,
+          "pipeline_value_usd": 84129.47,
+          "roas_multiplier": 3.24,
+          "pipeline_value_usd_ma3": 84910.03,
+          "pipeline_value_usd_zscore": -1.08
+        },
+        {
+          "campaign_name": "Paid Search - North America (2026-02)",
+          "channel": "Paid Search",
+          "region": "North America",
+          "campaign_month": "2026-02",
+          "spend_usd": 24577.81,
+          "clicks": 19355,
+          "leads_generated": 2094,
+          "conversions": 654,
+          "pipeline_value_usd": 83695.44,
+          "roas_multiplier": 3.41,
+          "pipeline_value_usd_ma3": 84177.01,
+          "pipeline_value_usd_zscore": -1.11
+        },
+        {
+          "campaign_name": "Partner Referral - North America (2026-08)",
+          "channel": "Partner Referral",
+          "region": "North America",
+          "campaign_month": "2026-08",
+          "spend_usd": 20036.69,
+          "clicks": 25482,
+          "leads_generated": 3918,
+          "conversions": 1153,
+          "pipeline_value_usd": 83493.01,
+          "roas_multiplier": 4.17,
+          "pipeline_value_usd_ma3": 83772.64,
+          "pipeline_value_usd_zscore": -1.12
+        },
+        {
+          "campaign_name": "LinkedIn Ads - Europe (2025-12)",
+          "channel": "LinkedIn Ads",
+          "region": "Europe",
+          "campaign_month": "2025-12",
+          "spend_usd": 23925.78,
+          "clicks": 10968,
+          "leads_generated": 850,
+          "conversions": 228,
+          "pipeline_value_usd": 83357.38,
+          "roas_multiplier": 3.48,
+          "pipeline_value_usd_ma3": 83515.28,
+          "pipeline_value_usd_zscore": -1.13
+        },
+        {
+          "campaign_name": "Paid Search - North America (2026-03)",
+          "channel": "Paid Search",
+          "region": "North America",
+          "campaign_month": "2026-03",
+          "spend_usd": 23100.11,
+          "clicks": 27349,
+          "leads_generated": 2293,
+          "conversions": 432,
+          "pipeline_value_usd": 83061.64,
+          "roas_multiplier": 3.6,
+          "pipeline_value_usd_ma3": 83304.01,
+          "pipeline_value_usd_zscore": -1.15
+        },
+        {
+          "campaign_name": "Partner Referral - North America (2026-10)",
+          "channel": "Partner Referral",
+          "region": "North America",
+          "campaign_month": "2026-10",
+          "spend_usd": 19419.57,
+          "clicks": 18390,
+          "leads_generated": 2323,
+          "conversions": 640,
+          "pipeline_value_usd": 82926.05,
+          "roas_multiplier": 4.27,
+          "pipeline_value_usd_ma3": 83115.02,
+          "pipeline_value_usd_zscore": -1.16
+        },
+        {
+          "campaign_name": "LinkedIn Ads - Europe (2025-08)",
+          "channel": "LinkedIn Ads",
+          "region": "Europe",
+          "campaign_month": "2025-08",
+          "spend_usd": 22575.29,
+          "clicks": 21125,
+          "leads_generated": 2299,
+          "conversions": 517,
+          "pipeline_value_usd": 82487.57,
+          "roas_multiplier": 3.65,
+          "pipeline_value_usd_ma3": 82825.09,
+          "pipeline_value_usd_zscore": -1.19
+        }
+      ],
+      "x_field": "campaign_name",
+      "y_fields": [
+        "pipeline_value_usd",
+        "spend_usd",
+        "roas_multiplier"
+      ],
+      "series_field": null,
+      "kpi_payload": null,
+      "echarts_option": null,
+      "insight_summary": "Pipeline Value Usd ranges from $82.5K to $145.5K (-43.31% trajectory). Outlier spike at LinkedIn Ads - North America (2026-09) (Z=2.89).",
+      "anomalies": [
+        {
+          "row_index": 0,
+          "dimension_label": "LinkedIn Ads - North America (2026-09)",
+          "metric_name": "pipeline_value_usd",
+          "value": 145494.15,
+          "z_score": 2.89,
+          "direction": "spike"
+        },
+        {
+          "row_index": 1,
+          "dimension_label": "LinkedIn Ads - North America (2026-03)",
+          "metric_name": "pipeline_value_usd",
+          "value": 137532.77,
+          "z_score": 2.38,
+          "direction": "spike"
+        },
+        {
+          "row_index": 2,
+          "dimension_label": "LinkedIn Ads - North America (2025-09)",
+          "metric_name": "pipeline_value_usd",
+          "value": 132813.98,
+          "z_score": 2.07,
+          "direction": "spike"
+        },
+        {
+          "row_index": 3,
+          "dimension_label": "LinkedIn Ads - North America (2025-10)",
+          "metric_name": "pipeline_value_usd",
+          "value": 128467.47,
+          "z_score": 1.79,
+          "direction": "spike"
+        }
+      ]
+    }
+  ],
+  "layouts": {
+    "lg": [
+      {
+        "i": "widget_kpi_pipeline_val",
+        "x": 0,
+        "y": 0,
+        "w": 3,
+        "h": 3,
+        "minW": 2,
+        "minH": 3
+      },
+      {
+        "i": "widget_kpi_ad_spend",
+        "x": 3,
+        "y": 0,
+        "w": 3,
+        "h": 3,
+        "minW": 2,
+        "minH": 3
+      },
+      {
+        "i": "widget_kpi_total_leads",
+        "x": 6,
+        "y": 0,
+        "w": 3,
+        "h": 3,
+        "minW": 2,
+        "minH": 3
+      },
+      {
+        "i": "widget_kpi_conversions",
+        "x": 9,
+        "y": 0,
+        "w": 3,
+        "h": 3,
+        "minW": 2,
+        "minH": 3
+      },
+      {
+        "i": "widget_chart_roi_trend",
+        "x": 0,
+        "y": 3,
+        "w": 8,
+        "h": 8,
+        "minW": 4,
+        "minH": 6
+      },
+      {
+        "i": "widget_chart_channel_funnel",
+        "x": 8,
+        "y": 3,
+        "w": 4,
+        "h": 8,
+        "minW": 3,
+        "minH": 6
+      },
+      {
+        "i": "widget_chart_channel_efficiency",
+        "x": 0,
+        "y": 11,
+        "w": 6,
+        "h": 8,
+        "minW": 4,
+        "minH": 6
+      },
+      {
+        "i": "widget_chart_heatmap_region_channel",
+        "x": 6,
+        "y": 11,
+        "w": 6,
+        "h": 8,
+        "minW": 4,
+        "minH": 6
+      },
+      {
+        "i": "widget_table_campaigns_top",
+        "x": 0,
+        "y": 19,
+        "w": 12,
+        "h": 8,
+        "minW": 6,
+        "minH": 5
+      }
+    ],
+    "md": [
+      {
+        "i": "widget_kpi_pipeline_val",
+        "x": 0,
+        "y": 0,
+        "w": 4,
+        "h": 3,
+        "minW": 2,
+        "minH": 3
+      },
+      {
+        "i": "widget_kpi_ad_spend",
+        "x": 4,
+        "y": 0,
+        "w": 4,
+        "h": 3,
+        "minW": 2,
+        "minH": 3
+      },
+      {
+        "i": "widget_kpi_total_leads",
+        "x": 0,
+        "y": 3,
+        "w": 4,
+        "h": 3,
+        "minW": 2,
+        "minH": 3
+      },
+      {
+        "i": "widget_kpi_conversions",
+        "x": 4,
+        "y": 3,
+        "w": 4,
+        "h": 3,
+        "minW": 2,
+        "minH": 3
+      },
+      {
+        "i": "widget_chart_roi_trend",
+        "x": 0,
+        "y": 6,
+        "w": 4,
+        "h": 8,
+        "minW": 4,
+        "minH": 6
+      },
+      {
+        "i": "widget_chart_channel_funnel",
+        "x": 4,
+        "y": 6,
+        "w": 4,
+        "h": 8,
+        "minW": 4,
+        "minH": 6
+      },
+      {
+        "i": "widget_chart_channel_efficiency",
+        "x": 0,
+        "y": 14,
+        "w": 4,
+        "h": 8,
+        "minW": 4,
+        "minH": 6
+      },
+      {
+        "i": "widget_chart_heatmap_region_channel",
+        "x": 4,
+        "y": 14,
+        "w": 4,
+        "h": 8,
+        "minW": 4,
+        "minH": 6
+      },
+      {
+        "i": "widget_table_campaigns_top",
+        "x": 0,
+        "y": 22,
+        "w": 8,
+        "h": 8,
+        "minW": 4,
+        "minH": 5
+      }
+    ],
+    "sm": [
+      {
+        "i": "widget_kpi_pipeline_val",
+        "x": 0,
+        "y": 0,
+        "w": 4,
+        "h": 3,
+        "minW": 2,
+        "minH": 3
+      },
+      {
+        "i": "widget_kpi_ad_spend",
+        "x": 0,
+        "y": 3,
+        "w": 4,
+        "h": 3,
+        "minW": 2,
+        "minH": 3
+      },
+      {
+        "i": "widget_kpi_total_leads",
+        "x": 0,
+        "y": 6,
+        "w": 4,
+        "h": 3,
+        "minW": 2,
+        "minH": 3
+      },
+      {
+        "i": "widget_kpi_conversions",
+        "x": 0,
+        "y": 9,
+        "w": 4,
+        "h": 3,
+        "minW": 2,
+        "minH": 3
+      },
+      {
+        "i": "widget_chart_roi_trend",
+        "x": 0,
+        "y": 12,
+        "w": 4,
+        "h": 8,
+        "minW": 4,
+        "minH": 6
+      },
+      {
+        "i": "widget_chart_channel_funnel",
+        "x": 0,
+        "y": 20,
+        "w": 4,
+        "h": 8,
+        "minW": 4,
+        "minH": 6
+      },
+      {
+        "i": "widget_chart_channel_efficiency",
+        "x": 0,
+        "y": 28,
+        "w": 4,
+        "h": 8,
+        "minW": 4,
+        "minH": 6
+      },
+      {
+        "i": "widget_chart_heatmap_region_channel",
+        "x": 0,
+        "y": 36,
+        "w": 4,
+        "h": 8,
+        "minW": 4,
+        "minH": 6
+      },
+      {
+        "i": "widget_table_campaigns_top",
+        "x": 0,
+        "y": 44,
+        "w": 4,
+        "h": 8,
+        "minW": 4,
+        "minH": 5
+      }
+    ]
+  },
+  "executive_summary": "Analysis of InsightForge SaaS & Commerce (SQLite) (SQLITE) across 9 reproducible SQL pipeline steps: Attributed Marketing Pipeline: $26.86M (+42.35% change) | Total Campaign Spend: $6.61M (+39.09% change) | Qualified Leads Generated: 31.2K% (+72.25% change)",
+  "key_insights": [
+    "Attributed Marketing Pipeline: $26.86M (+42.35% change)",
+    "Total Campaign Spend: $6.61M (+39.09% change)",
+    "Qualified Leads Generated: 31.2K% (+72.25% change)",
+    "Closed-Won Conversions: 158.4K% (+93.9% change)",
+    "Monthly Pipeline Generated vs Marketing Spend: Pipeline Value Usd ranges from $975.6K to $1.45M (+42.35% trajectory). Outlier drop at 2025-01 (Z=-1.84)."
+  ],
+  "suggested_followups": [
+    "Break down SaaS churn reasons and ARR exposure by customer segment",
+    "Analyze marketing attribution funnel, ROAS, and regional campaign conversions",
+    "Inspect customer support SLA breaches, P1-Critical tickets, and CSAT scores"
+  ],
+  "reproducibility_verified": true,
+  "data_drifted": false
+}

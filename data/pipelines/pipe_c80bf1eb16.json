@@ -1,0 +1,2573 @@
+{
+  "pipeline_id": "pipe_c80bf1eb16",
+  "title": "SaaS Churn & Retention Analysis by Segment",
+  "user_query": "Analyze SaaS churn, ARR exposure, and subscription retention by segment",
+  "created_at": "2026-11-11T19:55:55.044791+00:00",
+  "last_replayed_at": "2026-11-11T19:55:55.096753+00:00",
+  "connector_id": "default_sqlite_commerce",
+  "connector_name": "InsightForge SaaS & Commerce (SQLite)",
+  "dialect": "sqlite",
+  "schema_fingerprint": "sha256:c70ce3f139616544",
+  "model_used": "qwen3:4b",
+  "steps": [
+    {
+      "step_id": "step_1_kpi_1",
+      "step_number": 1,
+      "title": "Total Active Subscriptions",
+      "kind": "sql_extraction",
+      "sql_query": "SELECT COUNT(*) FROM subscriptions WHERE status = 'Active'",
+      "executed_sql": "SELECT COUNT(*) FROM subscriptions WHERE status = 'Active' LIMIT 2000",
+      "depends_on": [],
+      "operation": "SQLITE SELECT + Z-Score & Moving Average Enrichment",
+      "row_count": 1,
+      "columns": [
+        "COUNT(*)"
+      ],
+      "output_hash": "sha256:0030276d579d3f14",
+      "execution_ms": 2.64,
+      "anomalies_detected": [],
+      "summary_stats": {
+        "metric": "COUNT(*)",
+        "count": 1,
+        "sum": 245.0,
+        "mean": 245.0,
+        "median": 245.0,
+        "min": 245.0,
+        "max": 245.0,
+        "std": 0.0,
+        "period_delta_pct": 0.0,
+        "anomaly_count": 0
+      }
+    },
+    {
+      "step_id": "step_2_kpi_2",
+      "step_number": 2,
+      "title": "Total Churned Subscriptions",
+      "kind": "sql_extraction",
+      "sql_query": "SELECT COUNT(*) FROM subscriptions WHERE churn_date IS NOT NULL",
+      "executed_sql": "SELECT COUNT(*) FROM subscriptions WHERE NOT churn_date IS NULL LIMIT 2000",
+      "depends_on": [],
+      "operation": "SQLITE SELECT + Z-Score & Moving Average Enrichment",
+      "row_count": 1,
+      "columns": [
+        "COUNT(*)"
+      ],
+      "output_hash": "sha256:da690e0418bbe254",
+      "execution_ms": 2.78,
+      "anomalies_detected": [],
+      "summary_stats": {
+        "metric": "COUNT(*)",
+        "count": 1,
+        "sum": 45.0,
+        "mean": 45.0,
+        "median": 45.0,
+        "min": 45.0,
+        "max": 45.0,
+        "std": 0.0,
+        "period_delta_pct": 0.0,
+        "anomaly_count": 0
+      }
+    },
+    {
+      "step_id": "step_3_kpi_net_mrr",
+      "step_number": 3,
+      "title": "Average Monthly Recurring Revenue (MRR)",
+      "kind": "sql_extraction",
+      "sql_query": "SELECT plan_tier, ROUND(AVG(mrr_usd), 2) AS avg_mrr FROM subscriptions GROUP BY plan_tier",
+      "executed_sql": "SELECT plan_tier, ROUND(AVG(mrr_usd), 2) AS avg_mrr FROM subscriptions GROUP BY plan_tier LIMIT 2000",
+      "depends_on": [],
+      "operation": "SQLITE SELECT + Z-Score & Moving Average Enrichment",
+      "row_count": 4,
+      "columns": [
+        "plan_tier",
+        "avg_mrr"
+      ],
+      "output_hash": "sha256:9f2381fe1b18a5a8",
+      "execution_ms": 3.78,
+      "anomalies_detected": [],
+      "summary_stats": {
+        "metric": "avg_mrr",
+        "count": 4,
+        "sum": 10394.15,
+        "mean": 2598.54,
+        "median": 2096.1,
+        "min": 942.02,
+        "max": 5325.53,
+        "std": 1893.47,
+        "period_delta_pct": -82.31,
+        "anomaly_count": 0
+      }
+    },
+    {
+      "step_id": "step_4_kpi_4",
+      "step_number": 4,
+      "title": "Total ARR Exposure",
+      "kind": "sql_extraction",
+      "sql_query": "SELECT SUM(arr_usd) FROM subscriptions",
+      "executed_sql": "SELECT SUM(arr_usd) FROM subscriptions LIMIT 2000",
+      "depends_on": [],
+      "operation": "SQLITE SELECT + Z-Score & Moving Average Enrichment",
+      "row_count": 1,
+      "columns": [
+        "SUM(arr_usd)"
+      ],
+      "output_hash": "sha256:781c21415608cad3",
+      "execution_ms": 2.19,
+      "anomalies_detected": [],
+      "summary_stats": {
+        "metric": "SUM(arr_usd)",
+        "count": 1,
+        "sum": 14996715.36,
+        "mean": 14996715.36,
+        "median": 14996715.36,
+        "min": 14996715.36,
+        "max": 14996715.36,
+        "std": 0.0,
+        "period_delta_pct": 0.0,
+        "anomaly_count": 0
+      }
+    },
+    {
+      "step_id": "step_5_chart_mrr_trend",
+      "step_number": 5,
+      "title": "Monthly Net Revenue & Profit Trajectory",
+      "kind": "sql_extraction",
+      "sql_query": "SELECT order_month, ROUND(SUM(net_revenue), 2) AS net_revenue, ROUND(SUM(profit_usd), 2) AS net_profit FROM orders GROUP BY order_month ORDER BY order_month",
+      "executed_sql": "SELECT order_month, ROUND(SUM(net_revenue), 2) AS net_revenue, ROUND(SUM(profit_usd), 2) AS net_profit FROM orders GROUP BY order_month ORDER BY order_month LIMIT 2000",
+      "depends_on": [],
+      "operation": "SQLITE SELECT + Z-Score & Moving Average Enrichment",
+      "row_count": 22,
+      "columns": [
+        "order_month",
+        "net_revenue",
+        "net_profit"
+      ],
+      "output_hash": "sha256:24a186bb836fcca3",
+      "execution_ms": 6.35,
+      "anomalies_detected": [
+        {
+          "row_index": 19,
+          "dimension_label": "2026-08",
+          "metric_name": "net_revenue",
+          "value": 1075795.5,
+          "z_score": 2.03,
+          "direction": "spike"
+        },
+        {
+          "row_index": 21,
+          "dimension_label": "2026-10",
+          "metric_name": "net_revenue",
+          "value": 1192653.5,
+          "z_score": 2.64,
+          "direction": "spike"
+        }
+      ],
+      "summary_stats": {
+        "metric": "net_revenue",
+        "count": 22,
+        "sum": 15161317.5,
+        "mean": 689150.8,
+        "median": 665511.0,
+        "min": 462430.5,
+        "max": 1192653.5,
+        "std": 190423.66,
+        "period_delta_pct": 157.91,
+        "anomaly_count": 2
+      }
+    },
+    {
+      "step_id": "step_6_chart_churn_reasons",
+      "step_number": 6,
+      "title": "Churned ARR by Root Cause",
+      "kind": "sql_extraction",
+      "sql_query": "SELECT churn_reason, ROUND(SUM(arr_usd), 2) AS churned_arr, COUNT(*) AS churned_accounts FROM subscriptions WHERE status = 'Churned' AND churn_reason IS NOT NULL GROUP BY churn_reason ORDER BY churned_arr DESC",
+      "executed_sql": "SELECT churn_reason, ROUND(SUM(arr_usd), 2) AS churned_arr, COUNT(*) AS churned_accounts FROM subscriptions WHERE status = 'Churned' AND NOT churn_reason IS NULL GROUP BY churn_reason ORDER BY churned_arr DESC LIMIT 2000",
+      "depends_on": [],
+      "operation": "SQLITE SELECT + Z-Score & Moving Average Enrichment",
+      "row_count": 5,
+      "columns": [
+        "churn_reason",
+        "churned_arr",
+        "churned_accounts"
+      ],
+      "output_hash": "sha256:fa051e2696fcd619",
+      "execution_ms": 4.16,
+      "anomalies_detected": [],
+      "summary_stats": {
+        "metric": "churned_arr",
+        "count": 5,
+        "sum": 1113777.6,
+        "mean": 222755.52,
+        "median": 200997.6,
+        "min": 70944.0,
+        "max": 399840.0,
+        "std": 141670.91,
+        "period_delta_pct": -82.26,
+        "anomaly_count": 0
+      }
+    },
+    {
+      "step_id": "step_7_chart_segment_status",
+      "step_number": 7,
+      "title": "Subscription ARR by Segment & Status",
+      "kind": "sql_extraction",
+      "sql_query": "SELECT c.segment, ROUND(SUM(CASE WHEN s.status = 'Active' THEN s.arr_usd ELSE 0 END), 2) AS active_arr, ROUND(SUM(CASE WHEN s.status = 'Expanded' THEN s.arr_usd ELSE 0 END), 2) AS expanded_arr, ROUND(SUM(CASE WHEN s.status = 'Churned' THEN s.arr_usd ELSE 0 END), 2) AS churned_arr FROM subscriptions s JOIN customers c ON s.customer_id = c.customer_id GROUP BY c.segment ORDER BY active_arr DESC",
+      "executed_sql": "SELECT c.segment, ROUND(SUM(CASE WHEN s.status = 'Active' THEN s.arr_usd ELSE 0 END), 2) AS active_arr, ROUND(SUM(CASE WHEN s.status = 'Expanded' THEN s.arr_usd ELSE 0 END), 2) AS expanded_arr, ROUND(SUM(CASE WHEN s.status = 'Churned' THEN s.arr_usd ELSE 0 END), 2) AS churned_arr FROM subscriptions AS s JOIN customers AS c ON s.customer_id = c.customer_id GROUP BY c.segment ORDER BY active_arr DESC LIMIT 2000",
+      "depends_on": [],
+      "operation": "SQLITE SELECT + Z-Score & Moving Average Enrichment",
+      "row_count": 4,
+      "columns": [
+        "segment",
+        "active_arr",
+        "expanded_arr",
+        "churned_arr"
+      ],
+      "output_hash": "sha256:1b86ec6d8425ab9f",
+      "execution_ms": 6.96,
+      "anomalies_detected": [],
+      "summary_stats": {
+        "metric": "active_arr",
+        "count": 4,
+        "sum": 9442699.2,
+        "mean": 2360674.8,
+        "median": 3556946.4,
+        "min": 398784.0,
+        "max": 4538776.8,
+        "std": 2001609.12,
+        "period_delta_pct": -91.21,
+        "anomaly_count": 0
+      }
+    },
+    {
+      "step_id": "step_8_chart_flow_sankey",
+      "step_number": 8,
+      "title": "Segment to Product Category ARR Flow",
+      "kind": "sql_extraction",
+      "sql_query": "SELECT c.segment, p.category, ROUND(SUM(s.arr_usd), 2) AS total_arr FROM subscriptions s JOIN customers c ON s.customer_id = c.customer_id JOIN products p ON s.product_id = p.product_id GROUP BY c.segment, p.category ORDER BY total_arr DESC",
+      "executed_sql": "SELECT c.segment, p.category, ROUND(SUM(s.arr_usd), 2) AS total_arr FROM subscriptions AS s JOIN customers AS c ON s.customer_id = c.customer_id JOIN products AS p ON s.product_id = p.product_id GROUP BY c.segment, p.category ORDER BY total_arr DESC LIMIT 2000",
+      "depends_on": [],
+      "operation": "SQLITE SELECT + Z-Score & Moving Average Enrichment",
+      "row_count": 20,
+      "columns": [
+        "segment",
+        "category",
+        "total_arr"
+      ],
+      "output_hash": "sha256:62d26bbea7c1a569",
+      "execution_ms": 4.78,
+      "anomalies_detected": [
+        {
+          "row_index": 0,
+          "dimension_label": "Enterprise",
+          "metric_name": "total_arr",
+          "value": 2674803.12,
+          "z_score": 2.76,
+          "direction": "spike"
+        }
+      ],
+      "summary_stats": {
+        "metric": "total_arr",
+        "count": 20,
+        "sum": 14996715.36,
+        "mean": 749835.77,
+        "median": 632246.4,
+        "min": 60623.28,
+        "max": 2674803.12,
+        "std": 696692.56,
+        "period_delta_pct": -97.73,
+        "anomaly_count": 1
+      }
+    },
+    {
+      "step_id": "step_9_table_at_risk_accounts",
+      "step_number": 9,
+      "title": "High-Value Accounts & Subscription Ledger",
+      "kind": "sql_extraction",
+      "sql_query": "SELECT c.company_name, c.segment, c.region, p.product_name, s.status, s.mrr_usd, s.arr_usd, c.account_health_score, COALESCE(s.churn_reason, 'Healthy') AS risk_note FROM subscriptions s JOIN customers c ON s.customer_id = c.customer_id JOIN products p ON s.product_id = p.product_id ORDER BY s.arr_usd DESC LIMIT 50",
+      "executed_sql": "SELECT c.company_name, c.segment, c.region, p.product_name, s.status, s.mrr_usd, s.arr_usd, c.account_health_score, COALESCE(s.churn_reason, 'Healthy') AS risk_note FROM subscriptions AS s JOIN customers AS c ON s.customer_id = c.customer_id JOIN products AS p ON s.product_id = p.product_id ORDER BY s.arr_usd DESC LIMIT 50",
+      "depends_on": [],
+      "operation": "SQLITE SELECT + Z-Score & Moving Average Enrichment",
+      "row_count": 50,
+      "columns": [
+        "company_name",
+        "segment",
+        "region",
+        "product_name",
+        "status",
+        "mrr_usd",
+        "arr_usd",
+        "account_health_score",
+        "risk_note"
+      ],
+      "output_hash": "sha256:3a10f257803618b3",
+      "execution_ms": 4.76,
+      "anomalies_detected": [
+        {
+          "row_index": 0,
+          "dimension_label": "SaaSCore Uni #167",
+          "metric_name": "arr_usd",
+          "value": 242157.6,
+          "z_score": 2.86,
+          "direction": "spike"
+        },
+        {
+          "row_index": 1,
+          "dimension_label": "HealCore Can #057",
+          "metric_name": "arr_usd",
+          "value": 216982.8,
+          "z_score": 2.3,
+          "direction": "spike"
+        },
+        {
+          "row_index": 2,
+          "dimension_label": "FinTCore Can #005",
+          "metric_name": "arr_usd",
+          "value": 215424.0,
+          "z_score": 2.27,
+          "direction": "spike"
+        }
+      ],
+      "summary_stats": {
+        "metric": "arr_usd",
+        "count": 50,
+        "sum": 5640762.84,
+        "mean": 112815.26,
+        "median": 91008.0,
+        "min": 70346.88,
+        "max": 242157.6,
+        "std": 45267.71,
+        "period_delta_pct": -70.95,
+        "anomaly_count": 3
+      }
+    }
+  ],
+  "widgets": [
+    {
+      "id": "widget_kpi_1",
+      "title": "Total Active Subscriptions",
+      "subtitle": "Active SaaS subscriptions across all segments",
+      "widget_type": "kpi",
+      "chart_type": "kpi",
+      "step_id": "step_1_kpi_1",
+      "sql_query": "SELECT COUNT(*) FROM subscriptions WHERE status = 'Active' LIMIT 2000",
+      "data_hash": "sha256:0030276d579d3f14",
+      "columns": [
+        "COUNT(*)"
+      ],
+      "rows": [
+        {
+          "COUNT(*)": 245,
+          "COUNT(*)_ma3": 245.0
+        }
+      ],
+      "x_field": "COUNT(*)",
+      "y_fields": [
+        "COUNT(*)"
+      ],
+      "series_field": null,
+      "kpi_payload": {
+        "formatted_value": "245",
+        "raw_value": 245.0,
+        "metric_label": "Count(*)",
+        "delta_pct": 0.0,
+        "delta_direction": "neutral",
+        "sparkline": [
+          245.0
+        ],
+        "subtext": "Count(*) Ma3: 245"
+      },
+      "echarts_option": null,
+      "insight_summary": "Count(*) ranges from 245 to 245.",
+      "anomalies": []
+    },
+    {
+      "id": "widget_kpi_2",
+      "title": "Total Churned Subscriptions",
+      "subtitle": "Subscriptions that have been churned",
+      "widget_type": "kpi",
+      "chart_type": "kpi",
+      "step_id": "step_2_kpi_2",
+      "sql_query": "SELECT COUNT(*) FROM subscriptions WHERE NOT churn_date IS NULL LIMIT 2000",
+      "data_hash": "sha256:da690e0418bbe254",
+      "columns": [
+        "COUNT(*)"
+      ],
+      "rows": [
+        {
+          "COUNT(*)": 45,
+          "COUNT(*)_ma3": 45.0
+        }
+      ],
+      "x_field": "COUNT(*)",
+      "y_fields": [
+        "COUNT(*)"
+      ],
+      "series_field": null,
+      "kpi_payload": {
+        "formatted_value": "45",
+        "raw_value": 45.0,
+        "metric_label": "Count(*)",
+        "delta_pct": 0.0,
+        "delta_direction": "neutral",
+        "sparkline": [
+          45.0
+        ],
+        "subtext": "Count(*) Ma3: 45"
+      },
+      "echarts_option": null,
+      "insight_summary": "Count(*) ranges from 45 to 45.",
+      "anomalies": []
+    },
+    {
+      "id": "widget_kpi_net_mrr",
+      "title": "Average Monthly Recurring Revenue (MRR)",
+      "subtitle": "Per Subscription Contract",
+      "widget_type": "kpi",
+      "chart_type": "kpi",
+      "step_id": "step_3_kpi_net_mrr",
+      "sql_query": "SELECT plan_tier, ROUND(AVG(mrr_usd), 2) AS avg_mrr FROM subscriptions GROUP BY plan_tier LIMIT 2000",
+      "data_hash": "sha256:9f2381fe1b18a5a8",
+      "columns": [
+        "plan_tier",
+        "avg_mrr"
+      ],
+      "rows": [
+        {
+          "plan_tier": "Enterprise",
+          "avg_mrr": 5325.53,
+          "avg_mrr_ma3": 5325.53,
+          "avg_mrr_zscore": 1.44
+        },
+        {
+          "plan_tier": "Growth",
+          "avg_mrr": 2096.1,
+          "avg_mrr_ma3": 3710.81,
+          "avg_mrr_zscore": -0.27
+        },
+        {
+          "plan_tier": "Pro",
+          "avg_mrr": 2030.5,
+          "avg_mrr_ma3": 3150.71,
+          "avg_mrr_zscore": -0.3
+        },
+        {
+          "plan_tier": "Starter",
+          "avg_mrr": 942.02,
+          "avg_mrr_ma3": 1689.54,
+          "avg_mrr_zscore": -0.87
+        }
+      ],
+      "x_field": "plan_tier",
+      "y_fields": [
+        "avg_mrr"
+      ],
+      "series_field": null,
+      "kpi_payload": {
+        "formatted_value": "$2,599",
+        "raw_value": 2598.54,
+        "metric_label": "Avg Mrr",
+        "delta_pct": -82.31,
+        "delta_direction": "down",
+        "sparkline": [
+          5325.53,
+          2096.1,
+          2030.5,
+          942.02
+        ],
+        "subtext": "Across 4 periods"
+      },
+      "echarts_option": null,
+      "insight_summary": "Avg Mrr ranges from $942 to $5,326 (-82.31% trajectory).",
+      "anomalies": []
+    },
+    {
+      "id": "widget_kpi_4",
+      "title": "Total ARR Exposure",
+      "subtitle": "Total annual recurring revenue exposure",
+      "widget_type": "kpi",
+      "chart_type": "kpi",
+      "step_id": "step_4_kpi_4",
+      "sql_query": "SELECT SUM(arr_usd) FROM subscriptions LIMIT 2000",
+      "data_hash": "sha256:781c21415608cad3",
+      "columns": [
+        "SUM(arr_usd)"
+      ],
+      "rows": [
+        {
+          "SUM(arr_usd)": 14996715.36,
+          "SUM(arr_usd)_ma3": 14996715.36
+        }
+      ],
+      "x_field": "SUM(arr_usd)",
+      "y_fields": [
+        "SUM(arr_usd)"
+      ],
+      "series_field": null,
+      "kpi_payload": {
+        "formatted_value": "$15.00M",
+        "raw_value": 14996715.36,
+        "metric_label": "Sum(Arr Usd)",
+        "delta_pct": 0.0,
+        "delta_direction": "neutral",
+        "sparkline": [
+          14996715.36
+        ],
+        "subtext": "Sum(Arr Usd) Ma3: $15.00M"
+      },
+      "echarts_option": null,
+      "insight_summary": "Sum(Arr Usd) ranges from $15.00M to $15.00M.",
+      "anomalies": []
+    },
+    {
+      "id": "widget_chart_mrr_trend",
+      "title": "Monthly Net Revenue & Profit Trajectory",
+      "subtitle": "22-Month Historical Trend with Moving Average",
+      "widget_type": "echarts",
+      "chart_type": "combo_dual_axis",
+      "step_id": "step_5_chart_mrr_trend",
+      "sql_query": "SELECT order_month, ROUND(SUM(net_revenue), 2) AS net_revenue, ROUND(SUM(profit_usd), 2) AS net_profit FROM orders GROUP BY order_month ORDER BY order_month LIMIT 2000",
+      "data_hash": "sha256:24a186bb836fcca3",
+      "columns": [
+        "order_month",
+        "net_revenue",
+        "net_profit"
+      ],
+      "rows": [
+        {
+          "order_month": "2025-01",
+          "net_revenue": 462430.5,
+          "net_profit": 381096.04,
+          "net_revenue_ma3": 462430.5,
+          "net_revenue_zscore": -1.19
+        },
+        {
+          "order_month": "2025-02",
+          "net_revenue": 463609.0,
+          "net_profit": 384033.1,
+          "net_revenue_ma3": 463019.75,
+          "net_revenue_zscore": -1.18
+        },
+        {
+          "order_month": "2025-03",
+          "net_revenue": 541247.5,
+          "net_profit": 448388.34,
+          "net_revenue_ma3": 489095.67,
+          "net_revenue_zscore": -0.78
+        },
+        {
+          "order_month": "2025-04",
+          "net_revenue": 581166.0,
+          "net_profit": 478054.41,
+          "net_revenue_ma3": 528674.17,
+          "net_revenue_zscore": -0.57
+        },
+        {
+          "order_month": "2025-05",
+          "net_revenue": 490548.5,
+          "net_profit": 409050.63,
+          "net_revenue_ma3": 537654.0,
+          "net_revenue_zscore": -1.04
+        },
+        {
+          "order_month": "2025-06",
+          "net_revenue": 574554.0,
+          "net_profit": 470873.15,
+          "net_revenue_ma3": 548756.17,
+          "net_revenue_zscore": -0.6
+        },
+        {
+          "order_month": "2025-07",
+          "net_revenue": 700685.0,
+          "net_profit": 581712.33,
+          "net_revenue_ma3": 588595.83,
+          "net_revenue_zscore": 0.06
+        },
+        {
+          "order_month": "2025-08",
+          "net_revenue": 515897.0,
+          "net_profit": 432696.66,
+          "net_revenue_ma3": 597045.33,
+          "net_revenue_zscore": -0.91
+        },
+        {
+          "order_month": "2025-09",
+          "net_revenue": 596077.5,
+          "net_profit": 496509.46,
+          "net_revenue_ma3": 604219.83,
+          "net_revenue_zscore": -0.49
+        },
+        {
+          "order_month": "2025-10",
+          "net_revenue": 683991.5,
+          "net_profit": 559363.78,
+          "net_revenue_ma3": 598655.33,
+          "net_revenue_zscore": -0.03
+        },
+        {
+          "order_month": "2025-11",
+          "net_revenue": 750564.5,
+          "net_profit": 622558.2,
+          "net_revenue_ma3": 676877.83,
+          "net_revenue_zscore": 0.32
+        },
+        {
+          "order_month": "2025-12",
+          "net_revenue": 801067.0,
+          "net_profit": 651706.66,
+          "net_revenue_ma3": 745207.67,
+          "net_revenue_zscore": 0.59
+        },
+        {
+          "order_month": "2026-01",
+          "net_revenue": 631025.5,
+          "net_profit": 523815.92,
+          "net_revenue_ma3": 727552.33,
+          "net_revenue_zscore": -0.31
+        },
+        {
+          "order_month": "2026-02",
+          "net_revenue": 693585.0,
+          "net_profit": 575687.94,
+          "net_revenue_ma3": 708559.17,
+          "net_revenue_zscore": 0.02
+        },
+        {
+          "order_month": "2026-03",
+          "net_revenue": 592396.0,
+          "net_profit": 490058.71,
+          "net_revenue_ma3": 639002.17,
+          "net_revenue_zscore": -0.51
+        },
+        {
+          "order_month": "2026-04",
+          "net_revenue": 647768.5,
+          "net_profit": 533130.24,
+          "net_revenue_ma3": 644583.17,
+          "net_revenue_zscore": -0.22
+        },
+        {
+          "order_month": "2026-05",
+          "net_revenue": 771376.0,
+          "net_profit": 632662.49,
+          "net_revenue_ma3": 670513.5,
+          "net_revenue_zscore": 0.43
+        },
+        {
+          "order_month": "2026-06",
+          "net_revenue": 739104.0,
+          "net_profit": 620915.3,
+          "net_revenue_ma3": 719416.17,
+          "net_revenue_zscore": 0.26
+        },
+        {
+          "order_month": "2026-07",
+          "net_revenue": 665511.0,
+          "net_profit": 555108.72,
+          "net_revenue_ma3": 725330.33,
+          "net_revenue_zscore": -0.12
+        },
+        {
+          "order_month": "2026-08",
+          "net_revenue": 1075795.5,
+          "net_profit": 885137.03,
+          "net_revenue_ma3": 826803.5,
+          "net_revenue_zscore": 2.03
+        },
+        {
+          "order_month": "2026-09",
+          "net_revenue": 990264.5,
+          "net_profit": 817041.61,
+          "net_revenue_ma3": 910523.67,
+          "net_revenue_zscore": 1.58
+        },
+        {
+          "order_month": "2026-10",
+          "net_revenue": 1192653.5,
+          "net_profit": 983769.65,
+          "net_revenue_ma3": 1086237.83,
+          "net_revenue_zscore": 2.64
+        }
+      ],
+      "x_field": "order_month",
+      "y_fields": [
+        "net_revenue",
+        "net_profit"
+      ],
+      "series_field": null,
+      "kpi_payload": null,
+      "echarts_option": {
+        "color": [
+          "#6366f1",
+          "#06b6d4",
+          "#10b981",
+          "#f59e0b",
+          "#ec4899",
+          "#8b5cf6",
+          "#3b82f6",
+          "#14b8a6"
+        ],
+        "tooltip": {
+          "trigger": "axis",
+          "backgroundColor": "rgba(15, 23, 42, 0.94)",
+          "borderColor": "rgba(99, 102, 241, 0.35)",
+          "borderWidth": 1,
+          "textStyle": {
+            "color": "#f8fafc",
+            "fontSize": 12
+          },
+          "confine": true
+        },
+        "legend": {
+          "top": 0,
+          "right": 8,
+          "textStyle": {
+            "color": "#94a3b8",
+            "fontSize": 11
+          }
+        },
+        "grid": {
+          "top": 34,
+          "right": 48,
+          "bottom": 46,
+          "left": 16,
+          "containLabel": true
+        },
+        "xAxis": {
+          "type": "category",
+          "data": [
+            "2025-01",
+            "2025-02",
+            "2025-03",
+            "2025-04",
+            "2025-05",
+            "2025-06",
+            "2025-07",
+            "2025-08",
+            "2025-09",
+            "2025-10",
+            "2025-11",
+            "2025-12",
+            "2026-01",
+            "2026-02",
+            "2026-03",
+            "2026-04",
+            "2026-05",
+            "2026-06",
+            "2026-07",
+            "2026-08",
+            "2026-09",
+            "2026-10"
+          ],
+          "boundaryGap": true,
+          "axisLabel": {
+            "color": "#94a3b8",
+            "fontSize": 11
+          },
+          "axisLine": {
+            "lineStyle": {
+              "color": "rgba(148,163,184,0.2)"
+            }
+          }
+        },
+        "yAxis": [
+          {
+            "type": "value",
+            "axisLabel": {
+              "color": "#94a3b8",
+              "fontSize": 11
+            },
+            "splitLine": {
+              "lineStyle": {
+                "color": "rgba(148,163,184,0.12)",
+                "type": "dashed"
+              }
+            }
+          },
+          {
+            "type": "value",
+            "axisLabel": {
+              "color": "#10b981",
+              "fontSize": 11
+            },
+            "splitLine": {
+              "show": false
+            }
+          }
+        ],
+        "series": [
+          {
+            "name": "Net Revenue",
+            "type": "bar",
+            "barMaxWidth": 28,
+            "itemStyle": {
+              "borderRadius": [
+                5,
+                5,
+                0,
+                0
+              ],
+              "color": "#6366f1"
+            },
+            "data": [
+              462430.5,
+              463609.0,
+              541247.5,
+              581166.0,
+              490548.5,
+              574554.0,
+              700685.0,
+              515897.0,
+              596077.5,
+              683991.5,
+              750564.5,
+              801067.0,
+              631025.5,
+              693585.0,
+              592396.0,
+              647768.5,
+              771376.0,
+              739104.0,
+              665511.0,
+              1075795.5,
+              990264.5,
+              1192653.5
+            ]
+          },
+          {
+            "name": "Net Profit",
+            "type": "line",
+            "yAxisIndex": 1,
+            "smooth": true,
+            "symbol": "circle",
+            "symbolSize": 7,
+            "lineStyle": {
+              "width": 3,
+              "color": "#10b981"
+            },
+            "itemStyle": {
+              "color": "#10b981"
+            },
+            "data": [
+              381096.04,
+              384033.1,
+              448388.34,
+              478054.41,
+              409050.63,
+              470873.15,
+              581712.33,
+              432696.66,
+              496509.46,
+              559363.78,
+              622558.2,
+              651706.66,
+              523815.92,
+              575687.94,
+              490058.71,
+              533130.24,
+              632662.49,
+              620915.3,
+              555108.72,
+              885137.03,
+              817041.61,
+              983769.65
+            ]
+          }
+        ],
+        "dataZoom": [
+          {
+            "type": "inside",
+            "start": 0,
+            "end": 100
+          },
+          {
+            "type": "slider",
+            "height": 16,
+            "bottom": 6,
+            "borderColor": "rgba(148,163,184,0.15)",
+            "fillerColor": "rgba(99, 102, 241, 0.2)",
+            "textStyle": {
+              "color": "#94a3b8",
+              "fontSize": 10
+            }
+          }
+        ]
+      },
+      "insight_summary": "Net Revenue ranges from $462.4K to $1.19M (+157.91% trajectory). Outlier spike at 2026-08 (Z=2.03).",
+      "anomalies": [
+        {
+          "row_index": 19,
+          "dimension_label": "2026-08",
+          "metric_name": "net_revenue",
+          "value": 1075795.5,
+          "z_score": 2.03,
+          "direction": "spike"
+        },
+        {
+          "row_index": 21,
+          "dimension_label": "2026-10",
+          "metric_name": "net_revenue",
+          "value": 1192653.5,
+          "z_score": 2.64,
+          "direction": "spike"
+        }
+      ]
+    },
+    {
+      "id": "widget_chart_churn_reasons",
+      "title": "Churned ARR by Root Cause",
+      "subtitle": "Primary Churn Drivers",
+      "widget_type": "echarts",
+      "chart_type": "donut",
+      "step_id": "step_6_chart_churn_reasons",
+      "sql_query": "SELECT churn_reason, ROUND(SUM(arr_usd), 2) AS churned_arr, COUNT(*) AS churned_accounts FROM subscriptions WHERE status = 'Churned' AND NOT churn_reason IS NULL GROUP BY churn_reason ORDER BY churned_arr DESC LIMIT 2000",
+      "data_hash": "sha256:fa051e2696fcd619",
+      "columns": [
+        "churn_reason",
+        "churned_arr",
+        "churned_accounts"
+      ],
+      "rows": [
+        {
+          "churn_reason": "Low Team Adoption",
+          "churned_arr": 399840.0,
+          "churned_accounts": 11,
+          "churned_arr_ma3": 399840.0,
+          "churned_arr_zscore": 1.25
+        },
+        {
+          "churn_reason": "Company Acquired",
+          "churned_arr": 333686.4,
+          "churned_accounts": 12,
+          "churned_arr_ma3": 366763.2,
+          "churned_arr_zscore": 0.78
+        },
+        {
+          "churn_reason": "Missing Connector",
+          "churned_arr": 200997.6,
+          "churned_accounts": 10,
+          "churned_arr_ma3": 311508.0,
+          "churned_arr_zscore": -0.15
+        },
+        {
+          "churn_reason": "Switched to Competitor",
+          "churned_arr": 108309.6,
+          "churned_accounts": 8,
+          "churned_arr_ma3": 214331.2,
+          "churned_arr_zscore": -0.81
+        },
+        {
+          "churn_reason": "Budget Consolidation",
+          "churned_arr": 70944.0,
+          "churned_accounts": 4,
+          "churned_arr_ma3": 126750.4,
+          "churned_arr_zscore": -1.07
+        }
+      ],
+      "x_field": "churn_reason",
+      "y_fields": [
+        "churned_arr"
+      ],
+      "series_field": null,
+      "kpi_payload": null,
+      "echarts_option": {
+        "color": [
+          "#6366f1",
+          "#06b6d4",
+          "#10b981",
+          "#f59e0b",
+          "#ec4899",
+          "#8b5cf6",
+          "#3b82f6",
+          "#14b8a6"
+        ],
+        "tooltip": {
+          "trigger": "item",
+          "backgroundColor": "rgba(15, 23, 42, 0.94)",
+          "borderColor": "rgba(99, 102, 241, 0.35)",
+          "borderWidth": 1,
+          "textStyle": {
+            "color": "#f8fafc",
+            "fontSize": 12
+          },
+          "confine": true
+        },
+        "legend": {
+          "orient": "vertical",
+          "right": 8,
+          "top": "middle",
+          "textStyle": {
+            "color": "#94a3b8",
+            "fontSize": 11
+          }
+        },
+        "series": [
+          {
+            "name": "Churned Arr",
+            "type": "pie",
+            "radius": [
+              "42%",
+              "74%"
+            ],
+            "center": [
+              "38%",
+              "52%"
+            ],
+            "roseType": false,
+            "itemStyle": {
+              "borderRadius": 6,
+              "borderColor": "#0f172a",
+              "borderWidth": 2
+            },
+            "label": {
+              "show": false
+            },
+            "emphasis": {
+              "label": {
+                "show": true,
+                "fontSize": 13,
+                "fontWeight": "bold",
+                "color": "#f8fafc"
+              }
+            },
+            "data": [
+              {
+                "name": "Low Team Adoption",
+                "value": 399840.0
+              },
+              {
+                "name": "Company Acquired",
+                "value": 333686.4
+              },
+              {
+                "name": "Missing Connector",
+                "value": 200997.6
+              },
+              {
+                "name": "Switched to Competitor",
+                "value": 108309.6
+              },
+              {
+                "name": "Budget Consolidation",
+                "value": 70944.0
+              }
+            ]
+          }
+        ]
+      },
+      "insight_summary": "Churned Arr ranges from $70.9K to $399.8K (-82.26% trajectory).",
+      "anomalies": []
+    },
+    {
+      "id": "widget_chart_segment_status",
+      "title": "Subscription ARR by Segment & Status",
+      "subtitle": "Active vs Expanded vs Churned Breakdown",
+      "widget_type": "echarts",
+      "chart_type": "grouped_bar",
+      "step_id": "step_7_chart_segment_status",
+      "sql_query": "SELECT c.segment, ROUND(SUM(CASE WHEN s.status = 'Active' THEN s.arr_usd ELSE 0 END), 2) AS active_arr, ROUND(SUM(CASE WHEN s.status = 'Expanded' THEN s.arr_usd ELSE 0 END), 2) AS expanded_arr, ROUND(SUM(CASE WHEN s.status = 'Churned' THEN s.arr_usd ELSE 0 END), 2) AS churned_arr FROM subscriptions AS s JOIN customers AS c ON s.customer_id = c.customer_id GROUP BY c.segment ORDER BY active_arr DESC LIMIT 2000",
+      "data_hash": "sha256:1b86ec6d8425ab9f",
+      "columns": [
+        "segment",
+        "active_arr",
+        "expanded_arr",
+        "churned_arr"
+      ],
+      "rows": [
+        {
+          "segment": "Enterprise",
+          "active_arr": 4538776.8,
+          "expanded_arr": 2010053.88,
+          "churned_arr": 318583.2,
+          "active_arr_ma3": 4538776.8,
+          "active_arr_zscore": 1.09
+        },
+        {
+          "segment": "Mid-Market",
+          "active_arr": 3556946.4,
+          "expanded_arr": 1524782.88,
+          "churned_arr": 393388.8,
+          "active_arr_ma3": 4047861.6,
+          "active_arr_zscore": 0.6
+        },
+        {
+          "segment": "SMB",
+          "active_arr": 948192.0,
+          "expanded_arr": 670177.8,
+          "churned_arr": 295545.6,
+          "active_arr_ma3": 3014638.4,
+          "active_arr_zscore": -0.71
+        },
+        {
+          "segment": "Startup",
+          "active_arr": 398784.0,
+          "expanded_arr": 235224.0,
+          "churned_arr": 106260.0,
+          "active_arr_ma3": 1634640.8,
+          "active_arr_zscore": -0.98
+        }
+      ],
+      "x_field": "segment",
+      "y_fields": [
+        "active_arr",
+        "expanded_arr",
+        "churned_arr"
+      ],
+      "series_field": null,
+      "kpi_payload": null,
+      "echarts_option": {
+        "color": [
+          "#6366f1",
+          "#06b6d4",
+          "#10b981",
+          "#f59e0b",
+          "#ec4899",
+          "#8b5cf6",
+          "#3b82f6",
+          "#14b8a6"
+        ],
+        "tooltip": {
+          "trigger": "axis",
+          "backgroundColor": "rgba(15, 23, 42, 0.94)",
+          "borderColor": "rgba(99, 102, 241, 0.35)",
+          "borderWidth": 1,
+          "textStyle": {
+            "color": "#f8fafc",
+            "fontSize": 12
+          },
+          "confine": true
+        },
+        "legend": {
+          "top": 0,
+          "right": 8,
+          "textStyle": {
+            "color": "#94a3b8",
+            "fontSize": 11
+          }
+        },
+        "grid": {
+          "top": 34,
+          "right": 24,
+          "bottom": 24,
+          "left": 16,
+          "containLabel": true
+        },
+        "xAxis": {
+          "type": "category",
+          "data": [
+            "Enterprise",
+            "Mid-Market",
+            "SMB",
+            "Startup"
+          ],
+          "boundaryGap": true,
+          "axisLabel": {
+            "color": "#94a3b8",
+            "fontSize": 11
+          },
+          "axisLine": {
+            "lineStyle": {
+              "color": "rgba(148,163,184,0.2)"
+            }
+          }
+        },
+        "yAxis": {
+          "type": "value",
+          "axisLabel": {
+            "color": "#94a3b8",
+            "fontSize": 11
+          },
+          "splitLine": {
+            "lineStyle": {
+              "color": "rgba(148,163,184,0.12)",
+              "type": "dashed"
+            }
+          }
+        },
+        "series": [
+          {
+            "name": "Active Arr",
+            "type": "bar",
+            "data": [
+              4538776.8,
+              3556946.4,
+              948192.0,
+              398784.0
+            ],
+            "itemStyle": {
+              "color": "#6366f1",
+              "borderRadius": [
+                5,
+                5,
+                0,
+                0
+              ]
+            },
+            "barMaxWidth": 30
+          },
+          {
+            "name": "Expanded Arr",
+            "type": "bar",
+            "data": [
+              2010053.88,
+              1524782.88,
+              670177.8,
+              235224.0
+            ],
+            "itemStyle": {
+              "color": "#06b6d4",
+              "borderRadius": [
+                5,
+                5,
+                0,
+                0
+              ]
+            },
+            "barMaxWidth": 30
+          },
+          {
+            "name": "Churned Arr",
+            "type": "bar",
+            "data": [
+              318583.2,
+              393388.8,
+              295545.6,
+              106260.0
+            ],
+            "itemStyle": {
+              "color": "#10b981",
+              "borderRadius": [
+                5,
+                5,
+                0,
+                0
+              ]
+            },
+            "barMaxWidth": 30
+          }
+        ]
+      },
+      "insight_summary": "Active Arr ranges from $398.8K to $4.54M (-91.21% trajectory).",
+      "anomalies": []
+    },
+    {
+      "id": "widget_chart_flow_sankey",
+      "title": "Segment to Product Category ARR Flow",
+      "subtitle": "Multi-stage Subscription Attribution Sankey",
+      "widget_type": "echarts",
+      "chart_type": "sankey",
+      "step_id": "step_8_chart_flow_sankey",
+      "sql_query": "SELECT c.segment, p.category, ROUND(SUM(s.arr_usd), 2) AS total_arr FROM subscriptions AS s JOIN customers AS c ON s.customer_id = c.customer_id JOIN products AS p ON s.product_id = p.product_id GROUP BY c.segment, p.category ORDER BY total_arr DESC LIMIT 2000",
+      "data_hash": "sha256:62d26bbea7c1a569",
+      "columns": [
+        "segment",
+        "category",
+        "total_arr"
+      ],
+      "rows": [
+        {
+          "segment": "Enterprise",
+          "category": "AI Analytics Suite",
+          "total_arr": 2674803.12,
+          "total_arr_ma3": 2674803.12,
+          "total_arr_zscore": 2.76
+        },
+        {
+          "segment": "Mid-Market",
+          "category": "AI Analytics Suite",
+          "total_arr": 1767399.84,
+          "total_arr_ma3": 2221101.48,
+          "total_arr_zscore": 1.46
+        },
+        {
+          "segment": "Enterprise",
+          "category": "Cloud Data Warehouse",
+          "total_arr": 1680825.6,
+          "total_arr_ma3": 2041009.52,
+          "total_arr_zscore": 1.34
+        },
+        {
+          "segment": "Mid-Market",
+          "category": "Cloud Data Warehouse",
+          "total_arr": 1641830.4,
+          "total_arr_ma3": 1696685.28,
+          "total_arr_zscore": 1.28
+        },
+        {
+          "segment": "Enterprise",
+          "category": "Real-Time ETL",
+          "total_arr": 967655.4,
+          "total_arr_ma3": 1430103.8,
+          "total_arr_zscore": 0.31
+        },
+        {
+          "segment": "Mid-Market",
+          "category": "Governance & Security",
+          "total_arr": 829569.6,
+          "total_arr_ma3": 1146351.8,
+          "total_arr_zscore": 0.11
+        },
+        {
+          "segment": "Enterprise",
+          "category": "Embedded BI",
+          "total_arr": 819924.96,
+          "total_arr_ma3": 872383.32,
+          "total_arr_zscore": 0.1
+        },
+        {
+          "segment": "Enterprise",
+          "category": "Governance & Security",
+          "total_arr": 724204.8,
+          "total_arr_ma3": 791233.12,
+          "total_arr_zscore": -0.04
+        },
+        {
+          "segment": "SMB",
+          "category": "AI Analytics Suite",
+          "total_arr": 634997.76,
+          "total_arr_ma3": 726375.84,
+          "total_arr_zscore": -0.16
+        },
+        {
+          "segment": "SMB",
+          "category": "Cloud Data Warehouse",
+          "total_arr": 632246.4,
+          "total_arr_ma3": 663816.32,
+          "total_arr_zscore": -0.17
+        },
+        {
+          "segment": "Mid-Market",
+          "category": "Embedded BI",
+          "total_arr": 630536.52,
+          "total_arr_ma3": 632593.56,
+          "total_arr_zscore": -0.17
+        },
+        {
+          "segment": "Mid-Market",
+          "category": "Real-Time ETL",
+          "total_arr": 605781.72,
+          "total_arr_ma3": 622854.88,
+          "total_arr_zscore": -0.21
+        },
+        {
+          "segment": "Startup",
+          "category": "AI Analytics Suite",
+          "total_arr": 282105.6,
+          "total_arr_ma3": 506141.28,
+          "total_arr_zscore": -0.67
+        },
+        {
+          "segment": "SMB",
+          "category": "Real-Time ETL",
+          "total_arr": 237306.0,
+          "total_arr_ma3": 375064.44,
+          "total_arr_zscore": -0.74
+        },
+        {
+          "segment": "SMB",
+          "category": "Governance & Security",
+          "total_arr": 218908.8,
+          "total_arr_ma3": 246106.8,
+          "total_arr_zscore": -0.76
+        },
+        {
+          "segment": "SMB",
+          "category": "Embedded BI",
+          "total_arr": 190456.44,
+          "total_arr_ma3": 215557.08,
+          "total_arr_zscore": -0.8
+        },
+        {
+          "segment": "Startup",
+          "category": "Cloud Data Warehouse",
+          "total_arr": 158198.4,
+          "total_arr_ma3": 189187.88,
+          "total_arr_zscore": -0.85
+        },
+        {
+          "segment": "Startup",
+          "category": "Governance & Security",
+          "total_arr": 151401.6,
+          "total_arr_ma3": 166685.48,
+          "total_arr_zscore": -0.86
+        },
+        {
+          "segment": "Startup",
+          "category": "Embedded BI",
+          "total_arr": 87939.12,
+          "total_arr_ma3": 132513.04,
+          "total_arr_zscore": -0.95
+        },
+        {
+          "segment": "Startup",
+          "category": "Real-Time ETL",
+          "total_arr": 60623.28,
+          "total_arr_ma3": 99988.0,
+          "total_arr_zscore": -0.99
+        }
+      ],
+      "x_field": "segment",
+      "y_fields": [
+        "total_arr"
+      ],
+      "series_field": null,
+      "kpi_payload": null,
+      "echarts_option": {
+        "color": [
+          "#6366f1",
+          "#06b6d4",
+          "#10b981",
+          "#f59e0b",
+          "#ec4899",
+          "#8b5cf6",
+          "#3b82f6",
+          "#14b8a6"
+        ],
+        "tooltip": {
+          "trigger": "item",
+          "backgroundColor": "rgba(15, 23, 42, 0.94)",
+          "borderColor": "rgba(99, 102, 241, 0.35)",
+          "borderWidth": 1,
+          "textStyle": {
+            "color": "#f8fafc",
+            "fontSize": 12
+          },
+          "confine": true
+        },
+        "series": [
+          {
+            "type": "sankey",
+            "emphasis": {
+              "focus": "adjacency"
+            },
+            "nodeAlign": "left",
+            "data": [
+              {
+                "name": "AI Analytics Suite"
+              },
+              {
+                "name": "Cloud Data Warehouse"
+              },
+              {
+                "name": "Embedded BI"
+              },
+              {
+                "name": "Enterprise"
+              },
+              {
+                "name": "Governance & Security"
+              },
+              {
+                "name": "Mid-Market"
+              },
+              {
+                "name": "Real-Time ETL"
+              },
+              {
+                "name": "SMB"
+              },
+              {
+                "name": "Startup"
+              }
+            ],
+            "links": [
+              {
+                "source": "Enterprise",
+                "target": "AI Analytics Suite",
+                "value": 2674803.12
+              },
+              {
+                "source": "Mid-Market",
+                "target": "AI Analytics Suite",
+                "value": 1767399.84
+              },
+              {
+                "source": "Enterprise",
+                "target": "Cloud Data Warehouse",
+                "value": 1680825.6
+              },
+              {
+                "source": "Mid-Market",
+                "target": "Cloud Data Warehouse",
+                "value": 1641830.4
+              },
+              {
+                "source": "Enterprise",
+                "target": "Real-Time ETL",
+                "value": 967655.4
+              },
+              {
+                "source": "Mid-Market",
+                "target": "Governance & Security",
+                "value": 829569.6
+              },
+              {
+                "source": "Enterprise",
+                "target": "Embedded BI",
+                "value": 819924.96
+              },
+              {
+                "source": "Enterprise",
+                "target": "Governance & Security",
+                "value": 724204.8
+              },
+              {
+                "source": "SMB",
+                "target": "AI Analytics Suite",
+                "value": 634997.76
+              },
+              {
+                "source": "SMB",
+                "target": "Cloud Data Warehouse",
+                "value": 632246.4
+              },
+              {
+                "source": "Mid-Market",
+                "target": "Embedded BI",
+                "value": 630536.52
+              },
+              {
+                "source": "Mid-Market",
+                "target": "Real-Time ETL",
+                "value": 605781.72
+              },
+              {
+                "source": "Startup",
+                "target": "AI Analytics Suite",
+                "value": 282105.6
+              },
+              {
+                "source": "SMB",
+                "target": "Real-Time ETL",
+                "value": 237306.0
+              },
+              {
+                "source": "SMB",
+                "target": "Governance & Security",
+                "value": 218908.8
+              },
+              {
+                "source": "SMB",
+                "target": "Embedded BI",
+                "value": 190456.44
+              },
+              {
+                "source": "Startup",
+                "target": "Cloud Data Warehouse",
+                "value": 158198.4
+              },
+              {
+                "source": "Startup",
+                "target": "Governance & Security",
+                "value": 151401.6
+              },
+              {
+                "source": "Startup",
+                "target": "Embedded BI",
+                "value": 87939.12
+              },
+              {
+                "source": "Startup",
+                "target": "Real-Time ETL",
+                "value": 60623.28
+              }
+            ],
+            "lineStyle": {
+              "color": "gradient",
+              "curveness": 0.5,
+              "opacity": 0.45
+            },
+            "label": {
+              "color": "#e2e8f0",
+              "fontSize": 11
+            }
+          }
+        ]
+      },
+      "insight_summary": "Total Arr ranges from $60.6K to $2.67M (-97.73% trajectory). Outlier spike at Enterprise (Z=2.76).",
+      "anomalies": [
+        {
+          "row_index": 0,
+          "dimension_label": "Enterprise",
+          "metric_name": "total_arr",
+          "value": 2674803.12,
+          "z_score": 2.76,
+          "direction": "spike"
+        }
+      ]
+    },
+    {
+      "id": "widget_table_at_risk_accounts",
+      "title": "High-Value Accounts & Subscription Ledger",
+      "subtitle": "Top Enterprise & Mid-Market Subscriptions with Health Scores",
+      "widget_type": "table",
+      "chart_type": "table",
+      "step_id": "step_9_table_at_risk_accounts",
+      "sql_query": "SELECT c.company_name, c.segment, c.region, p.product_name, s.status, s.mrr_usd, s.arr_usd, c.account_health_score, COALESCE(s.churn_reason, 'Healthy') AS risk_note FROM subscriptions AS s JOIN customers AS c ON s.customer_id = c.customer_id JOIN products AS p ON s.product_id = p.product_id ORDER BY s.arr_usd DESC LIMIT 50",
+      "data_hash": "sha256:3a10f257803618b3",
+      "columns": [
+        "company_name",
+        "segment",
+        "region",
+        "product_name",
+        "status",
+        "mrr_usd",
+        "arr_usd",
+        "account_health_score",
+        "risk_note"
+      ],
+      "rows": [
+        {
+          "company_name": "SaaSCore Uni #167",
+          "segment": "Enterprise",
+          "region": "North America",
+          "product_name": "InsightForge Enterprise AI",
+          "status": "Expanded",
+          "mrr_usd": 20179.8,
+          "arr_usd": 242157.6,
+          "account_health_score": 94,
+          "risk_note": "Healthy",
+          "arr_usd_ma3": 242157.6,
+          "arr_usd_zscore": 2.86
+        },
+        {
+          "company_name": "HealCore Can #057",
+          "segment": "Enterprise",
+          "region": "North America",
+          "product_name": "InsightForge Enterprise AI",
+          "status": "Expanded",
+          "mrr_usd": 18081.9,
+          "arr_usd": 216982.8,
+          "account_health_score": 84,
+          "risk_note": "Healthy",
+          "arr_usd_ma3": 229570.2,
+          "arr_usd_zscore": 2.3
+        },
+        {
+          "company_name": "FinTCore Can #005",
+          "segment": "Enterprise",
+          "region": "North America",
+          "product_name": "Lakehouse Query Accelerator",
+          "status": "Active",
+          "mrr_usd": 17952.0,
+          "arr_usd": 215424.0,
+          "account_health_score": 77,
+          "risk_note": "Healthy",
+          "arr_usd_ma3": 224854.8,
+          "arr_usd_zscore": 2.27
+        },
+        {
+          "company_name": "E-CoCore Jap #083",
+          "segment": "Enterprise",
+          "region": "APAC",
+          "product_name": "Lakehouse Query Accelerator",
+          "status": "Active",
+          "mrr_usd": 15648.0,
+          "arr_usd": 187776.0,
+          "account_health_score": 99,
+          "risk_note": "Healthy",
+          "arr_usd_ma3": 206727.6,
+          "arr_usd_zscore": 1.66
+        },
+        {
+          "company_name": "SaaSCore Ind #284",
+          "segment": "Enterprise",
+          "region": "APAC",
+          "product_name": "Lakehouse Query Accelerator",
+          "status": "Expanded",
+          "mrr_usd": 15098.4,
+          "arr_usd": 181180.8,
+          "account_health_score": 84,
+          "risk_note": "Healthy",
+          "arr_usd_ma3": 194793.6,
+          "arr_usd_zscore": 1.51
+        },
+        {
+          "company_name": "E-CoCore Can #085",
+          "segment": "Enterprise",
+          "region": "North America",
+          "product_name": "InsightForge Enterprise AI",
+          "status": "Active",
+          "mrr_usd": 15059.0,
+          "arr_usd": 180708.0,
+          "account_health_score": 69,
+          "risk_note": "Healthy",
+          "arr_usd_ma3": 183221.6,
+          "arr_usd_zscore": 1.5
+        },
+        {
+          "company_name": "SaaSCore Can #062",
+          "segment": "Enterprise",
+          "region": "North America",
+          "product_name": "InsightForge Enterprise AI",
+          "status": "Active",
+          "mrr_usd": 14948.0,
+          "arr_usd": 179376.0,
+          "account_health_score": 83,
+          "risk_note": "Healthy",
+          "arr_usd_ma3": 180421.6,
+          "arr_usd_zscore": 1.47
+        },
+        {
+          "company_name": "LogiCore Can #168",
+          "segment": "Enterprise",
+          "region": "North America",
+          "product_name": "Lakehouse Query Accelerator",
+          "status": "Active",
+          "mrr_usd": 14496.0,
+          "arr_usd": 173952.0,
+          "account_health_score": 99,
+          "risk_note": "Healthy",
+          "arr_usd_ma3": 178012.0,
+          "arr_usd_zscore": 1.35
+        },
+        {
+          "company_name": "LogiCore Uni #299",
+          "segment": "Enterprise",
+          "region": "North America",
+          "product_name": "InsightForge Enterprise AI",
+          "status": "Active",
+          "mrr_usd": 13949.0,
+          "arr_usd": 167388.0,
+          "account_health_score": 99,
+          "risk_note": "Healthy",
+          "arr_usd_ma3": 173572.0,
+          "arr_usd_zscore": 1.21
+        },
+        {
+          "company_name": "SaaSCore Can #121",
+          "segment": "Enterprise",
+          "region": "North America",
+          "product_name": "InsightForge Enterprise AI",
+          "status": "Active",
+          "mrr_usd": 13616.0,
+          "arr_usd": 163392.0,
+          "account_health_score": 78,
+          "risk_note": "Healthy",
+          "arr_usd_ma3": 168244.0,
+          "arr_usd_zscore": 1.12
+        },
+        {
+          "company_name": "ManuCore Can #154",
+          "segment": "Enterprise",
+          "region": "North America",
+          "product_name": "InsightForge Enterprise AI",
+          "status": "Active",
+          "mrr_usd": 13616.0,
+          "arr_usd": 163392.0,
+          "account_health_score": 99,
+          "risk_note": "Healthy",
+          "arr_usd_ma3": 164724.0,
+          "arr_usd_zscore": 1.12
+        },
+        {
+          "company_name": "E-CoCore Uni #074",
+          "segment": "Enterprise",
+          "region": "North America",
+          "product_name": "Lakehouse Query Accelerator",
+          "status": "Active",
+          "mrr_usd": 11616.0,
+          "arr_usd": 139392.0,
+          "account_health_score": 73,
+          "risk_note": "Healthy",
+          "arr_usd_ma3": 155392.0,
+          "arr_usd_zscore": 0.59
+        },
+        {
+          "company_name": "FinTCore Can #261",
+          "segment": "Enterprise",
+          "region": "North America",
+          "product_name": "Lakehouse Query Accelerator",
+          "status": "Expanded",
+          "mrr_usd": 11599.2,
+          "arr_usd": 139190.4,
+          "account_health_score": 71,
+          "risk_note": "Healthy",
+          "arr_usd_ma3": 147324.8,
+          "arr_usd_zscore": 0.58
+        },
+        {
+          "company_name": "LogiCore Ger #098",
+          "segment": "Enterprise",
+          "region": "Europe",
+          "product_name": "Lakehouse Query Accelerator",
+          "status": "Active",
+          "mrr_usd": 11328.0,
+          "arr_usd": 135936.0,
+          "account_health_score": 76,
+          "risk_note": "Healthy",
+          "arr_usd_ma3": 138172.8,
+          "arr_usd_zscore": 0.51
+        },
+        {
+          "company_name": "FinTCore Can #011",
+          "segment": "Enterprise",
+          "region": "North America",
+          "product_name": "Lakehouse Query Accelerator",
+          "status": "Churned",
+          "mrr_usd": 11184.0,
+          "arr_usd": 134208.0,
+          "account_health_score": 64,
+          "risk_note": "Low Team Adoption",
+          "arr_usd_ma3": 136444.8,
+          "arr_usd_zscore": 0.47
+        },
+        {
+          "company_name": "MediCore Sin #009",
+          "segment": "Enterprise",
+          "region": "APAC",
+          "product_name": "DataShield Governance Guard",
+          "status": "Active",
+          "mrr_usd": 8976.0,
+          "arr_usd": 107712.0,
+          "account_health_score": 96,
+          "risk_note": "Healthy",
+          "arr_usd_ma3": 125952.0,
+          "arr_usd_zscore": -0.11
+        },
+        {
+          "company_name": "MediCore Uni #183",
+          "segment": "Enterprise",
+          "region": "North America",
+          "product_name": "DataShield Governance Guard",
+          "status": "Active",
+          "mrr_usd": 8832.0,
+          "arr_usd": 105984.0,
+          "account_health_score": 88,
+          "risk_note": "Healthy",
+          "arr_usd_ma3": 115968.0,
+          "arr_usd_zscore": -0.15
+        },
+        {
+          "company_name": "MediCore Can #220",
+          "segment": "Enterprise",
+          "region": "North America",
+          "product_name": "InsightForge Enterprise AI",
+          "status": "Active",
+          "mrr_usd": 8732.0,
+          "arr_usd": 104784.0,
+          "account_health_score": 99,
+          "risk_note": "Healthy",
+          "arr_usd_ma3": 106160.0,
+          "arr_usd_zscore": -0.18
+        },
+        {
+          "company_name": "ManuCore Uni #090",
+          "segment": "Enterprise",
+          "region": "Europe",
+          "product_name": "Lakehouse Query Accelerator",
+          "status": "Expanded",
+          "mrr_usd": 8683.2,
+          "arr_usd": 104198.4,
+          "account_health_score": 96,
+          "risk_note": "Healthy",
+          "arr_usd_ma3": 104988.8,
+          "arr_usd_zscore": -0.19
+        },
+        {
+          "company_name": "LogiCore Uni #299",
+          "segment": "Enterprise",
+          "region": "North America",
+          "product_name": "EmbedKit React SDK",
+          "status": "Expanded",
+          "mrr_usd": 8554.68,
+          "arr_usd": 102656.16,
+          "account_health_score": 99,
+          "risk_note": "Healthy",
+          "arr_usd_ma3": 103879.52,
+          "arr_usd_zscore": -0.22
+        },
+        {
+          "company_name": "SaaSCore Bra #164",
+          "segment": "Mid-Market",
+          "region": "LATAM",
+          "product_name": "Lakehouse Query Accelerator",
+          "status": "Expanded",
+          "mrr_usd": 8488.8,
+          "arr_usd": 101865.6,
+          "account_health_score": 66,
+          "risk_note": "Healthy",
+          "arr_usd_ma3": 102906.72,
+          "arr_usd_zscore": -0.24
+        },
+        {
+          "company_name": "MediCore Can #220",
+          "segment": "Enterprise",
+          "region": "North America",
+          "product_name": "Lakehouse Query Accelerator",
+          "status": "Active",
+          "mrr_usd": 8016.0,
+          "arr_usd": 96192.0,
+          "account_health_score": 99,
+          "risk_note": "Healthy",
+          "arr_usd_ma3": 100237.92,
+          "arr_usd_zscore": -0.37
+        },
+        {
+          "company_name": "LogiCore Can #125",
+          "segment": "Enterprise",
+          "region": "North America",
+          "product_name": "DataShield Governance Guard",
+          "status": "Active",
+          "mrr_usd": 7968.0,
+          "arr_usd": 95616.0,
+          "account_health_score": 82,
+          "risk_note": "Healthy",
+          "arr_usd_ma3": 97891.2,
+          "arr_usd_zscore": -0.38
+        },
+        {
+          "company_name": "SaaSCore Can #088",
+          "segment": "Mid-Market",
+          "region": "North America",
+          "product_name": "InsightForge Enterprise AI",
+          "status": "Expanded",
+          "mrr_usd": 7742.25,
+          "arr_usd": 92907.0,
+          "account_health_score": 77,
+          "risk_note": "Healthy",
+          "arr_usd_ma3": 94905.0,
+          "arr_usd_zscore": -0.44
+        },
+        {
+          "company_name": "SaaSCore Uni #071",
+          "segment": "Enterprise",
+          "region": "North America",
+          "product_name": "Lakehouse Query Accelerator",
+          "status": "Active",
+          "mrr_usd": 7584.0,
+          "arr_usd": 91008.0,
+          "account_health_score": 85,
+          "risk_note": "Healthy",
+          "arr_usd_ma3": 93177.0,
+          "arr_usd_zscore": -0.48
+        },
+        {
+          "company_name": "SaaSCore Can #121",
+          "segment": "Enterprise",
+          "region": "North America",
+          "product_name": "EmbedKit React SDK",
+          "status": "Expanded",
+          "mrr_usd": 7473.33,
+          "arr_usd": 89679.96,
+          "account_health_score": 78,
+          "risk_note": "Healthy",
+          "arr_usd_ma3": 91198.32,
+          "arr_usd_zscore": -0.51
+        },
+        {
+          "company_name": "HealCore Can #127",
+          "segment": "Mid-Market",
+          "region": "North America",
+          "product_name": "Lakehouse Query Accelerator",
+          "status": "Active",
+          "mrr_usd": 7440.0,
+          "arr_usd": 89280.0,
+          "account_health_score": 61,
+          "risk_note": "Healthy",
+          "arr_usd_ma3": 89989.32,
+          "arr_usd_zscore": -0.52
+        },
+        {
+          "company_name": "E-CoCore Can #137",
+          "segment": "Mid-Market",
+          "region": "North America",
+          "product_name": "Lakehouse Query Accelerator",
+          "status": "Active",
+          "mrr_usd": 7440.0,
+          "arr_usd": 89280.0,
+          "account_health_score": 69,
+          "risk_note": "Healthy",
+          "arr_usd_ma3": 89413.32,
+          "arr_usd_zscore": -0.52
+        },
+        {
+          "company_name": "ManuCore Uni #146",
+          "segment": "Mid-Market",
+          "region": "North America",
+          "product_name": "Lakehouse Query Accelerator",
+          "status": "Active",
+          "mrr_usd": 7440.0,
+          "arr_usd": 89280.0,
+          "account_health_score": 85,
+          "risk_note": "Healthy",
+          "arr_usd_ma3": 89280.0,
+          "arr_usd_zscore": -0.52
+        },
+        {
+          "company_name": "ManuCore Net #217",
+          "segment": "Mid-Market",
+          "region": "Europe",
+          "product_name": "Lakehouse Query Accelerator",
+          "status": "Expanded",
+          "mrr_usd": 7322.4,
+          "arr_usd": 87868.8,
+          "account_health_score": 99,
+          "risk_note": "Healthy",
+          "arr_usd_ma3": 88809.6,
+          "arr_usd_zscore": -0.55
+        },
+        {
+          "company_name": "E-CoCore Sin #279",
+          "segment": "Mid-Market",
+          "region": "APAC",
+          "product_name": "Lakehouse Query Accelerator",
+          "status": "Active",
+          "mrr_usd": 7296.0,
+          "arr_usd": 87552.0,
+          "account_health_score": 84,
+          "risk_note": "Healthy",
+          "arr_usd_ma3": 88233.6,
+          "arr_usd_zscore": -0.56
+        },
+        {
+          "company_name": "SaaSCore Can #248",
+          "segment": "Enterprise",
+          "region": "North America",
+          "product_name": "HyperStream ETL Connectors",
+          "status": "Expanded",
+          "mrr_usd": 7252.2,
+          "arr_usd": 87026.4,
+          "account_health_score": 72,
+          "risk_note": "Healthy",
+          "arr_usd_ma3": 87482.4,
+          "arr_usd_zscore": -0.57
+        },
+        {
+          "company_name": "E-CoCore Net #030",
+          "segment": "Mid-Market",
+          "region": "Europe",
+          "product_name": "Lakehouse Query Accelerator",
+          "status": "Churned",
+          "mrr_usd": 7152.0,
+          "arr_usd": 85824.0,
+          "account_health_score": 74,
+          "risk_note": "Company Acquired",
+          "arr_usd_ma3": 86800.8,
+          "arr_usd_zscore": -0.6
+        },
+        {
+          "company_name": "HealCore Uni #059",
+          "segment": "Enterprise",
+          "region": "North America",
+          "product_name": "DataShield Governance Guard",
+          "status": "Expanded",
+          "mrr_usd": 7063.2,
+          "arr_usd": 84758.4,
+          "account_health_score": 87,
+          "risk_note": "Healthy",
+          "arr_usd_ma3": 85869.6,
+          "arr_usd_zscore": -0.62
+        },
+        {
+          "company_name": "FinTCore Ind #091",
+          "segment": "Mid-Market",
+          "region": "APAC",
+          "product_name": "Lakehouse Query Accelerator",
+          "status": "Active",
+          "mrr_usd": 6864.0,
+          "arr_usd": 82368.0,
+          "account_health_score": 54,
+          "risk_note": "Healthy",
+          "arr_usd_ma3": 84316.8,
+          "arr_usd_zscore": -0.67
+        },
+        {
+          "company_name": "LogiCore Net #225",
+          "segment": "Mid-Market",
+          "region": "Europe",
+          "product_name": "Lakehouse Query Accelerator",
+          "status": "Active",
+          "mrr_usd": 6864.0,
+          "arr_usd": 82368.0,
+          "account_health_score": 61,
+          "risk_note": "Healthy",
+          "arr_usd_ma3": 83164.8,
+          "arr_usd_zscore": -0.67
+        },
+        {
+          "company_name": "LogiCore Aus #312",
+          "segment": "Enterprise",
+          "region": "APAC",
+          "product_name": "Lakehouse Query Accelerator",
+          "status": "Active",
+          "mrr_usd": 6864.0,
+          "arr_usd": 82368.0,
+          "account_health_score": 99,
+          "risk_note": "Healthy",
+          "arr_usd_ma3": 82368.0,
+          "arr_usd_zscore": -0.67
+        },
+        {
+          "company_name": "E-CoCore Jap #315",
+          "segment": "Mid-Market",
+          "region": "APAC",
+          "product_name": "Lakehouse Query Accelerator",
+          "status": "Active",
+          "mrr_usd": 6864.0,
+          "arr_usd": 82368.0,
+          "account_health_score": 77,
+          "risk_note": "Healthy",
+          "arr_usd_ma3": 82368.0,
+          "arr_usd_zscore": -0.67
+        },
+        {
+          "company_name": "LogiCore Ind #260",
+          "segment": "Enterprise",
+          "region": "APAC",
+          "product_name": "DataShield Governance Guard",
+          "status": "Active",
+          "mrr_usd": 6816.0,
+          "arr_usd": 81792.0,
+          "account_health_score": 97,
+          "risk_note": "Healthy",
+          "arr_usd_ma3": 82176.0,
+          "arr_usd_zscore": -0.69
+        },
+        {
+          "company_name": "ManuCore Jap #166",
+          "segment": "Mid-Market",
+          "region": "APAC",
+          "product_name": "Lakehouse Query Accelerator",
+          "status": "Active",
+          "mrr_usd": 6720.0,
+          "arr_usd": 80640.0,
+          "account_health_score": 78,
+          "risk_note": "Healthy",
+          "arr_usd_ma3": 81600.0,
+          "arr_usd_zscore": -0.71
+        },
+        {
+          "company_name": "HealCore Swe #268",
+          "segment": "Mid-Market",
+          "region": "Europe",
+          "product_name": "Lakehouse Query Accelerator",
+          "status": "Active",
+          "mrr_usd": 6576.0,
+          "arr_usd": 78912.0,
+          "account_health_score": 79,
+          "risk_note": "Healthy",
+          "arr_usd_ma3": 80448.0,
+          "arr_usd_zscore": -0.75
+        },
+        {
+          "company_name": "E-CoCore Aus #294",
+          "segment": "Mid-Market",
+          "region": "APAC",
+          "product_name": "Lakehouse Query Accelerator",
+          "status": "Active",
+          "mrr_usd": 6288.0,
+          "arr_usd": 75456.0,
+          "account_health_score": 84,
+          "risk_note": "Healthy",
+          "arr_usd_ma3": 78336.0,
+          "arr_usd_zscore": -0.83
+        },
+        {
+          "company_name": "LogiCore Jap #165",
+          "segment": "Mid-Market",
+          "region": "APAC",
+          "product_name": "InsightForge Enterprise AI",
+          "status": "Expanded",
+          "mrr_usd": 6243.75,
+          "arr_usd": 74925.0,
+          "account_health_score": 95,
+          "risk_note": "Healthy",
+          "arr_usd_ma3": 76431.0,
+          "arr_usd_zscore": -0.84
+        },
+        {
+          "company_name": "E-CoCore Fra #185",
+          "segment": "Enterprise",
+          "region": "Europe",
+          "product_name": "EmbedKit React SDK",
+          "status": "Active",
+          "mrr_usd": 6176.6,
+          "arr_usd": 74119.2,
+          "account_health_score": 84,
+          "risk_note": "Healthy",
+          "arr_usd_ma3": 74833.4,
+          "arr_usd_zscore": -0.85
+        },
+        {
+          "company_name": "E-CoCore Can #061",
+          "segment": "Mid-Market",
+          "region": "North America",
+          "product_name": "InsightForge Enterprise AI",
+          "status": "Expanded",
+          "mrr_usd": 6093.9,
+          "arr_usd": 73126.8,
+          "account_health_score": 72,
+          "risk_note": "Healthy",
+          "arr_usd_ma3": 74057.0,
+          "arr_usd_zscore": -0.88
+        },
+        {
+          "company_name": "ManuCore Can #281",
+          "segment": "Mid-Market",
+          "region": "North America",
+          "product_name": "InsightForge Enterprise AI",
+          "status": "Expanded",
+          "mrr_usd": 6093.9,
+          "arr_usd": 73126.8,
+          "account_health_score": 94,
+          "risk_note": "Healthy",
+          "arr_usd_ma3": 73457.6,
+          "arr_usd_zscore": -0.88
+        },
+        {
+          "company_name": "SaaSCore Uni #304",
+          "segment": "Mid-Market",
+          "region": "Europe",
+          "product_name": "Lakehouse Query Accelerator",
+          "status": "Active",
+          "mrr_usd": 6000.0,
+          "arr_usd": 72000.0,
+          "account_health_score": 66,
+          "risk_note": "Healthy",
+          "arr_usd_ma3": 72751.2,
+          "arr_usd_zscore": -0.9
+        },
+        {
+          "company_name": "HealCore Uni #055",
+          "segment": "Enterprise",
+          "region": "North America",
+          "product_name": "Pulse Anomaly Monitor",
+          "status": "Expanded",
+          "mrr_usd": 5957.82,
+          "arr_usd": 71493.84,
+          "account_health_score": 78,
+          "risk_note": "Healthy",
+          "arr_usd_ma3": 72206.88,
+          "arr_usd_zscore": -0.91
+        },
+        {
+          "company_name": "E-CoCore Uni #074",
+          "segment": "Enterprise",
+          "region": "North America",
+          "product_name": "DataShield Governance Guard",
+          "status": "Active",
+          "mrr_usd": 5952.0,
+          "arr_usd": 71424.0,
+          "account_health_score": 73,
+          "risk_note": "Healthy",
+          "arr_usd_ma3": 71639.28,
+          "arr_usd_zscore": -0.91
+        },
+        {
+          "company_name": "SaaSCore Uni #017",
+          "segment": "Enterprise",
+          "region": "North America",
+          "product_name": "Pulse Anomaly Monitor",
+          "status": "Expanded",
+          "mrr_usd": 5862.24,
+          "arr_usd": 70346.88,
+          "account_health_score": 91,
+          "risk_note": "Healthy",
+          "arr_usd_ma3": 71088.24,
+          "arr_usd_zscore": -0.94
+        }
+      ],
+      "x_field": "company_name",
+      "y_fields": [
+        "arr_usd",
+        "mrr_usd",
+        "account_health_score"
+      ],
+      "series_field": null,
+      "kpi_payload": null,
+      "echarts_option": null,
+      "insight_summary": "Arr Usd ranges from $70.3K to $242.2K (-70.95% trajectory). Outlier spike at SaaSCore Uni #167 (Z=2.86).",
+      "anomalies": [
+        {
+          "row_index": 0,
+          "dimension_label": "SaaSCore Uni #167",
+          "metric_name": "arr_usd",
+          "value": 242157.6,
+          "z_score": 2.86,
+          "direction": "spike"
+        },
+        {
+          "row_index": 1,
+          "dimension_label": "HealCore Can #057",
+          "metric_name": "arr_usd",
+          "value": 216982.8,
+          "z_score": 2.3,
+          "direction": "spike"
+        },
+        {
+          "row_index": 2,
+          "dimension_label": "FinTCore Can #005",
+          "metric_name": "arr_usd",
+          "value": 215424.0,
+          "z_score": 2.27,
+          "direction": "spike"
+        }
+      ]
+    }
+  ],
+  "layouts": {
+    "lg": [
+      {
+        "i": "widget_kpi_1",
+        "x": 0,
+        "y": 0,
+        "w": 3,
+        "h": 3,
+        "minW": 2,
+        "minH": 3
+      },
+      {
+        "i": "widget_kpi_2",
+        "x": 3,
+        "y": 0,
+        "w": 3,
+        "h": 3,
+        "minW": 2,
+        "minH": 3
+      },
+      {
+        "i": "widget_kpi_net_mrr",
+        "x": 6,
+        "y": 0,
+        "w": 3,
+        "h": 3,
+        "minW": 2,
+        "minH": 3
+      },
+      {
+        "i": "widget_kpi_4",
+        "x": 9,
+        "y": 0,
+        "w": 3,
+        "h": 3,
+        "minW": 2,
+        "minH": 3
+      },
+      {
+        "i": "widget_chart_mrr_trend",
+        "x": 0,
+        "y": 3,
+        "w": 8,
+        "h": 8,
+        "minW": 4,
+        "minH": 6
+      },
+      {
+        "i": "widget_chart_churn_reasons",
+        "x": 8,
+        "y": 3,
+        "w": 4,
+        "h": 8,
+        "minW": 3,
+        "minH": 6
+      },
+      {
+        "i": "widget_chart_segment_status",
+        "x": 0,
+        "y": 11,
+        "w": 6,
+        "h": 8,
+        "minW": 4,
+        "minH": 6
+      },
+      {
+        "i": "widget_chart_flow_sankey",
+        "x": 6,
+        "y": 11,
+        "w": 6,
+        "h": 8,
+        "minW": 4,
+        "minH": 6
+      },
+      {
+        "i": "widget_table_at_risk_accounts",
+        "x": 0,
+        "y": 19,
+        "w": 12,
+        "h": 8,
+        "minW": 6,
+        "minH": 5
+      }
+    ],
+    "md": [
+      {
+        "i": "widget_kpi_1",
+        "x": 0,
+        "y": 0,
+        "w": 4,
+        "h": 3,
+        "minW": 2,
+        "minH": 3
+      },
+      {
+        "i": "widget_kpi_2",
+        "x": 4,
+        "y": 0,
+        "w": 4,
+        "h": 3,
+        "minW": 2,
+        "minH": 3
+      },
+      {
+        "i": "widget_kpi_net_mrr",
+        "x": 0,
+        "y": 3,
+        "w": 4,
+        "h": 3,
+        "minW": 2,
+        "minH": 3
+      },
+      {
+        "i": "widget_kpi_4",
+        "x": 4,
+        "y": 3,
+        "w": 4,
+        "h": 3,
+        "minW": 2,
+        "minH": 3
+      },
+      {
+        "i": "widget_chart_mrr_trend",
+        "x": 0,
+        "y": 6,
+        "w": 4,
+        "h": 8,
+        "minW": 4,
+        "minH": 6
+      },
+      {
+        "i": "widget_chart_churn_reasons",
+        "x": 4,
+        "y": 6,
+        "w": 4,
+        "h": 8,
+        "minW": 4,
+        "minH": 6
+      },
+      {
+        "i": "widget_chart_segment_status",
+        "x": 0,
+        "y": 14,
+        "w": 4,
+        "h": 8,
+        "minW": 4,
+        "minH": 6
+      },
+      {
+        "i": "widget_chart_flow_sankey",
+        "x": 4,
+        "y": 14,
+        "w": 4,
+        "h": 8,
+        "minW": 4,
+        "minH": 6
+      },
+      {
+        "i": "widget_table_at_risk_accounts",
+        "x": 0,
+        "y": 22,
+        "w": 8,
+        "h": 8,
+        "minW": 4,
+        "minH": 5
+      }
+    ],
+    "sm": [
+      {
+        "i": "widget_kpi_1",
+        "x": 0,
+        "y": 0,
+        "w": 4,
+        "h": 3,
+        "minW": 2,
+        "minH": 3
+      },
+      {
+        "i": "widget_kpi_2",
+        "x": 0,
+        "y": 3,
+        "w": 4,
+        "h": 3,
+        "minW": 2,
+        "minH": 3
+      },
+      {
+        "i": "widget_kpi_net_mrr",
+        "x": 0,
+        "y": 6,
+        "w": 4,
+        "h": 3,
+        "minW": 2,
+        "minH": 3
+      },
+      {
+        "i": "widget_kpi_4",
+        "x": 0,
+        "y": 9,
+        "w": 4,
+        "h": 3,
+        "minW": 2,
+        "minH": 3
+      },
+      {
+        "i": "widget_chart_mrr_trend",
+        "x": 0,
+        "y": 12,
+        "w": 4,
+        "h": 8,
+        "minW": 4,
+        "minH": 6
+      },
+      {
+        "i": "widget_chart_churn_reasons",
+        "x": 0,
+        "y": 20,
+        "w": 4,
+        "h": 8,
+        "minW": 4,
+        "minH": 6
+      },
+      {
+        "i": "widget_chart_segment_status",
+        "x": 0,
+        "y": 28,
+        "w": 4,
+        "h": 8,
+        "minW": 4,
+        "minH": 6
+      },
+      {
+        "i": "widget_chart_flow_sankey",
+        "x": 0,
+        "y": 36,
+        "w": 4,
+        "h": 8,
+        "minW": 4,
+        "minH": 6
+      },
+      {
+        "i": "widget_table_at_risk_accounts",
+        "x": 0,
+        "y": 44,
+        "w": 4,
+        "h": 8,
+        "minW": 4,
+        "minH": 5
+      }
+    ]
+  },
+  "executive_summary": "Total active subscriptions remain stable at 245 with no change, but average monthly recurring revenue (MRR) has declined sharply by 82.31% to $2,599. Total ARR exposure stands at $15.00M with no change, while monthly net revenue shows a significant trajectory increase from $462.4K to $1.19M (+157.91%), indicating potential revenue volatility with an outlier spike in August 2026.",
+  "key_insights": [
+    "Total active subscriptions at 245 show no change in the latest period",
+    "Average MRR has decreased by 82.31% to $2.599K",
+    "Monthly net revenue trajectory increased by 157.91% from $462.4K to $1.19M",
+    "Churned ARR ranges from $70.9K to $399.8K with a -82.26% trajectory"
+  ],
+  "suggested_followups": [
+    "What specific factors contributed to the outlier spike in net revenue during August 2026?",
+    "How do segment-specific churn rates impact the overall ARR exposure?",
+    "Can we identify high-value accounts that are at risk of churn based on the subscription ledger data?"
+  ],
+  "reproducibility_verified": true,
+  "data_drifted": false
+}

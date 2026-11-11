@@ -1,0 +1,82 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* react-grid-layout core & resize handle styling */
+.react-grid-layout {
+  position: relative;
+  transition: height 200ms ease;
+}
+
+.react-grid-item {
+  transition: all 200ms ease;
+  transition-property: left, top, width, height;
+}
+
+.react-grid-item.cssTransforms {
+  transition-property: transform, width, height;
+}
+
+.react-grid-item.resizing {
+  z-index: 30;
+  will-change: width, height;
+}
+
+.react-grid-item.react-draggable-dragging {
+  transition: none;
+  z-index: 40;
+  will-change: transform;
+  box-shadow: 0 20px 50px rgba(79, 70, 229, 0.28);
+}
+
+.react-grid-item.react-grid-placeholder {
+  background: rgba(99, 102, 241, 0.16);
+  border: 2px dashed rgba(99, 102, 241, 0.65);
+  border-radius: 0.75rem;
+  transition-duration: 100ms;
+  z-index: 2;
+  user-select: none;
+}
+
+.react-grid-item > .react-resizable-handle {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  bottom: 2px;
+  right: 2px;
+  cursor: se-resize;
+  z-index: 20;
+  opacity: 0.35;
+  transition: opacity 150ms ease;
+}
+
+.react-grid-item:hover > .react-resizable-handle {
+  opacity: 0.95;
+}
+
+.react-grid-item > .react-resizable-handle::after {
+  content: "";
+  position: absolute;
+  right: 5px;
+  bottom: 5px;
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid #818cf8;
+  border-bottom: 2px solid #818cf8;
+}
+
+/* Custom sleek scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.6);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(71, 85, 105, 0.6);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(99, 102, 241, 0.7);
+}

@@ -1,0 +1,4697 @@
+{
+  "pipeline_id": "pipe_fda7bece6d",
+  "title": "Executive Revenue, Profit & Regional Growth Command Center",
+  "user_query": "Analyze executive revenue trajectory, profit margins, regional share, and product performance",
+  "created_at": "2026-11-11T19:28:19.355902+00:00",
+  "last_replayed_at": null,
+  "connector_id": "default_sqlite_commerce",
+  "connector_name": "InsightForge SaaS & Commerce (SQLite)",
+  "dialect": "sqlite",
+  "schema_fingerprint": "sha256:f74036a45a8ea6b1",
+  "model_used": "schema-adaptive-bi-engine",
+  "steps": [
+    {
+      "step_id": "step_1_kpi_net_rev",
+      "step_number": 1,
+      "title": "Total Net Revenue",
+      "kind": "sql_extraction",
+      "sql_query": "SELECT order_month, ROUND(SUM(net_revenue), 2) AS net_revenue FROM orders GROUP BY order_month ORDER BY order_month",
+      "executed_sql": "SELECT order_month, ROUND(SUM(net_revenue), 2) AS net_revenue FROM orders GROUP BY order_month ORDER BY order_month LIMIT 2000",
+      "depends_on": [],
+      "operation": "SQLITE SELECT + Z-Score & Moving Average Enrichment",
+      "row_count": 22,
+      "columns": [
+        "order_month",
+        "net_revenue"
+      ],
+      "output_hash": "sha256:1595044f0c1445bd",
+      "execution_ms": 3.22,
+      "anomalies_detected": [
+        {
+          "row_index": 19,
+          "dimension_label": "2026-08",
+          "metric_name": "net_revenue",
+          "value": 1075795.5,
+          "z_score": 2.03,
+          "direction": "spike"
+        },
+        {
+          "row_index": 21,
+          "dimension_label": "2026-10",
+          "metric_name": "net_revenue",
+          "value": 1192653.5,
+          "z_score": 2.64,
+          "direction": "spike"
+        }
+      ],
+      "summary_stats": {
+        "metric": "net_revenue",
+        "count": 22,
+        "sum": 15161317.5,
+        "mean": 689150.8,
+        "median": 665511.0,
+        "min": 462430.5,
+        "max": 1192653.5,
+        "std": 190423.66,
+        "period_delta_pct": 157.91,
+        "anomaly_count": 2
+      }
+    },
+    {
+      "step_id": "step_2_kpi_net_profit",
+      "step_number": 2,
+      "title": "Gross Operating Profit",
+      "kind": "sql_extraction",
+      "sql_query": "SELECT order_month, ROUND(SUM(profit_usd), 2) AS profit_usd FROM orders GROUP BY order_month ORDER BY order_month",
+      "executed_sql": "SELECT order_month, ROUND(SUM(profit_usd), 2) AS profit_usd FROM orders GROUP BY order_month ORDER BY order_month LIMIT 2000",
+      "depends_on": [],
+      "operation": "SQLITE SELECT + Z-Score & Moving Average Enrichment",
+      "row_count": 22,
+      "columns": [
+        "order_month",
+        "profit_usd"
+      ],
+      "output_hash": "sha256:8ad38c22000f7a76",
+      "execution_ms": 1.65,
+      "anomalies_detected": [
+        {
+          "row_index": 19,
+          "dimension_label": "2026-08",
+          "metric_name": "profit_usd",
+          "value": 885137.03,
+          "z_score": 2.02,
+          "direction": "spike"
+        },
+        {
+          "row_index": 21,
+          "dimension_label": "2026-10",
+          "metric_name": "profit_usd",
+          "value": 983769.65,
+          "z_score": 2.65,
+          "direction": "spike"
+        }
+      ],
+      "summary_stats": {
+        "metric": "profit_usd",
+        "count": 22,
+        "sum": 12533370.37,
+        "mean": 569698.65,
+        "median": 555108.72,
+        "min": 381096.04,
+        "max": 983769.65,
+        "std": 156050.14,
+        "period_delta_pct": 158.14,
+        "anomaly_count": 2
+      }
+    },
+    {
+      "step_id": "step_3_kpi_active_arr",
+      "step_number": 3,
+      "title": "Active SaaS ARR",
+      "kind": "sql_extraction",
+      "sql_query": "SELECT start_date, ROUND(SUM(arr_usd), 2) AS arr_usd FROM subscriptions WHERE status IN ('Active', 'Expanded') GROUP BY start_date ORDER BY start_date",
+      "executed_sql": "SELECT start_date, ROUND(SUM(arr_usd), 2) AS arr_usd FROM subscriptions WHERE status IN ('Active', 'Expanded') GROUP BY start_date ORDER BY start_date LIMIT 2000",
+      "depends_on": [],
+      "operation": "SQLITE SELECT + Z-Score & Moving Average Enrichment",
+      "row_count": 220,
+      "columns": [
+        "start_date",
+        "arr_usd"
+      ],
+      "output_hash": "sha256:02ae182ea041f0be",
+      "execution_ms": 2.48,
+      "anomalies_detected": [
+        {
+          "row_index": 61,
+          "dimension_label": "2025-07-09",
+          "metric_name": "arr_usd",
+          "value": 299838.96,
+          "z_score": 3.61,
+          "direction": "spike"
+        },
+        {
+          "row_index": 70,
+          "dimension_label": "2025-07-24",
+          "metric_name": "arr_usd",
+          "value": 258985.32,
+          "z_score": 2.99,
+          "direction": "spike"
+        },
+        {
+          "row_index": 74,
+          "dimension_label": "2025-07-29",
+          "metric_name": "arr_usd",
+          "value": 192796.32,
+          "z_score": 1.98,
+          "direction": "spike"
+        },
+        {
+          "row_index": 84,
+          "dimension_label": "2025-08-29",
+          "metric_name": "arr_usd",
+          "value": 269520.0,
+          "z_score": 3.15,
+          "direction": "spike"
+        },
+        {
+          "row_index": 89,
+          "dimension_label": "2025-09-14",
+          "metric_name": "arr_usd",
+          "value": 214020.0,
+          "z_score": 2.3,
+          "direction": "spike"
+        },
+        {
+          "row_index": 93,
+          "dimension_label": "2025-09-27",
+          "metric_name": "arr_usd",
+          "value": 193577.04,
+          "z_score": 1.99,
+          "direction": "spike"
+        },
+        {
+          "row_index": 122,
+          "dimension_label": "2025-12-16",
+          "metric_name": "arr_usd",
+          "value": 228573.6,
+          "z_score": 2.52,
+          "direction": "spike"
+        },
+        {
+          "row_index": 138,
+          "dimension_label": "2026-02-06",
+          "metric_name": "arr_usd",
+          "value": 260660.4,
+          "z_score": 3.01,
+          "direction": "spike"
+        },
+        {
+          "row_index": 154,
+          "dimension_label": "2026-03-23",
+          "metric_name": "arr_usd",
+          "value": 205980.0,
+          "z_score": 2.18,
+          "direction": "spike"
+        },
+        {
+          "row_index": 157,
+          "dimension_label": "2026-03-29",
+          "metric_name": "arr_usd",
+          "value": 424976.76,
+          "z_score": 5.52,
+          "direction": "spike"
+        },
+        {
+          "row_index": 186,
+          "dimension_label": "2026-06-04",
+          "metric_name": "arr_usd",
+          "value": 179376.0,
+          "z_score": 1.77,
+          "direction": "spike"
+        },
+        {
+          "row_index": 188,
+          "dimension_label": "2026-06-07",
+          "metric_name": "arr_usd",
+          "value": 301763.76,
+          "z_score": 3.64,
+          "direction": "spike"
+        },
+        {
+          "row_index": 189,
+          "dimension_label": "2026-06-08",
+          "metric_name": "arr_usd",
+          "value": 255710.4,
+          "z_score": 2.94,
+          "direction": "spike"
+        },
+        {
+          "row_index": 193,
+          "dimension_label": "2026-06-24",
+          "metric_name": "arr_usd",
+          "value": 265701.6,
+          "z_score": 3.09,
+          "direction": "spike"
+        },
+        {
+          "row_index": 216,
+          "dimension_label": "2026-09-06",
+          "metric_name": "arr_usd",
+          "value": 210816.0,
+          "z_score": 2.25,
+          "direction": "spike"
+        }
+      ],
+      "summary_stats": {
+        "metric": "arr_usd",
+        "count": 220,
+        "sum": 13882937.76,
+        "mean": 63104.26,
+        "median": 40879.2,
+        "min": 4524.0,
+        "max": 424976.76,
+        "std": 65570.59,
+        "period_delta_pct": -78.45,
+        "anomaly_count": 15
+      }
+    },
+    {
+      "step_id": "step_4_kpi_order_vol",
+      "step_number": 4,
+      "title": "Total Enterprise Orders",
+      "kind": "sql_extraction",
+      "sql_query": "SELECT order_month, COUNT(*) AS order_count FROM orders GROUP BY order_month ORDER BY order_month",
+      "executed_sql": "SELECT order_month, COUNT(*) AS order_count FROM orders GROUP BY order_month ORDER BY order_month LIMIT 2000",
+      "depends_on": [],
+      "operation": "SQLITE SELECT + Z-Score & Moving Average Enrichment",
+      "row_count": 22,
+      "columns": [
+        "order_month",
+        "order_count"
+      ],
+      "output_hash": "sha256:55fdc87cf344aab3",
+      "execution_ms": 2.17,
+      "anomalies_detected": [
+        {
+          "row_index": 21,
+          "dimension_label": "2026-10",
+          "metric_name": "order_count",
+          "value": 238.0,
+          "z_score": 2.71,
+          "direction": "spike"
+        }
+      ],
+      "summary_stats": {
+        "metric": "order_count",
+        "count": 22,
+        "sum": 2952.0,
+        "mean": 134.18,
+        "median": 138.0,
+        "min": 85.0,
+        "max": 238.0,
+        "std": 38.29,
+        "period_delta_pct": 180.0,
+        "anomaly_count": 1
+      }
+    },
+    {
+      "step_id": "step_5_chart_rev_trajectory",
+      "step_number": 5,
+      "title": "Monthly Net Revenue & Operating Profit Trend",
+      "kind": "sql_extraction",
+      "sql_query": "SELECT order_month, ROUND(SUM(net_revenue), 2) AS net_revenue, ROUND(SUM(profit_usd), 2) AS profit_usd FROM orders GROUP BY order_month ORDER BY order_month",
+      "executed_sql": "SELECT order_month, ROUND(SUM(net_revenue), 2) AS net_revenue, ROUND(SUM(profit_usd), 2) AS profit_usd FROM orders GROUP BY order_month ORDER BY order_month LIMIT 2000",
+      "depends_on": [],
+      "operation": "SQLITE SELECT + Z-Score & Moving Average Enrichment",
+      "row_count": 22,
+      "columns": [
+        "order_month",
+        "net_revenue",
+        "profit_usd"
+      ],
+      "output_hash": "sha256:51e08c923d4685a5",
+      "execution_ms": 1.62,
+      "anomalies_detected": [
+        {
+          "row_index": 19,
+          "dimension_label": "2026-08",
+          "metric_name": "net_revenue",
+          "value": 1075795.5,
+          "z_score": 2.03,
+          "direction": "spike"
+        },
+        {
+          "row_index": 21,
+          "dimension_label": "2026-10",
+          "metric_name": "net_revenue",
+          "value": 1192653.5,
+          "z_score": 2.64,
+          "direction": "spike"
+        }
+      ],
+      "summary_stats": {
+        "metric": "net_revenue",
+        "count": 22,
+        "sum": 15161317.5,
+        "mean": 689150.8,
+        "median": 665511.0,
+        "min": 462430.5,
+        "max": 1192653.5,
+        "std": 190423.66,
+        "period_delta_pct": 157.91,
+        "anomaly_count": 2
+      }
+    },
+    {
+      "step_id": "step_6_chart_region_donut",
+      "step_number": 6,
+      "title": "Net Revenue Share by Global Region",
+      "kind": "sql_extraction",
+      "sql_query": "SELECT region, ROUND(SUM(net_revenue), 2) AS net_revenue FROM orders GROUP BY region ORDER BY net_revenue DESC",
+      "executed_sql": "SELECT region, ROUND(SUM(net_revenue), 2) AS net_revenue FROM orders GROUP BY region ORDER BY net_revenue DESC LIMIT 2000",
+      "depends_on": [],
+      "operation": "SQLITE SELECT + Z-Score & Moving Average Enrichment",
+      "row_count": 4,
+      "columns": [
+        "region",
+        "net_revenue"
+      ],
+      "output_hash": "sha256:13438bbf7b78c702",
+      "execution_ms": 1.92,
+      "anomalies_detected": [],
+      "summary_stats": {
+        "metric": "net_revenue",
+        "count": 4,
+        "sum": 15161317.5,
+        "mean": 3790329.38,
+        "median": 3596947.5,
+        "min": 925974.5,
+        "max": 7570223.0,
+        "std": 2771944.67,
+        "period_delta_pct": -87.77,
+        "anomaly_count": 0
+      }
+    },
+    {
+      "step_id": "step_7_chart_product_ranking",
+      "step_number": 7,
+      "title": "Product Revenue & Profit Performance",
+      "kind": "sql_extraction",
+      "sql_query": "SELECT p.product_name, ROUND(SUM(o.net_revenue), 2) AS net_revenue, ROUND(SUM(o.profit_usd), 2) AS profit_usd FROM orders o JOIN products p ON o.product_id = p.product_id GROUP BY p.product_name ORDER BY net_revenue DESC",
+      "executed_sql": "SELECT p.product_name, ROUND(SUM(o.net_revenue), 2) AS net_revenue, ROUND(SUM(o.profit_usd), 2) AS profit_usd FROM orders AS o JOIN products AS p ON o.product_id = p.product_id GROUP BY p.product_name ORDER BY net_revenue DESC LIMIT 2000",
+      "depends_on": [],
+      "operation": "SQLITE SELECT + Z-Score & Moving Average Enrichment",
+      "row_count": 8,
+      "columns": [
+        "product_name",
+        "net_revenue",
+        "profit_usd"
+      ],
+      "output_hash": "sha256:eece3fe73274c4f3",
+      "execution_ms": 4.7,
+      "anomalies_detected": [
+        {
+          "row_index": 0,
+          "dimension_label": "Lakehouse Query Accelerator",
+          "metric_name": "net_revenue",
+          "value": 4330440.0,
+          "z_score": 1.88,
+          "direction": "spike"
+        }
+      ],
+      "summary_stats": {
+        "metric": "net_revenue",
+        "count": 8,
+        "sum": 15161317.5,
+        "mean": 1895164.69,
+        "median": 1748049.0,
+        "min": 586046.5,
+        "max": 4330440.0,
+        "std": 1295002.17,
+        "period_delta_pct": -86.47,
+        "anomaly_count": 1
+      }
+    },
+    {
+      "step_id": "step_8_chart_segment_channel_heatmap",
+      "step_number": 8,
+      "title": "Revenue Matrix: Customer Segment × Acquisition Channel",
+      "kind": "sql_extraction",
+      "sql_query": "SELECT channel, segment, ROUND(SUM(net_revenue), 2) AS net_revenue FROM orders GROUP BY channel, segment",
+      "executed_sql": "SELECT channel, segment, ROUND(SUM(net_revenue), 2) AS net_revenue FROM orders GROUP BY channel, segment LIMIT 2000",
+      "depends_on": [],
+      "operation": "SQLITE SELECT + Z-Score & Moving Average Enrichment",
+      "row_count": 24,
+      "columns": [
+        "channel",
+        "segment",
+        "net_revenue"
+      ],
+      "output_hash": "sha256:7c92e4f2ed843893",
+      "execution_ms": 3.04,
+      "anomalies_detected": [
+        {
+          "row_index": 8,
+          "dimension_label": "Outbound Sales",
+          "metric_name": "net_revenue",
+          "value": 1739392.5,
+          "z_score": 2.32,
+          "direction": "spike"
+        }
+      ],
+      "summary_stats": {
+        "metric": "net_revenue",
+        "count": 24,
+        "sum": 15161317.5,
+        "mean": 631721.56,
+        "median": 608227.5,
+        "min": 58534.0,
+        "max": 1739392.5,
+        "std": 476527.0,
+        "period_delta_pct": -85.66,
+        "anomaly_count": 1
+      }
+    },
+    {
+      "step_id": "step_9_table_top_customers",
+      "step_number": 9,
+      "title": "Top Revenue Customer Accounts & Health Ledger",
+      "kind": "sql_extraction",
+      "sql_query": "SELECT c.company_name, c.segment, c.industry, c.region, c.account_health_score, COUNT(o.order_id) AS total_orders, ROUND(SUM(o.net_revenue), 2) AS lifetime_net_revenue, ROUND(SUM(o.profit_usd), 2) AS lifetime_profit FROM customers c JOIN orders o ON c.customer_id = o.customer_id GROUP BY c.customer_id, c.company_name, c.segment, c.industry, c.region, c.account_health_score ORDER BY lifetime_net_revenue DESC LIMIT 50",
+      "executed_sql": "SELECT c.company_name, c.segment, c.industry, c.region, c.account_health_score, COUNT(o.order_id) AS total_orders, ROUND(SUM(o.net_revenue), 2) AS lifetime_net_revenue, ROUND(SUM(o.profit_usd), 2) AS lifetime_profit FROM customers AS c JOIN orders AS o ON c.customer_id = o.customer_id GROUP BY c.customer_id, c.company_name, c.segment, c.industry, c.region, c.account_health_score ORDER BY lifetime_net_revenue DESC LIMIT 50",
+      "depends_on": [],
+      "operation": "SQLITE SELECT + Z-Score & Moving Average Enrichment",
+      "row_count": 50,
+      "columns": [
+        "company_name",
+        "segment",
+        "industry",
+        "region",
+        "account_health_score",
+        "total_orders",
+        "lifetime_net_revenue",
+        "lifetime_profit"
+      ],
+      "output_hash": "sha256:a1f19c7212b90e2b",
+      "execution_ms": 5.21,
+      "anomalies_detected": [
+        {
+          "row_index": 0,
+          "dimension_label": "MediCore Can #041",
+          "metric_name": "lifetime_net_revenue",
+          "value": 224487.5,
+          "z_score": 3.72,
+          "direction": "spike"
+        },
+        {
+          "row_index": 1,
+          "dimension_label": "MediCore Net #203",
+          "metric_name": "lifetime_net_revenue",
+          "value": 182761.0,
+          "z_score": 2.35,
+          "direction": "spike"
+        },
+        {
+          "row_index": 2,
+          "dimension_label": "MediCore Can #060",
+          "metric_name": "lifetime_net_revenue",
+          "value": 168089.0,
+          "z_score": 1.86,
+          "direction": "spike"
+        }
+      ],
+      "summary_stats": {
+        "metric": "lifetime_net_revenue",
+        "count": 50,
+        "sum": 5575809.0,
+        "mean": 111516.18,
+        "median": 103429.0,
+        "min": 80784.5,
+        "max": 224487.5,
+        "std": 30350.85,
+        "period_delta_pct": -64.01,
+        "anomaly_count": 3
+      }
+    }
+  ],
+  "widgets": [
+    {
+      "id": "widget_kpi_net_rev",
+      "title": "Total Net Revenue",
+      "subtitle": "Cumulative Recognized Revenue",
+      "widget_type": "kpi",
+      "chart_type": "kpi",
+      "step_id": "step_1_kpi_net_rev",
+      "sql_query": "SELECT order_month, ROUND(SUM(net_revenue), 2) AS net_revenue FROM orders GROUP BY order_month ORDER BY order_month LIMIT 2000",
+      "data_hash": "sha256:1595044f0c1445bd",
+      "columns": [
+        "order_month",
+        "net_revenue"
+      ],
+      "rows": [
+        {
+          "order_month": "2025-01",
+          "net_revenue": 462430.5,
+          "net_revenue_ma3": 462430.5,
+          "net_revenue_zscore": -1.19
+        },
+        {
+          "order_month": "2025-02",
+          "net_revenue": 463609.0,
+          "net_revenue_ma3": 463019.75,
+          "net_revenue_zscore": -1.18
+        },
+        {
+          "order_month": "2025-03",
+          "net_revenue": 541247.5,
+          "net_revenue_ma3": 489095.67,
+          "net_revenue_zscore": -0.78
+        },
+        {
+          "order_month": "2025-04",
+          "net_revenue": 581166.0,
+          "net_revenue_ma3": 528674.17,
+          "net_revenue_zscore": -0.57
+        },
+        {
+          "order_month": "2025-05",
+          "net_revenue": 490548.5,
+          "net_revenue_ma3": 537654.0,
+          "net_revenue_zscore": -1.04
+        },
+        {
+          "order_month": "2025-06",
+          "net_revenue": 574554.0,
+          "net_revenue_ma3": 548756.17,
+          "net_revenue_zscore": -0.6
+        },
+        {
+          "order_month": "2025-07",
+          "net_revenue": 700685.0,
+          "net_revenue_ma3": 588595.83,
+          "net_revenue_zscore": 0.06
+        },
+        {
+          "order_month": "2025-08",
+          "net_revenue": 515897.0,
+          "net_revenue_ma3": 597045.33,
+          "net_revenue_zscore": -0.91
+        },
+        {
+          "order_month": "2025-09",
+          "net_revenue": 596077.5,
+          "net_revenue_ma3": 604219.83,
+          "net_revenue_zscore": -0.49
+        },
+        {
+          "order_month": "2025-10",
+          "net_revenue": 683991.5,
+          "net_revenue_ma3": 598655.33,
+          "net_revenue_zscore": -0.03
+        },
+        {
+          "order_month": "2025-11",
+          "net_revenue": 750564.5,
+          "net_revenue_ma3": 676877.83,
+          "net_revenue_zscore": 0.32
+        },
+        {
+          "order_month": "2025-12",
+          "net_revenue": 801067.0,
+          "net_revenue_ma3": 745207.67,
+          "net_revenue_zscore": 0.59
+        },
+        {
+          "order_month": "2026-01",
+          "net_revenue": 631025.5,
+          "net_revenue_ma3": 727552.33,
+          "net_revenue_zscore": -0.31
+        },
+        {
+          "order_month": "2026-02",
+          "net_revenue": 693585.0,
+          "net_revenue_ma3": 708559.17,
+          "net_revenue_zscore": 0.02
+        },
+        {
+          "order_month": "2026-03",
+          "net_revenue": 592396.0,
+          "net_revenue_ma3": 639002.17,
+          "net_revenue_zscore": -0.51
+        },
+        {
+          "order_month": "2026-04",
+          "net_revenue": 647768.5,
+          "net_revenue_ma3": 644583.17,
+          "net_revenue_zscore": -0.22
+        },
+        {
+          "order_month": "2026-05",
+          "net_revenue": 771376.0,
+          "net_revenue_ma3": 670513.5,
+          "net_revenue_zscore": 0.43
+        },
+        {
+          "order_month": "2026-06",
+          "net_revenue": 739104.0,
+          "net_revenue_ma3": 719416.17,
+          "net_revenue_zscore": 0.26
+        },
+        {
+          "order_month": "2026-07",
+          "net_revenue": 665511.0,
+          "net_revenue_ma3": 725330.33,
+          "net_revenue_zscore": -0.12
+        },
+        {
+          "order_month": "2026-08",
+          "net_revenue": 1075795.5,
+          "net_revenue_ma3": 826803.5,
+          "net_revenue_zscore": 2.03
+        },
+        {
+          "order_month": "2026-09",
+          "net_revenue": 990264.5,
+          "net_revenue_ma3": 910523.67,
+          "net_revenue_zscore": 1.58
+        },
+        {
+          "order_month": "2026-10",
+          "net_revenue": 1192653.5,
+          "net_revenue_ma3": 1086237.83,
+          "net_revenue_zscore": 2.64
+        }
+      ],
+      "x_field": "order_month",
+      "y_fields": [
+        "net_revenue"
+      ],
+      "series_field": null,
+      "kpi_payload": {
+        "formatted_value": "$15.16M",
+        "raw_value": 15161317.5,
+        "metric_label": "Net Revenue",
+        "delta_pct": 157.91,
+        "delta_direction": "up",
+        "sparkline": [
+          462430.5,
+          463609.0,
+          541247.5,
+          581166.0,
+          490548.5,
+          574554.0,
+          700685.0,
+          515897.0,
+          596077.5,
+          683991.5,
+          750564.5,
+          801067.0,
+          631025.5,
+          693585.0,
+          592396.0,
+          647768.5,
+          771376.0,
+          739104.0,
+          665511.0,
+          1075795.5,
+          990264.5,
+          1192653.5
+        ],
+        "subtext": "Across 22 periods"
+      },
+      "echarts_option": null,
+      "insight_summary": "Net Revenue ranges from $462.4K to $1.19M (+157.91% trajectory). Outlier spike at 2026-08 (Z=2.03).",
+      "anomalies": [
+        {
+          "row_index": 19,
+          "dimension_label": "2026-08",
+          "metric_name": "net_revenue",
+          "value": 1075795.5,
+          "z_score": 2.03,
+          "direction": "spike"
+        },
+        {
+          "row_index": 21,
+          "dimension_label": "2026-10",
+          "metric_name": "net_revenue",
+          "value": 1192653.5,
+          "z_score": 2.64,
+          "direction": "spike"
+        }
+      ]
+    },
+    {
+      "id": "widget_kpi_net_profit",
+      "title": "Gross Operating Profit",
+      "subtitle": "Margin-Adjusted Profit USD",
+      "widget_type": "kpi",
+      "chart_type": "kpi",
+      "step_id": "step_2_kpi_net_profit",
+      "sql_query": "SELECT order_month, ROUND(SUM(profit_usd), 2) AS profit_usd FROM orders GROUP BY order_month ORDER BY order_month LIMIT 2000",
+      "data_hash": "sha256:8ad38c22000f7a76",
+      "columns": [
+        "order_month",
+        "profit_usd"
+      ],
+      "rows": [
+        {
+          "order_month": "2025-01",
+          "profit_usd": 381096.04,
+          "profit_usd_ma3": 381096.04,
+          "profit_usd_zscore": -1.21
+        },
+        {
+          "order_month": "2025-02",
+          "profit_usd": 384033.1,
+          "profit_usd_ma3": 382564.57,
+          "profit_usd_zscore": -1.19
+        },
+        {
+          "order_month": "2025-03",
+          "profit_usd": 448388.34,
+          "profit_usd_ma3": 404505.83,
+          "profit_usd_zscore": -0.78
+        },
+        {
+          "order_month": "2025-04",
+          "profit_usd": 478054.41,
+          "profit_usd_ma3": 436825.28,
+          "profit_usd_zscore": -0.59
+        },
+        {
+          "order_month": "2025-05",
+          "profit_usd": 409050.63,
+          "profit_usd_ma3": 445164.46,
+          "profit_usd_zscore": -1.03
+        },
+        {
+          "order_month": "2025-06",
+          "profit_usd": 470873.15,
+          "profit_usd_ma3": 452659.4,
+          "profit_usd_zscore": -0.63
+        },
+        {
+          "order_month": "2025-07",
+          "profit_usd": 581712.33,
+          "profit_usd_ma3": 487212.04,
+          "profit_usd_zscore": 0.08
+        },
+        {
+          "order_month": "2025-08",
+          "profit_usd": 432696.66,
+          "profit_usd_ma3": 495094.05,
+          "profit_usd_zscore": -0.88
+        },
+        {
+          "order_month": "2025-09",
+          "profit_usd": 496509.46,
+          "profit_usd_ma3": 503639.48,
+          "profit_usd_zscore": -0.47
+        },
+        {
+          "order_month": "2025-10",
+          "profit_usd": 559363.78,
+          "profit_usd_ma3": 496189.97,
+          "profit_usd_zscore": -0.07
+        },
+        {
+          "order_month": "2025-11",
+          "profit_usd": 622558.2,
+          "profit_usd_ma3": 559477.15,
+          "profit_usd_zscore": 0.34
+        },
+        {
+          "order_month": "2025-12",
+          "profit_usd": 651706.66,
+          "profit_usd_ma3": 611209.55,
+          "profit_usd_zscore": 0.53
+        },
+        {
+          "order_month": "2026-01",
+          "profit_usd": 523815.92,
+          "profit_usd_ma3": 599360.26,
+          "profit_usd_zscore": -0.29
+        },
+        {
+          "order_month": "2026-02",
+          "profit_usd": 575687.94,
+          "profit_usd_ma3": 583736.84,
+          "profit_usd_zscore": 0.04
+        },
+        {
+          "order_month": "2026-03",
+          "profit_usd": 490058.71,
+          "profit_usd_ma3": 529854.19,
+          "profit_usd_zscore": -0.51
+        },
+        {
+          "order_month": "2026-04",
+          "profit_usd": 533130.24,
+          "profit_usd_ma3": 532958.96,
+          "profit_usd_zscore": -0.23
+        },
+        {
+          "order_month": "2026-05",
+          "profit_usd": 632662.49,
+          "profit_usd_ma3": 551950.48,
+          "profit_usd_zscore": 0.4
+        },
+        {
+          "order_month": "2026-06",
+          "profit_usd": 620915.3,
+          "profit_usd_ma3": 595569.34,
+          "profit_usd_zscore": 0.33
+        },
+        {
+          "order_month": "2026-07",
+          "profit_usd": 555108.72,
+          "profit_usd_ma3": 602895.5,
+          "profit_usd_zscore": -0.09
+        },
+        {
+          "order_month": "2026-08",
+          "profit_usd": 885137.03,
+          "profit_usd_ma3": 687053.68,
+          "profit_usd_zscore": 2.02
+        },
+        {
+          "order_month": "2026-09",
+          "profit_usd": 817041.61,
+          "profit_usd_ma3": 752429.12,
+          "profit_usd_zscore": 1.59
+        },
+        {
+          "order_month": "2026-10",
+          "profit_usd": 983769.65,
+          "profit_usd_ma3": 895316.1,
+          "profit_usd_zscore": 2.65
+        }
+      ],
+      "x_field": "order_month",
+      "y_fields": [
+        "profit_usd"
+      ],
+      "series_field": null,
+      "kpi_payload": {
+        "formatted_value": "$12.53M",
+        "raw_value": 12533370.37,
+        "metric_label": "Profit Usd",
+        "delta_pct": 158.14,
+        "delta_direction": "up",
+        "sparkline": [
+          381096.04,
+          384033.1,
+          448388.34,
+          478054.41,
+          409050.63,
+          470873.15,
+          581712.33,
+          432696.66,
+          496509.46,
+          559363.78,
+          622558.2,
+          651706.66,
+          523815.92,
+          575687.94,
+          490058.71,
+          533130.24,
+          632662.49,
+          620915.3,
+          555108.72,
+          885137.03,
+          817041.61,
+          983769.65
+        ],
+        "subtext": "Across 22 periods"
+      },
+      "echarts_option": null,
+      "insight_summary": "Profit Usd ranges from $381.1K to $983.8K (+158.14% trajectory). Outlier spike at 2026-08 (Z=2.02).",
+      "anomalies": [
+        {
+          "row_index": 19,
+          "dimension_label": "2026-08",
+          "metric_name": "profit_usd",
+          "value": 885137.03,
+          "z_score": 2.02,
+          "direction": "spike"
+        },
+        {
+          "row_index": 21,
+          "dimension_label": "2026-10",
+          "metric_name": "profit_usd",
+          "value": 983769.65,
+          "z_score": 2.65,
+          "direction": "spike"
+        }
+      ]
+    },
+    {
+      "id": "widget_kpi_active_arr",
+      "title": "Active SaaS ARR",
+      "subtitle": "Annual Recurring Subscription Base",
+      "widget_type": "kpi",
+      "chart_type": "kpi",
+      "step_id": "step_3_kpi_active_arr",
+      "sql_query": "SELECT start_date, ROUND(SUM(arr_usd), 2) AS arr_usd FROM subscriptions WHERE status IN ('Active', 'Expanded') GROUP BY start_date ORDER BY start_date LIMIT 2000",
+      "data_hash": "sha256:02ae182ea041f0be",
+      "columns": [
+        "start_date",
+        "arr_usd"
+      ],
+      "rows": [
+        {
+          "start_date": "2025-01-01",
+          "arr_usd": 133920.0,
+          "arr_usd_ma3": 133920.0,
+          "arr_usd_zscore": 1.08
+        },
+        {
+          "start_date": "2025-01-03",
+          "arr_usd": 11851.92,
+          "arr_usd_ma3": 72885.96,
+          "arr_usd_zscore": -0.78
+        },
+        {
+          "start_date": "2025-01-04",
+          "arr_usd": 144218.4,
+          "arr_usd_ma3": 96663.44,
+          "arr_usd_zscore": 1.24
+        },
+        {
+          "start_date": "2025-01-05",
+          "arr_usd": 16447.2,
+          "arr_usd_ma3": 57505.84,
+          "arr_usd_zscore": -0.71
+        },
+        {
+          "start_date": "2025-01-11",
+          "arr_usd": 140269.2,
+          "arr_usd_ma3": 100311.6,
+          "arr_usd_zscore": 1.18
+        },
+        {
+          "start_date": "2025-01-12",
+          "arr_usd": 51734.4,
+          "arr_usd_ma3": 69483.6,
+          "arr_usd_zscore": -0.17
+        },
+        {
+          "start_date": "2025-01-20",
+          "arr_usd": 17856.0,
+          "arr_usd_ma3": 69953.2,
+          "arr_usd_zscore": -0.69
+        },
+        {
+          "start_date": "2025-01-23",
+          "arr_usd": 81792.0,
+          "arr_usd_ma3": 50460.8,
+          "arr_usd_zscore": 0.29
+        },
+        {
+          "start_date": "2025-01-24",
+          "arr_usd": 10351.8,
+          "arr_usd_ma3": 36666.6,
+          "arr_usd_zscore": -0.8
+        },
+        {
+          "start_date": "2025-02-02",
+          "arr_usd": 76431.72,
+          "arr_usd_ma3": 56191.84,
+          "arr_usd_zscore": 0.2
+        },
+        {
+          "start_date": "2025-02-07",
+          "arr_usd": 13884.0,
+          "arr_usd_ma3": 33555.84,
+          "arr_usd_zscore": -0.75
+        },
+        {
+          "start_date": "2025-02-10",
+          "arr_usd": 20932.8,
+          "arr_usd_ma3": 37082.84,
+          "arr_usd_zscore": -0.64
+        },
+        {
+          "start_date": "2025-02-13",
+          "arr_usd": 18223.92,
+          "arr_usd_ma3": 17680.24,
+          "arr_usd_zscore": -0.68
+        },
+        {
+          "start_date": "2025-02-18",
+          "arr_usd": 7864.8,
+          "arr_usd_ma3": 15673.84,
+          "arr_usd_zscore": -0.84
+        },
+        {
+          "start_date": "2025-02-23",
+          "arr_usd": 27110.4,
+          "arr_usd_ma3": 17733.04,
+          "arr_usd_zscore": -0.55
+        },
+        {
+          "start_date": "2025-02-25",
+          "arr_usd": 115776.0,
+          "arr_usd_ma3": 50250.4,
+          "arr_usd_zscore": 0.8
+        },
+        {
+          "start_date": "2025-02-26",
+          "arr_usd": 127092.84,
+          "arr_usd_ma3": 89993.08,
+          "arr_usd_zscore": 0.98
+        },
+        {
+          "start_date": "2025-02-28",
+          "arr_usd": 47808.0,
+          "arr_usd_ma3": 96892.28,
+          "arr_usd_zscore": -0.23
+        },
+        {
+          "start_date": "2025-03-01",
+          "arr_usd": 15576.0,
+          "arr_usd_ma3": 63492.28,
+          "arr_usd_zscore": -0.72
+        },
+        {
+          "start_date": "2025-03-05",
+          "arr_usd": 13027.2,
+          "arr_usd_ma3": 25470.4,
+          "arr_usd_zscore": -0.76
+        },
+        {
+          "start_date": "2025-03-08",
+          "arr_usd": 45113.76,
+          "arr_usd_ma3": 24572.32,
+          "arr_usd_zscore": -0.27
+        },
+        {
+          "start_date": "2025-03-09",
+          "arr_usd": 19099.8,
+          "arr_usd_ma3": 25746.92,
+          "arr_usd_zscore": -0.67
+        },
+        {
+          "start_date": "2025-03-11",
+          "arr_usd": 98436.0,
+          "arr_usd_ma3": 54216.52,
+          "arr_usd_zscore": 0.54
+        },
+        {
+          "start_date": "2025-03-15",
+          "arr_usd": 30179.52,
+          "arr_usd_ma3": 49238.44,
+          "arr_usd_zscore": -0.5
+        },
+        {
+          "start_date": "2025-03-19",
+          "arr_usd": 29263.2,
+          "arr_usd_ma3": 52626.24,
+          "arr_usd_zscore": -0.52
+        },
+        {
+          "start_date": "2025-03-25",
+          "arr_usd": 33782.4,
+          "arr_usd_ma3": 31075.04,
+          "arr_usd_zscore": -0.45
+        },
+        {
+          "start_date": "2025-04-03",
+          "arr_usd": 6671.16,
+          "arr_usd_ma3": 23238.92,
+          "arr_usd_zscore": -0.86
+        },
+        {
+          "start_date": "2025-04-06",
+          "arr_usd": 16128.0,
+          "arr_usd_ma3": 18860.52,
+          "arr_usd_zscore": -0.72
+        },
+        {
+          "start_date": "2025-04-16",
+          "arr_usd": 11463.12,
+          "arr_usd_ma3": 11420.76,
+          "arr_usd_zscore": -0.79
+        },
+        {
+          "start_date": "2025-04-17",
+          "arr_usd": 89280.0,
+          "arr_usd_ma3": 38957.04,
+          "arr_usd_zscore": 0.4
+        },
+        {
+          "start_date": "2025-04-18",
+          "arr_usd": 35712.0,
+          "arr_usd_ma3": 45485.04,
+          "arr_usd_zscore": -0.42
+        },
+        {
+          "start_date": "2025-04-20",
+          "arr_usd": 168426.36,
+          "arr_usd_ma3": 97806.12,
+          "arr_usd_zscore": 1.61
+        },
+        {
+          "start_date": "2025-04-25",
+          "arr_usd": 61065.6,
+          "arr_usd_ma3": 88401.32,
+          "arr_usd_zscore": -0.03
+        },
+        {
+          "start_date": "2025-04-26",
+          "arr_usd": 32256.0,
+          "arr_usd_ma3": 87249.32,
+          "arr_usd_zscore": -0.47
+        },
+        {
+          "start_date": "2025-04-28",
+          "arr_usd": 81210.48,
+          "arr_usd_ma3": 58177.36,
+          "arr_usd_zscore": 0.28
+        },
+        {
+          "start_date": "2025-05-04",
+          "arr_usd": 70346.88,
+          "arr_usd_ma3": 61271.12,
+          "arr_usd_zscore": 0.11
+        },
+        {
+          "start_date": "2025-05-06",
+          "arr_usd": 13243.2,
+          "arr_usd_ma3": 54933.52,
+          "arr_usd_zscore": -0.76
+        },
+        {
+          "start_date": "2025-05-07",
+          "arr_usd": 17013.24,
+          "arr_usd_ma3": 33534.44,
+          "arr_usd_zscore": -0.7
+        },
+        {
+          "start_date": "2025-05-09",
+          "arr_usd": 20412.0,
+          "arr_usd_ma3": 16889.48,
+          "arr_usd_zscore": -0.65
+        },
+        {
+          "start_date": "2025-05-12",
+          "arr_usd": 52876.8,
+          "arr_usd_ma3": 30100.68,
+          "arr_usd_zscore": -0.16
+        },
+        {
+          "start_date": "2025-05-13",
+          "arr_usd": 97752.0,
+          "arr_usd_ma3": 57013.6,
+          "arr_usd_zscore": 0.53
+        },
+        {
+          "start_date": "2025-05-15",
+          "arr_usd": 12076.8,
+          "arr_usd_ma3": 54235.2,
+          "arr_usd_zscore": -0.78
+        },
+        {
+          "start_date": "2025-05-19",
+          "arr_usd": 65875.68,
+          "arr_usd_ma3": 58568.16,
+          "arr_usd_zscore": 0.04
+        },
+        {
+          "start_date": "2025-05-20",
+          "arr_usd": 32467.2,
+          "arr_usd_ma3": 36806.56,
+          "arr_usd_zscore": -0.47
+        },
+        {
+          "start_date": "2025-05-21",
+          "arr_usd": 82368.0,
+          "arr_usd_ma3": 60236.96,
+          "arr_usd_zscore": 0.29
+        },
+        {
+          "start_date": "2025-05-23",
+          "arr_usd": 14964.0,
+          "arr_usd_ma3": 43266.4,
+          "arr_usd_zscore": -0.73
+        },
+        {
+          "start_date": "2025-05-24",
+          "arr_usd": 85235.52,
+          "arr_usd_ma3": 60855.84,
+          "arr_usd_zscore": 0.34
+        },
+        {
+          "start_date": "2025-05-26",
+          "arr_usd": 6953.04,
+          "arr_usd_ma3": 35717.52,
+          "arr_usd_zscore": -0.86
+        },
+        {
+          "start_date": "2025-05-30",
+          "arr_usd": 165310.08,
+          "arr_usd_ma3": 85832.88,
+          "arr_usd_zscore": 1.56
+        },
+        {
+          "start_date": "2025-05-31",
+          "arr_usd": 8602.2,
+          "arr_usd_ma3": 60288.44,
+          "arr_usd_zscore": -0.83
+        },
+        {
+          "start_date": "2025-06-03",
+          "arr_usd": 38162.88,
+          "arr_usd_ma3": 70691.72,
+          "arr_usd_zscore": -0.38
+        },
+        {
+          "start_date": "2025-06-05",
+          "arr_usd": 18286.56,
+          "arr_usd_ma3": 21683.88,
+          "arr_usd_zscore": -0.68
+        },
+        {
+          "start_date": "2025-06-07",
+          "arr_usd": 150631.2,
+          "arr_usd_ma3": 69026.88,
+          "arr_usd_zscore": 1.33
+        },
+        {
+          "start_date": "2025-06-08",
+          "arr_usd": 73126.8,
+          "arr_usd_ma3": 80681.52,
+          "arr_usd_zscore": 0.15
+        },
+        {
+          "start_date": "2025-06-11",
+          "arr_usd": 31620.0,
+          "arr_usd_ma3": 85126.0,
+          "arr_usd_zscore": -0.48
+        },
+        {
+          "start_date": "2025-06-17",
+          "arr_usd": 42554.4,
+          "arr_usd_ma3": 49100.4,
+          "arr_usd_zscore": -0.31
+        },
+        {
+          "start_date": "2025-06-20",
+          "arr_usd": 127065.24,
+          "arr_usd_ma3": 67079.88,
+          "arr_usd_zscore": 0.98
+        },
+        {
+          "start_date": "2025-06-22",
+          "arr_usd": 12998.88,
+          "arr_usd_ma3": 60872.84,
+          "arr_usd_zscore": -0.76
+        },
+        {
+          "start_date": "2025-06-24",
+          "arr_usd": 84396.0,
+          "arr_usd_ma3": 74820.04,
+          "arr_usd_zscore": 0.32
+        },
+        {
+          "start_date": "2025-06-26",
+          "arr_usd": 30378.24,
+          "arr_usd_ma3": 42591.04,
+          "arr_usd_zscore": -0.5
+        },
+        {
+          "start_date": "2025-07-04",
+          "arr_usd": 11463.12,
+          "arr_usd_ma3": 42079.12,
+          "arr_usd_zscore": -0.79
+        },
+        {
+          "start_date": "2025-07-09",
+          "arr_usd": 299838.96,
+          "arr_usd_ma3": 113893.44,
+          "arr_usd_zscore": 3.61
+        },
+        {
+          "start_date": "2025-07-10",
+          "arr_usd": 46419.48,
+          "arr_usd_ma3": 119240.52,
+          "arr_usd_zscore": -0.25
+        },
+        {
+          "start_date": "2025-07-11",
+          "arr_usd": 15806.4,
+          "arr_usd_ma3": 120688.28,
+          "arr_usd_zscore": -0.72
+        },
+        {
+          "start_date": "2025-07-14",
+          "arr_usd": 23068.8,
+          "arr_usd_ma3": 28431.56,
+          "arr_usd_zscore": -0.61
+        },
+        {
+          "start_date": "2025-07-15",
+          "arr_usd": 29359.68,
+          "arr_usd_ma3": 22744.96,
+          "arr_usd_zscore": -0.51
+        },
+        {
+          "start_date": "2025-07-17",
+          "arr_usd": 11556.0,
+          "arr_usd_ma3": 21328.16,
+          "arr_usd_zscore": -0.79
+        },
+        {
+          "start_date": "2025-07-18",
+          "arr_usd": 101904.0,
+          "arr_usd_ma3": 47606.56,
+          "arr_usd_zscore": 0.59
+        },
+        {
+          "start_date": "2025-07-20",
+          "arr_usd": 115900.8,
+          "arr_usd_ma3": 76453.6,
+          "arr_usd_zscore": 0.81
+        },
+        {
+          "start_date": "2025-07-21",
+          "arr_usd": 59496.0,
+          "arr_usd_ma3": 92433.6,
+          "arr_usd_zscore": -0.06
+        },
+        {
+          "start_date": "2025-07-24",
+          "arr_usd": 258985.32,
+          "arr_usd_ma3": 144794.04,
+          "arr_usd_zscore": 2.99
+        },
+        {
+          "start_date": "2025-07-25",
+          "arr_usd": 27528.0,
+          "arr_usd_ma3": 115336.44,
+          "arr_usd_zscore": -0.54
+        },
+        {
+          "start_date": "2025-07-26",
+          "arr_usd": 7798.68,
+          "arr_usd_ma3": 98104.0,
+          "arr_usd_zscore": -0.84
+        },
+        {
+          "start_date": "2025-07-27",
+          "arr_usd": 19140.0,
+          "arr_usd_ma3": 18155.56,
+          "arr_usd_zscore": -0.67
+        },
+        {
+          "start_date": "2025-07-29",
+          "arr_usd": 192796.32,
+          "arr_usd_ma3": 73245.0,
+          "arr_usd_zscore": 1.98
+        },
+        {
+          "start_date": "2025-07-30",
+          "arr_usd": 71656.8,
+          "arr_usd_ma3": 94531.04,
+          "arr_usd_zscore": 0.13
+        },
+        {
+          "start_date": "2025-08-09",
+          "arr_usd": 80880.0,
+          "arr_usd_ma3": 115111.04,
+          "arr_usd_zscore": 0.27
+        },
+        {
+          "start_date": "2025-08-13",
+          "arr_usd": 8354.4,
+          "arr_usd_ma3": 53630.4,
+          "arr_usd_zscore": -0.83
+        },
+        {
+          "start_date": "2025-08-15",
+          "arr_usd": 10478.4,
+          "arr_usd_ma3": 33237.6,
+          "arr_usd_zscore": -0.8
+        },
+        {
+          "start_date": "2025-08-17",
+          "arr_usd": 56938.2,
+          "arr_usd_ma3": 25257.0,
+          "arr_usd_zscore": -0.09
+        },
+        {
+          "start_date": "2025-08-18",
+          "arr_usd": 33588.0,
+          "arr_usd_ma3": 33668.2,
+          "arr_usd_zscore": -0.45
+        },
+        {
+          "start_date": "2025-08-23",
+          "arr_usd": 71917.2,
+          "arr_usd_ma3": 54147.8,
+          "arr_usd_zscore": 0.13
+        },
+        {
+          "start_date": "2025-08-24",
+          "arr_usd": 163062.6,
+          "arr_usd_ma3": 89522.6,
+          "arr_usd_zscore": 1.52
+        },
+        {
+          "start_date": "2025-08-25",
+          "arr_usd": 32292.0,
+          "arr_usd_ma3": 89090.6,
+          "arr_usd_zscore": -0.47
+        },
+        {
+          "start_date": "2025-08-29",
+          "arr_usd": 269520.0,
+          "arr_usd_ma3": 154958.2,
+          "arr_usd_zscore": 3.15
+        },
+        {
+          "start_date": "2025-09-02",
+          "arr_usd": 10584.0,
+          "arr_usd_ma3": 104132.0,
+          "arr_usd_zscore": -0.8
+        },
+        {
+          "start_date": "2025-09-03",
+          "arr_usd": 70272.0,
+          "arr_usd_ma3": 116792.0,
+          "arr_usd_zscore": 0.11
+        },
+        {
+          "start_date": "2025-09-04",
+          "arr_usd": 14796.0,
+          "arr_usd_ma3": 31884.0,
+          "arr_usd_zscore": -0.74
+        },
+        {
+          "start_date": "2025-09-11",
+          "arr_usd": 18974.4,
+          "arr_usd_ma3": 34680.8,
+          "arr_usd_zscore": -0.67
+        },
+        {
+          "start_date": "2025-09-14",
+          "arr_usd": 214020.0,
+          "arr_usd_ma3": 82596.8,
+          "arr_usd_zscore": 2.3
+        },
+        {
+          "start_date": "2025-09-16",
+          "arr_usd": 68042.4,
+          "arr_usd_ma3": 100345.6,
+          "arr_usd_zscore": 0.08
+        },
+        {
+          "start_date": "2025-09-21",
+          "arr_usd": 13659.84,
+          "arr_usd_ma3": 98574.08,
+          "arr_usd_zscore": -0.75
+        },
+        {
+          "start_date": "2025-09-26",
+          "arr_usd": 4732.8,
+          "arr_usd_ma3": 28811.68,
+          "arr_usd_zscore": -0.89
+        },
+        {
+          "start_date": "2025-09-27",
+          "arr_usd": 193577.04,
+          "arr_usd_ma3": 70656.56,
+          "arr_usd_zscore": 1.99
+        },
+        {
+          "start_date": "2025-09-30",
+          "arr_usd": 40896.0,
+          "arr_usd_ma3": 79735.28,
+          "arr_usd_zscore": -0.34
+        },
+        {
+          "start_date": "2025-10-02",
+          "arr_usd": 36763.2,
+          "arr_usd_ma3": 90412.08,
+          "arr_usd_zscore": -0.4
+        },
+        {
+          "start_date": "2025-10-03",
+          "arr_usd": 42779.88,
+          "arr_usd_ma3": 40146.36,
+          "arr_usd_zscore": -0.31
+        },
+        {
+          "start_date": "2025-10-05",
+          "arr_usd": 32940.0,
+          "arr_usd_ma3": 37494.36,
+          "arr_usd_zscore": -0.46
+        },
+        {
+          "start_date": "2025-10-07",
+          "arr_usd": 54182.4,
+          "arr_usd_ma3": 43300.76,
+          "arr_usd_zscore": -0.14
+        },
+        {
+          "start_date": "2025-10-12",
+          "arr_usd": 13659.84,
+          "arr_usd_ma3": 33594.08,
+          "arr_usd_zscore": -0.75
+        },
+        {
+          "start_date": "2025-10-13",
+          "arr_usd": 10617.48,
+          "arr_usd_ma3": 26153.24,
+          "arr_usd_zscore": -0.8
+        },
+        {
+          "start_date": "2025-10-15",
+          "arr_usd": 28860.0,
+          "arr_usd_ma3": 17712.44,
+          "arr_usd_zscore": -0.52
+        },
+        {
+          "start_date": "2025-10-16",
+          "arr_usd": 14323.2,
+          "arr_usd_ma3": 17933.56,
+          "arr_usd_zscore": -0.74
+        },
+        {
+          "start_date": "2025-10-18",
+          "arr_usd": 26784.0,
+          "arr_usd_ma3": 23322.4,
+          "arr_usd_zscore": -0.55
+        },
+        {
+          "start_date": "2025-10-20",
+          "arr_usd": 26496.0,
+          "arr_usd_ma3": 22534.4,
+          "arr_usd_zscore": -0.56
+        },
+        {
+          "start_date": "2025-10-26",
+          "arr_usd": 15165.6,
+          "arr_usd_ma3": 22815.2,
+          "arr_usd_zscore": -0.73
+        },
+        {
+          "start_date": "2025-10-29",
+          "arr_usd": 9117.6,
+          "arr_usd_ma3": 16926.4,
+          "arr_usd_zscore": -0.82
+        },
+        {
+          "start_date": "2025-10-30",
+          "arr_usd": 79519.8,
+          "arr_usd_ma3": 34601.0,
+          "arr_usd_zscore": 0.25
+        },
+        {
+          "start_date": "2025-11-02",
+          "arr_usd": 65934.0,
+          "arr_usd_ma3": 51523.8,
+          "arr_usd_zscore": 0.04
+        },
+        {
+          "start_date": "2025-11-06",
+          "arr_usd": 27340.8,
+          "arr_usd_ma3": 57598.2,
+          "arr_usd_zscore": -0.55
+        },
+        {
+          "start_date": "2025-11-13",
+          "arr_usd": 26438.4,
+          "arr_usd_ma3": 39904.4,
+          "arr_usd_zscore": -0.56
+        },
+        {
+          "start_date": "2025-11-15",
+          "arr_usd": 39516.0,
+          "arr_usd_ma3": 31098.4,
+          "arr_usd_zscore": -0.36
+        },
+        {
+          "start_date": "2025-11-18",
+          "arr_usd": 107712.0,
+          "arr_usd_ma3": 57888.8,
+          "arr_usd_zscore": 0.68
+        },
+        {
+          "start_date": "2025-11-26",
+          "arr_usd": 140412.0,
+          "arr_usd_ma3": 95880.0,
+          "arr_usd_zscore": 1.18
+        },
+        {
+          "start_date": "2025-11-29",
+          "arr_usd": 42624.0,
+          "arr_usd_ma3": 96916.0,
+          "arr_usd_zscore": -0.31
+        },
+        {
+          "start_date": "2025-12-03",
+          "arr_usd": 52876.8,
+          "arr_usd_ma3": 78637.6,
+          "arr_usd_zscore": -0.16
+        },
+        {
+          "start_date": "2025-12-04",
+          "arr_usd": 19584.0,
+          "arr_usd_ma3": 38361.6,
+          "arr_usd_zscore": -0.66
+        },
+        {
+          "start_date": "2025-12-06",
+          "arr_usd": 88641.6,
+          "arr_usd_ma3": 53700.8,
+          "arr_usd_zscore": 0.39
+        },
+        {
+          "start_date": "2025-12-07",
+          "arr_usd": 24768.0,
+          "arr_usd_ma3": 44331.2,
+          "arr_usd_zscore": -0.58
+        },
+        {
+          "start_date": "2025-12-11",
+          "arr_usd": 16447.2,
+          "arr_usd_ma3": 43285.6,
+          "arr_usd_zscore": -0.71
+        },
+        {
+          "start_date": "2025-12-13",
+          "arr_usd": 62942.4,
+          "arr_usd_ma3": 34719.2,
+          "arr_usd_zscore": -0.0
+        },
+        {
+          "start_date": "2025-12-15",
+          "arr_usd": 45559.8,
+          "arr_usd_ma3": 41649.8,
+          "arr_usd_zscore": -0.27
+        },
+        {
+          "start_date": "2025-12-16",
+          "arr_usd": 228573.6,
+          "arr_usd_ma3": 112358.6,
+          "arr_usd_zscore": 2.52
+        },
+        {
+          "start_date": "2025-12-18",
+          "arr_usd": 27528.0,
+          "arr_usd_ma3": 100553.8,
+          "arr_usd_zscore": -0.54
+        },
+        {
+          "start_date": "2025-12-20",
+          "arr_usd": 133992.0,
+          "arr_usd_ma3": 130031.2,
+          "arr_usd_zscore": 1.08
+        },
+        {
+          "start_date": "2025-12-21",
+          "arr_usd": 51734.4,
+          "arr_usd_ma3": 71084.8,
+          "arr_usd_zscore": -0.17
+        },
+        {
+          "start_date": "2025-12-27",
+          "arr_usd": 4524.0,
+          "arr_usd_ma3": 63416.8,
+          "arr_usd_zscore": -0.89
+        },
+        {
+          "start_date": "2025-12-29",
+          "arr_usd": 37574.4,
+          "arr_usd_ma3": 31277.6,
+          "arr_usd_zscore": -0.39
+        },
+        {
+          "start_date": "2025-12-31",
+          "arr_usd": 49984.8,
+          "arr_usd_ma3": 30694.4,
+          "arr_usd_zscore": -0.2
+        },
+        {
+          "start_date": "2026-01-03",
+          "arr_usd": 24468.48,
+          "arr_usd_ma3": 37342.56,
+          "arr_usd_zscore": -0.59
+        },
+        {
+          "start_date": "2026-01-04",
+          "arr_usd": 82368.0,
+          "arr_usd_ma3": 52273.76,
+          "arr_usd_zscore": 0.29
+        },
+        {
+          "start_date": "2026-01-05",
+          "arr_usd": 82003.2,
+          "arr_usd_ma3": 62946.56,
+          "arr_usd_zscore": 0.29
+        },
+        {
+          "start_date": "2026-01-07",
+          "arr_usd": 142562.4,
+          "arr_usd_ma3": 102311.2,
+          "arr_usd_zscore": 1.21
+        },
+        {
+          "start_date": "2026-01-10",
+          "arr_usd": 31524.0,
+          "arr_usd_ma3": 85363.2,
+          "arr_usd_zscore": -0.48
+        },
+        {
+          "start_date": "2026-01-18",
+          "arr_usd": 18369.6,
+          "arr_usd_ma3": 64152.0,
+          "arr_usd_zscore": -0.68
+        },
+        {
+          "start_date": "2026-01-20",
+          "arr_usd": 108796.8,
+          "arr_usd_ma3": 52896.8,
+          "arr_usd_zscore": 0.7
+        },
+        {
+          "start_date": "2026-01-27",
+          "arr_usd": 13056.0,
+          "arr_usd_ma3": 46740.8,
+          "arr_usd_zscore": -0.76
+        },
+        {
+          "start_date": "2026-01-30",
+          "arr_usd": 8779.2,
+          "arr_usd_ma3": 43544.0,
+          "arr_usd_zscore": -0.83
+        },
+        {
+          "start_date": "2026-02-06",
+          "arr_usd": 260660.4,
+          "arr_usd_ma3": 94165.2,
+          "arr_usd_zscore": 3.01
+        },
+        {
+          "start_date": "2026-02-07",
+          "arr_usd": 52836.0,
+          "arr_usd_ma3": 107425.2,
+          "arr_usd_zscore": -0.16
+        },
+        {
+          "start_date": "2026-02-11",
+          "arr_usd": 10118.4,
+          "arr_usd_ma3": 107871.6,
+          "arr_usd_zscore": -0.81
+        },
+        {
+          "start_date": "2026-02-15",
+          "arr_usd": 71887.2,
+          "arr_usd_ma3": 44947.2,
+          "arr_usd_zscore": 0.13
+        },
+        {
+          "start_date": "2026-02-17",
+          "arr_usd": 7668.0,
+          "arr_usd_ma3": 29891.2,
+          "arr_usd_zscore": -0.85
+        },
+        {
+          "start_date": "2026-02-20",
+          "arr_usd": 11752.8,
+          "arr_usd_ma3": 30436.0,
+          "arr_usd_zscore": -0.78
+        },
+        {
+          "start_date": "2026-02-26",
+          "arr_usd": 83754.96,
+          "arr_usd_ma3": 34391.92,
+          "arr_usd_zscore": 0.31
+        },
+        {
+          "start_date": "2026-02-27",
+          "arr_usd": 85269.0,
+          "arr_usd_ma3": 60258.92,
+          "arr_usd_zscore": 0.34
+        },
+        {
+          "start_date": "2026-03-03",
+          "arr_usd": 67855.2,
+          "arr_usd_ma3": 78959.72,
+          "arr_usd_zscore": 0.07
+        },
+        {
+          "start_date": "2026-03-09",
+          "arr_usd": 37075.2,
+          "arr_usd_ma3": 63399.8,
+          "arr_usd_zscore": -0.4
+        },
+        {
+          "start_date": "2026-03-14",
+          "arr_usd": 52764.0,
+          "arr_usd_ma3": 52564.8,
+          "arr_usd_zscore": -0.16
+        },
+        {
+          "start_date": "2026-03-15",
+          "arr_usd": 33093.6,
+          "arr_usd_ma3": 40977.6,
+          "arr_usd_zscore": -0.46
+        },
+        {
+          "start_date": "2026-03-16",
+          "arr_usd": 27604.8,
+          "arr_usd_ma3": 37820.8,
+          "arr_usd_zscore": -0.54
+        },
+        {
+          "start_date": "2026-03-18",
+          "arr_usd": 54529.2,
+          "arr_usd_ma3": 38409.2,
+          "arr_usd_zscore": -0.13
+        },
+        {
+          "start_date": "2026-03-20",
+          "arr_usd": 4732.8,
+          "arr_usd_ma3": 28955.6,
+          "arr_usd_zscore": -0.89
+        },
+        {
+          "start_date": "2026-03-22",
+          "arr_usd": 13243.2,
+          "arr_usd_ma3": 24168.4,
+          "arr_usd_zscore": -0.76
+        },
+        {
+          "start_date": "2026-03-23",
+          "arr_usd": 205980.0,
+          "arr_usd_ma3": 74652.0,
+          "arr_usd_zscore": 2.18
+        },
+        {
+          "start_date": "2026-03-26",
+          "arr_usd": 97159.2,
+          "arr_usd_ma3": 105460.8,
+          "arr_usd_zscore": 0.52
+        },
+        {
+          "start_date": "2026-03-28",
+          "arr_usd": 79368.0,
+          "arr_usd_ma3": 127502.4,
+          "arr_usd_zscore": 0.25
+        },
+        {
+          "start_date": "2026-03-29",
+          "arr_usd": 424976.76,
+          "arr_usd_ma3": 200501.32,
+          "arr_usd_zscore": 5.52
+        },
+        {
+          "start_date": "2026-03-30",
+          "arr_usd": 90283.2,
+          "arr_usd_ma3": 198209.32,
+          "arr_usd_zscore": 0.41
+        },
+        {
+          "start_date": "2026-03-31",
+          "arr_usd": 15806.4,
+          "arr_usd_ma3": 177022.12,
+          "arr_usd_zscore": -0.72
+        },
+        {
+          "start_date": "2026-04-02",
+          "arr_usd": 40879.2,
+          "arr_usd_ma3": 48989.6,
+          "arr_usd_zscore": -0.34
+        },
+        {
+          "start_date": "2026-04-07",
+          "arr_usd": 46080.0,
+          "arr_usd_ma3": 34255.2,
+          "arr_usd_zscore": -0.26
+        },
+        {
+          "start_date": "2026-04-16",
+          "arr_usd": 54132.0,
+          "arr_usd_ma3": 47030.4,
+          "arr_usd_zscore": -0.14
+        },
+        {
+          "start_date": "2026-04-18",
+          "arr_usd": 18938.4,
+          "arr_usd_ma3": 39716.8,
+          "arr_usd_zscore": -0.67
+        },
+        {
+          "start_date": "2026-04-19",
+          "arr_usd": 11851.92,
+          "arr_usd_ma3": 28307.44,
+          "arr_usd_zscore": -0.78
+        },
+        {
+          "start_date": "2026-04-20",
+          "arr_usd": 35712.0,
+          "arr_usd_ma3": 22167.44,
+          "arr_usd_zscore": -0.42
+        },
+        {
+          "start_date": "2026-04-21",
+          "arr_usd": 23544.0,
+          "arr_usd_ma3": 23702.64,
+          "arr_usd_zscore": -0.6
+        },
+        {
+          "start_date": "2026-04-22",
+          "arr_usd": 14981.76,
+          "arr_usd_ma3": 24745.92,
+          "arr_usd_zscore": -0.73
+        },
+        {
+          "start_date": "2026-04-23",
+          "arr_usd": 7668.0,
+          "arr_usd_ma3": 15397.92,
+          "arr_usd_zscore": -0.85
+        },
+        {
+          "start_date": "2026-04-26",
+          "arr_usd": 5825.52,
+          "arr_usd_ma3": 9491.76,
+          "arr_usd_zscore": -0.87
+        },
+        {
+          "start_date": "2026-04-27",
+          "arr_usd": 26571.24,
+          "arr_usd_ma3": 13354.92,
+          "arr_usd_zscore": -0.56
+        },
+        {
+          "start_date": "2026-04-28",
+          "arr_usd": 23636.76,
+          "arr_usd_ma3": 18677.84,
+          "arr_usd_zscore": -0.6
+        },
+        {
+          "start_date": "2026-04-29",
+          "arr_usd": 147732.0,
+          "arr_usd_ma3": 65980.0,
+          "arr_usd_zscore": 1.29
+        },
+        {
+          "start_date": "2026-05-01",
+          "arr_usd": 42965.64,
+          "arr_usd_ma3": 71444.8,
+          "arr_usd_zscore": -0.31
+        },
+        {
+          "start_date": "2026-05-02",
+          "arr_usd": 9612.0,
+          "arr_usd_ma3": 66769.88,
+          "arr_usd_zscore": -0.82
+        },
+        {
+          "start_date": "2026-05-03",
+          "arr_usd": 64540.8,
+          "arr_usd_ma3": 39039.48,
+          "arr_usd_zscore": 0.02
+        },
+        {
+          "start_date": "2026-05-07",
+          "arr_usd": 22214.4,
+          "arr_usd_ma3": 32122.4,
+          "arr_usd_zscore": -0.62
+        },
+        {
+          "start_date": "2026-05-10",
+          "arr_usd": 17878.32,
+          "arr_usd_ma3": 34877.84,
+          "arr_usd_zscore": -0.69
+        },
+        {
+          "start_date": "2026-05-12",
+          "arr_usd": 44355.6,
+          "arr_usd_ma3": 28149.44,
+          "arr_usd_zscore": -0.29
+        },
+        {
+          "start_date": "2026-05-14",
+          "arr_usd": 40848.0,
+          "arr_usd_ma3": 34360.64,
+          "arr_usd_zscore": -0.34
+        },
+        {
+          "start_date": "2026-05-15",
+          "arr_usd": 65500.8,
+          "arr_usd_ma3": 50234.8,
+          "arr_usd_zscore": 0.04
+        },
+        {
+          "start_date": "2026-05-19",
+          "arr_usd": 8779.2,
+          "arr_usd_ma3": 38376.0,
+          "arr_usd_zscore": -0.83
+        },
+        {
+          "start_date": "2026-05-22",
+          "arr_usd": 50964.48,
+          "arr_usd_ma3": 41748.16,
+          "arr_usd_zscore": -0.19
+        },
+        {
+          "start_date": "2026-05-25",
+          "arr_usd": 89280.0,
+          "arr_usd_ma3": 49674.56,
+          "arr_usd_zscore": 0.4
+        },
+        {
+          "start_date": "2026-05-27",
+          "arr_usd": 86892.0,
+          "arr_usd_ma3": 75712.16,
+          "arr_usd_zscore": 0.36
+        },
+        {
+          "start_date": "2026-06-02",
+          "arr_usd": 49536.0,
+          "arr_usd_ma3": 75236.0,
+          "arr_usd_zscore": -0.21
+        },
+        {
+          "start_date": "2026-06-04",
+          "arr_usd": 179376.0,
+          "arr_usd_ma3": 105268.0,
+          "arr_usd_zscore": 1.77
+        },
+        {
+          "start_date": "2026-06-05",
+          "arr_usd": 92907.0,
+          "arr_usd_ma3": 107273.0,
+          "arr_usd_zscore": 0.45
+        },
+        {
+          "start_date": "2026-06-07",
+          "arr_usd": 301763.76,
+          "arr_usd_ma3": 191348.92,
+          "arr_usd_zscore": 3.64
+        },
+        {
+          "start_date": "2026-06-08",
+          "arr_usd": 255710.4,
+          "arr_usd_ma3": 216793.72,
+          "arr_usd_zscore": 2.94
+        },
+        {
+          "start_date": "2026-06-11",
+          "arr_usd": 63657.6,
+          "arr_usd_ma3": 207043.92,
+          "arr_usd_zscore": 0.01
+        },
+        {
+          "start_date": "2026-06-16",
+          "arr_usd": 14981.76,
+          "arr_usd_ma3": 111449.92,
+          "arr_usd_zscore": -0.73
+        },
+        {
+          "start_date": "2026-06-20",
+          "arr_usd": 7234.92,
+          "arr_usd_ma3": 28624.76,
+          "arr_usd_zscore": -0.85
+        },
+        {
+          "start_date": "2026-06-24",
+          "arr_usd": 265701.6,
+          "arr_usd_ma3": 95972.76,
+          "arr_usd_zscore": 3.09
+        },
+        {
+          "start_date": "2026-06-25",
+          "arr_usd": 37440.0,
+          "arr_usd_ma3": 103458.84,
+          "arr_usd_zscore": -0.39
+        },
+        {
+          "start_date": "2026-06-27",
+          "arr_usd": 51417.6,
+          "arr_usd_ma3": 118186.4,
+          "arr_usd_zscore": -0.18
+        },
+        {
+          "start_date": "2026-07-04",
+          "arr_usd": 26196.0,
+          "arr_usd_ma3": 38351.2,
+          "arr_usd_zscore": -0.56
+        },
+        {
+          "start_date": "2026-07-05",
+          "arr_usd": 26438.4,
+          "arr_usd_ma3": 34684.0,
+          "arr_usd_zscore": -0.56
+        },
+        {
+          "start_date": "2026-07-11",
+          "arr_usd": 11961.6,
+          "arr_usd_ma3": 21532.0,
+          "arr_usd_zscore": -0.78
+        },
+        {
+          "start_date": "2026-07-14",
+          "arr_usd": 38714.28,
+          "arr_usd_ma3": 25704.76,
+          "arr_usd_zscore": -0.37
+        },
+        {
+          "start_date": "2026-07-15",
+          "arr_usd": 120096.0,
+          "arr_usd_ma3": 56923.96,
+          "arr_usd_zscore": 0.87
+        },
+        {
+          "start_date": "2026-07-17",
+          "arr_usd": 13884.0,
+          "arr_usd_ma3": 57564.76,
+          "arr_usd_zscore": -0.75
+        },
+        {
+          "start_date": "2026-07-18",
+          "arr_usd": 22456.44,
+          "arr_usd_ma3": 52145.48,
+          "arr_usd_zscore": -0.62
+        },
+        {
+          "start_date": "2026-07-21",
+          "arr_usd": 93537.6,
+          "arr_usd_ma3": 43292.68,
+          "arr_usd_zscore": 0.46
+        },
+        {
+          "start_date": "2026-07-25",
+          "arr_usd": 52670.4,
+          "arr_usd_ma3": 56221.48,
+          "arr_usd_zscore": -0.16
+        },
+        {
+          "start_date": "2026-07-29",
+          "arr_usd": 163392.0,
+          "arr_usd_ma3": 103200.0,
+          "arr_usd_zscore": 1.53
+        },
+        {
+          "start_date": "2026-08-02",
+          "arr_usd": 59313.6,
+          "arr_usd_ma3": 91792.0,
+          "arr_usd_zscore": -0.06
+        },
+        {
+          "start_date": "2026-08-03",
+          "arr_usd": 71055.36,
+          "arr_usd_ma3": 97920.32,
+          "arr_usd_zscore": 0.12
+        },
+        {
+          "start_date": "2026-08-09",
+          "arr_usd": 105446.4,
+          "arr_usd_ma3": 78605.12,
+          "arr_usd_zscore": 0.65
+        },
+        {
+          "start_date": "2026-08-13",
+          "arr_usd": 63538.56,
+          "arr_usd_ma3": 80013.44,
+          "arr_usd_zscore": 0.01
+        },
+        {
+          "start_date": "2026-08-23",
+          "arr_usd": 100500.0,
+          "arr_usd_ma3": 89828.32,
+          "arr_usd_zscore": 0.57
+        },
+        {
+          "start_date": "2026-08-24",
+          "arr_usd": 29040.0,
+          "arr_usd_ma3": 64359.52,
+          "arr_usd_zscore": -0.52
+        },
+        {
+          "start_date": "2026-08-26",
+          "arr_usd": 38640.24,
+          "arr_usd_ma3": 56060.08,
+          "arr_usd_zscore": -0.37
+        },
+        {
+          "start_date": "2026-08-29",
+          "arr_usd": 139190.4,
+          "arr_usd_ma3": 68956.88,
+          "arr_usd_zscore": 1.16
+        },
+        {
+          "start_date": "2026-09-01",
+          "arr_usd": 51808.8,
+          "arr_usd_ma3": 76546.48,
+          "arr_usd_zscore": -0.17
+        },
+        {
+          "start_date": "2026-09-02",
+          "arr_usd": 30854.52,
+          "arr_usd_ma3": 73951.24,
+          "arr_usd_zscore": -0.49
+        },
+        {
+          "start_date": "2026-09-06",
+          "arr_usd": 210816.0,
+          "arr_usd_ma3": 97826.44,
+          "arr_usd_zscore": 2.25
+        },
+        {
+          "start_date": "2026-09-07",
+          "arr_usd": 78912.0,
+          "arr_usd_ma3": 106860.84,
+          "arr_usd_zscore": 0.24
+        },
+        {
+          "start_date": "2026-09-10",
+          "arr_usd": 123964.8,
+          "arr_usd_ma3": 137897.6,
+          "arr_usd_zscore": 0.93
+        },
+        {
+          "start_date": "2026-09-11",
+          "arr_usd": 28860.0,
+          "arr_usd_ma3": 77245.6,
+          "arr_usd_zscore": -0.52
+        }
+      ],
+      "x_field": "start_date",
+      "y_fields": [
+        "arr_usd"
+      ],
+      "series_field": null,
+      "kpi_payload": {
+        "formatted_value": "$13.88M",
+        "raw_value": 13882937.76,
+        "metric_label": "Arr Usd",
+        "delta_pct": -78.45,
+        "delta_direction": "down",
+        "sparkline": [
+          26196.0,
+          26438.4,
+          11961.6,
+          38714.28,
+          120096.0,
+          13884.0,
+          22456.44,
+          93537.6,
+          52670.4,
+          163392.0,
+          59313.6,
+          71055.36,
+          105446.4,
+          63538.56,
+          100500.0,
+          29040.0,
+          38640.24,
+          139190.4,
+          51808.8,
+          30854.52,
+          210816.0,
+          78912.0,
+          123964.8,
+          28860.0
+        ],
+        "subtext": "Across 220 periods"
+      },
+      "echarts_option": null,
+      "insight_summary": "Arr Usd ranges from $4,524 to $425.0K (-78.45% trajectory). Outlier spike at 2025-07-09 (Z=3.61).",
+      "anomalies": [
+        {
+          "row_index": 61,
+          "dimension_label": "2025-07-09",
+          "metric_name": "arr_usd",
+          "value": 299838.96,
+          "z_score": 3.61,
+          "direction": "spike"
+        },
+        {
+          "row_index": 70,
+          "dimension_label": "2025-07-24",
+          "metric_name": "arr_usd",
+          "value": 258985.32,
+          "z_score": 2.99,
+          "direction": "spike"
+        },
+        {
+          "row_index": 74,
+          "dimension_label": "2025-07-29",
+          "metric_name": "arr_usd",
+          "value": 192796.32,
+          "z_score": 1.98,
+          "direction": "spike"
+        },
+        {
+          "row_index": 84,
+          "dimension_label": "2025-08-29",
+          "metric_name": "arr_usd",
+          "value": 269520.0,
+          "z_score": 3.15,
+          "direction": "spike"
+        },
+        {
+          "row_index": 89,
+          "dimension_label": "2025-09-14",
+          "metric_name": "arr_usd",
+          "value": 214020.0,
+          "z_score": 2.3,
+          "direction": "spike"
+        },
+        {
+          "row_index": 93,
+          "dimension_label": "2025-09-27",
+          "metric_name": "arr_usd",
+          "value": 193577.04,
+          "z_score": 1.99,
+          "direction": "spike"
+        },
+        {
+          "row_index": 122,
+          "dimension_label": "2025-12-16",
+          "metric_name": "arr_usd",
+          "value": 228573.6,
+          "z_score": 2.52,
+          "direction": "spike"
+        },
+        {
+          "row_index": 138,
+          "dimension_label": "2026-02-06",
+          "metric_name": "arr_usd",
+          "value": 260660.4,
+          "z_score": 3.01,
+          "direction": "spike"
+        },
+        {
+          "row_index": 154,
+          "dimension_label": "2026-03-23",
+          "metric_name": "arr_usd",
+          "value": 205980.0,
+          "z_score": 2.18,
+          "direction": "spike"
+        },
+        {
+          "row_index": 157,
+          "dimension_label": "2026-03-29",
+          "metric_name": "arr_usd",
+          "value": 424976.76,
+          "z_score": 5.52,
+          "direction": "spike"
+        },
+        {
+          "row_index": 186,
+          "dimension_label": "2026-06-04",
+          "metric_name": "arr_usd",
+          "value": 179376.0,
+          "z_score": 1.77,
+          "direction": "spike"
+        },
+        {
+          "row_index": 188,
+          "dimension_label": "2026-06-07",
+          "metric_name": "arr_usd",
+          "value": 301763.76,
+          "z_score": 3.64,
+          "direction": "spike"
+        },
+        {
+          "row_index": 189,
+          "dimension_label": "2026-06-08",
+          "metric_name": "arr_usd",
+          "value": 255710.4,
+          "z_score": 2.94,
+          "direction": "spike"
+        },
+        {
+          "row_index": 193,
+          "dimension_label": "2026-06-24",
+          "metric_name": "arr_usd",
+          "value": 265701.6,
+          "z_score": 3.09,
+          "direction": "spike"
+        },
+        {
+          "row_index": 216,
+          "dimension_label": "2026-09-06",
+          "metric_name": "arr_usd",
+          "value": 210816.0,
+          "z_score": 2.25,
+          "direction": "spike"
+        }
+      ]
+    },
+    {
+      "id": "widget_kpi_order_vol",
+      "title": "Total Enterprise Orders",
+      "subtitle": "Completed Transactions",
+      "widget_type": "kpi",
+      "chart_type": "kpi",
+      "step_id": "step_4_kpi_order_vol",
+      "sql_query": "SELECT order_month, COUNT(*) AS order_count FROM orders GROUP BY order_month ORDER BY order_month LIMIT 2000",
+      "data_hash": "sha256:55fdc87cf344aab3",
+      "columns": [
+        "order_month",
+        "order_count"
+      ],
+      "rows": [
+        {
+          "order_month": "2025-01",
+          "order_count": 85,
+          "order_count_ma3": 85.0,
+          "order_count_zscore": -1.28
+        },
+        {
+          "order_month": "2025-02",
+          "order_count": 88,
+          "order_count_ma3": 86.5,
+          "order_count_zscore": -1.21
+        },
+        {
+          "order_month": "2025-03",
+          "order_count": 92,
+          "order_count_ma3": 88.33,
+          "order_count_zscore": -1.1
+        },
+        {
+          "order_month": "2025-04",
+          "order_count": 96,
+          "order_count_ma3": 92.0,
+          "order_count_zscore": -1.0
+        },
+        {
+          "order_month": "2025-05",
+          "order_count": 100,
+          "order_count_ma3": 96.0,
+          "order_count_zscore": -0.89
+        },
+        {
+          "order_month": "2025-06",
+          "order_count": 104,
+          "order_count_ma3": 100.0,
+          "order_count_zscore": -0.79
+        },
+        {
+          "order_month": "2025-07",
+          "order_count": 107,
+          "order_count_ma3": 103.67,
+          "order_count_zscore": -0.71
+        },
+        {
+          "order_month": "2025-08",
+          "order_count": 111,
+          "order_count_ma3": 107.33,
+          "order_count_zscore": -0.61
+        },
+        {
+          "order_month": "2025-09",
+          "order_count": 115,
+          "order_count_ma3": 111.0,
+          "order_count_zscore": -0.5
+        },
+        {
+          "order_month": "2025-10",
+          "order_count": 140,
+          "order_count_ma3": 122.0,
+          "order_count_zscore": 0.15
+        },
+        {
+          "order_month": "2025-11",
+          "order_count": 145,
+          "order_count_ma3": 133.33,
+          "order_count_zscore": 0.28
+        },
+        {
+          "order_month": "2025-12",
+          "order_count": 149,
+          "order_count_ma3": 144.67,
+          "order_count_zscore": 0.39
+        },
+        {
+          "order_month": "2026-01",
+          "order_count": 130,
+          "order_count_ma3": 141.33,
+          "order_count_zscore": -0.11
+        },
+        {
+          "order_month": "2026-02",
+          "order_count": 134,
+          "order_count_ma3": 137.67,
+          "order_count_zscore": -0.0
+        },
+        {
+          "order_month": "2026-03",
+          "order_count": 138,
+          "order_count_ma3": 134.0,
+          "order_count_zscore": 0.1
+        },
+        {
+          "order_month": "2026-04",
+          "order_count": 142,
+          "order_count_ma3": 138.0,
+          "order_count_zscore": 0.2
+        },
+        {
+          "order_month": "2026-05",
+          "order_count": 146,
+          "order_count_ma3": 142.0,
+          "order_count_zscore": 0.31
+        },
+        {
+          "order_month": "2026-06",
+          "order_count": 150,
+          "order_count_ma3": 146.0,
+          "order_count_zscore": 0.41
+        },
+        {
+          "order_month": "2026-07",
+          "order_count": 153,
+          "order_count_ma3": 149.67,
+          "order_count_zscore": 0.49
+        },
+        {
+          "order_month": "2026-08",
+          "order_count": 192,
+          "order_count_ma3": 165.0,
+          "order_count_zscore": 1.51
+        },
+        {
+          "order_month": "2026-09",
+          "order_count": 197,
+          "order_count_ma3": 180.67,
+          "order_count_zscore": 1.64
+        },
+        {
+          "order_month": "2026-10",
+          "order_count": 238,
+          "order_count_ma3": 209.0,
+          "order_count_zscore": 2.71
+        }
+      ],
+      "x_field": "order_month",
+      "y_fields": [
+        "order_count"
+      ],
+      "series_field": null,
+      "kpi_payload": {
+        "formatted_value": "2,952",
+        "raw_value": 2952.0,
+        "metric_label": "Order Count",
+        "delta_pct": 180.0,
+        "delta_direction": "up",
+        "sparkline": [
+          85.0,
+          88.0,
+          92.0,
+          96.0,
+          100.0,
+          104.0,
+          107.0,
+          111.0,
+          115.0,
+          140.0,
+          145.0,
+          149.0,
+          130.0,
+          134.0,
+          138.0,
+          142.0,
+          146.0,
+          150.0,
+          153.0,
+          192.0,
+          197.0,
+          238.0
+        ],
+        "subtext": "Across 22 periods"
+      },
+      "echarts_option": null,
+      "insight_summary": "Order Count ranges from 85 to 238 (+180.0% trajectory). Outlier spike at 2026-10 (Z=2.71).",
+      "anomalies": [
+        {
+          "row_index": 21,
+          "dimension_label": "2026-10",
+          "metric_name": "order_count",
+          "value": 238.0,
+          "z_score": 2.71,
+          "direction": "spike"
+        }
+      ]
+    },
+    {
+      "id": "widget_chart_rev_trajectory",
+      "title": "Monthly Net Revenue & Operating Profit Trend",
+      "subtitle": "22-Month Trajectory with 3-Month Moving Average",
+      "widget_type": "echarts",
+      "chart_type": "area_spline",
+      "step_id": "step_5_chart_rev_trajectory",
+      "sql_query": "SELECT order_month, ROUND(SUM(net_revenue), 2) AS net_revenue, ROUND(SUM(profit_usd), 2) AS profit_usd FROM orders GROUP BY order_month ORDER BY order_month LIMIT 2000",
+      "data_hash": "sha256:51e08c923d4685a5",
+      "columns": [
+        "order_month",
+        "net_revenue",
+        "profit_usd"
+      ],
+      "rows": [
+        {
+          "order_month": "2025-01",
+          "net_revenue": 462430.5,
+          "profit_usd": 381096.04,
+          "net_revenue_ma3": 462430.5,
+          "net_revenue_zscore": -1.19
+        },
+        {
+          "order_month": "2025-02",
+          "net_revenue": 463609.0,
+          "profit_usd": 384033.1,
+          "net_revenue_ma3": 463019.75,
+          "net_revenue_zscore": -1.18
+        },
+        {
+          "order_month": "2025-03",
+          "net_revenue": 541247.5,
+          "profit_usd": 448388.34,
+          "net_revenue_ma3": 489095.67,
+          "net_revenue_zscore": -0.78
+        },
+        {
+          "order_month": "2025-04",
+          "net_revenue": 581166.0,
+          "profit_usd": 478054.41,
+          "net_revenue_ma3": 528674.17,
+          "net_revenue_zscore": -0.57
+        },
+        {
+          "order_month": "2025-05",
+          "net_revenue": 490548.5,
+          "profit_usd": 409050.63,
+          "net_revenue_ma3": 537654.0,
+          "net_revenue_zscore": -1.04
+        },
+        {
+          "order_month": "2025-06",
+          "net_revenue": 574554.0,
+          "profit_usd": 470873.15,
+          "net_revenue_ma3": 548756.17,
+          "net_revenue_zscore": -0.6
+        },
+        {
+          "order_month": "2025-07",
+          "net_revenue": 700685.0,
+          "profit_usd": 581712.33,
+          "net_revenue_ma3": 588595.83,
+          "net_revenue_zscore": 0.06
+        },
+        {
+          "order_month": "2025-08",
+          "net_revenue": 515897.0,
+          "profit_usd": 432696.66,
+          "net_revenue_ma3": 597045.33,
+          "net_revenue_zscore": -0.91
+        },
+        {
+          "order_month": "2025-09",
+          "net_revenue": 596077.5,
+          "profit_usd": 496509.46,
+          "net_revenue_ma3": 604219.83,
+          "net_revenue_zscore": -0.49
+        },
+        {
+          "order_month": "2025-10",
+          "net_revenue": 683991.5,
+          "profit_usd": 559363.78,
+          "net_revenue_ma3": 598655.33,
+          "net_revenue_zscore": -0.03
+        },
+        {
+          "order_month": "2025-11",
+          "net_revenue": 750564.5,
+          "profit_usd": 622558.2,
+          "net_revenue_ma3": 676877.83,
+          "net_revenue_zscore": 0.32
+        },
+        {
+          "order_month": "2025-12",
+          "net_revenue": 801067.0,
+          "profit_usd": 651706.66,
+          "net_revenue_ma3": 745207.67,
+          "net_revenue_zscore": 0.59
+        },
+        {
+          "order_month": "2026-01",
+          "net_revenue": 631025.5,
+          "profit_usd": 523815.92,
+          "net_revenue_ma3": 727552.33,
+          "net_revenue_zscore": -0.31
+        },
+        {
+          "order_month": "2026-02",
+          "net_revenue": 693585.0,
+          "profit_usd": 575687.94,
+          "net_revenue_ma3": 708559.17,
+          "net_revenue_zscore": 0.02
+        },
+        {
+          "order_month": "2026-03",
+          "net_revenue": 592396.0,
+          "profit_usd": 490058.71,
+          "net_revenue_ma3": 639002.17,
+          "net_revenue_zscore": -0.51
+        },
+        {
+          "order_month": "2026-04",
+          "net_revenue": 647768.5,
+          "profit_usd": 533130.24,
+          "net_revenue_ma3": 644583.17,
+          "net_revenue_zscore": -0.22
+        },
+        {
+          "order_month": "2026-05",
+          "net_revenue": 771376.0,
+          "profit_usd": 632662.49,
+          "net_revenue_ma3": 670513.5,
+          "net_revenue_zscore": 0.43
+        },
+        {
+          "order_month": "2026-06",
+          "net_revenue": 739104.0,
+          "profit_usd": 620915.3,
+          "net_revenue_ma3": 719416.17,
+          "net_revenue_zscore": 0.26
+        },
+        {
+          "order_month": "2026-07",
+          "net_revenue": 665511.0,
+          "profit_usd": 555108.72,
+          "net_revenue_ma3": 725330.33,
+          "net_revenue_zscore": -0.12
+        },
+        {
+          "order_month": "2026-08",
+          "net_revenue": 1075795.5,
+          "profit_usd": 885137.03,
+          "net_revenue_ma3": 826803.5,
+          "net_revenue_zscore": 2.03
+        },
+        {
+          "order_month": "2026-09",
+          "net_revenue": 990264.5,
+          "profit_usd": 817041.61,
+          "net_revenue_ma3": 910523.67,
+          "net_revenue_zscore": 1.58
+        },
+        {
+          "order_month": "2026-10",
+          "net_revenue": 1192653.5,
+          "profit_usd": 983769.65,
+          "net_revenue_ma3": 1086237.83,
+          "net_revenue_zscore": 2.64
+        }
+      ],
+      "x_field": "order_month",
+      "y_fields": [
+        "net_revenue",
+        "profit_usd"
+      ],
+      "series_field": null,
+      "kpi_payload": null,
+      "echarts_option": {
+        "color": [
+          "#6366f1",
+          "#06b6d4",
+          "#10b981",
+          "#f59e0b",
+          "#ec4899",
+          "#8b5cf6",
+          "#3b82f6",
+          "#14b8a6"
+        ],
+        "tooltip": {
+          "trigger": "axis",
+          "backgroundColor": "rgba(15, 23, 42, 0.94)",
+          "borderColor": "rgba(99, 102, 241, 0.35)",
+          "borderWidth": 1,
+          "textStyle": {
+            "color": "#f8fafc",
+            "fontSize": 12
+          },
+          "confine": true
+        },
+        "legend": {
+          "top": 0,
+          "right": 8,
+          "textStyle": {
+            "color": "#94a3b8",
+            "fontSize": 11
+          }
+        },
+        "grid": {
+          "top": 34,
+          "right": 24,
+          "bottom": 46,
+          "left": 16,
+          "containLabel": true
+        },
+        "xAxis": {
+          "type": "category",
+          "data": [
+            "2025-01",
+            "2025-02",
+            "2025-03",
+            "2025-04",
+            "2025-05",
+            "2025-06",
+            "2025-07",
+            "2025-08",
+            "2025-09",
+            "2025-10",
+            "2025-11",
+            "2025-12",
+            "2026-01",
+            "2026-02",
+            "2026-03",
+            "2026-04",
+            "2026-05",
+            "2026-06",
+            "2026-07",
+            "2026-08",
+            "2026-09",
+            "2026-10"
+          ],
+          "boundaryGap": false,
+          "axisLabel": {
+            "color": "#94a3b8",
+            "fontSize": 11
+          },
+          "axisLine": {
+            "lineStyle": {
+              "color": "rgba(148,163,184,0.2)"
+            }
+          }
+        },
+        "yAxis": {
+          "type": "value",
+          "axisLabel": {
+            "color": "#94a3b8",
+            "fontSize": 11
+          },
+          "splitLine": {
+            "lineStyle": {
+              "color": "rgba(148,163,184,0.12)",
+              "type": "dashed"
+            }
+          }
+        },
+        "series": [
+          {
+            "name": "Net Revenue",
+            "type": "line",
+            "data": [
+              462430.5,
+              463609.0,
+              541247.5,
+              581166.0,
+              490548.5,
+              574554.0,
+              700685.0,
+              515897.0,
+              596077.5,
+              683991.5,
+              750564.5,
+              801067.0,
+              631025.5,
+              693585.0,
+              592396.0,
+              647768.5,
+              771376.0,
+              739104.0,
+              665511.0,
+              1075795.5,
+              990264.5,
+              1192653.5
+            ],
+            "itemStyle": {
+              "color": "#6366f1"
+            },
+            "smooth": true,
+            "symbolSize": 6,
+            "lineStyle": {
+              "width": 3,
+              "color": "#6366f1"
+            },
+            "areaStyle": {
+              "color": {
+                "type": "linear",
+                "x": 0,
+                "y": 0,
+                "x2": 0,
+                "y2": 1,
+                "colorStops": [
+                  {
+                    "offset": 0,
+                    "color": "#6366f188"
+                  },
+                  {
+                    "offset": 1,
+                    "color": "#6366f105"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "name": "Profit Usd",
+            "type": "line",
+            "data": [
+              381096.04,
+              384033.1,
+              448388.34,
+              478054.41,
+              409050.63,
+              470873.15,
+              581712.33,
+              432696.66,
+              496509.46,
+              559363.78,
+              622558.2,
+              651706.66,
+              523815.92,
+              575687.94,
+              490058.71,
+              533130.24,
+              632662.49,
+              620915.3,
+              555108.72,
+              885137.03,
+              817041.61,
+              983769.65
+            ],
+            "itemStyle": {
+              "color": "#06b6d4"
+            },
+            "smooth": true,
+            "symbolSize": 6,
+            "lineStyle": {
+              "width": 3,
+              "color": "#06b6d4"
+            },
+            "areaStyle": {
+              "color": {
+                "type": "linear",
+                "x": 0,
+                "y": 0,
+                "x2": 0,
+                "y2": 1,
+                "colorStops": [
+                  {
+                    "offset": 0,
+                    "color": "#06b6d488"
+                  },
+                  {
+                    "offset": 1,
+                    "color": "#06b6d405"
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "dataZoom": [
+          {
+            "type": "inside",
+            "start": 0,
+            "end": 100
+          },
+          {
+            "type": "slider",
+            "height": 16,
+            "bottom": 6,
+            "borderColor": "rgba(148,163,184,0.15)",
+            "fillerColor": "rgba(99, 102, 241, 0.2)",
+            "textStyle": {
+              "color": "#94a3b8",
+              "fontSize": 10
+            }
+          }
+        ]
+      },
+      "insight_summary": "Net Revenue ranges from $462.4K to $1.19M (+157.91% trajectory). Outlier spike at 2026-08 (Z=2.03).",
+      "anomalies": [
+        {
+          "row_index": 19,
+          "dimension_label": "2026-08",
+          "metric_name": "net_revenue",
+          "value": 1075795.5,
+          "z_score": 2.03,
+          "direction": "spike"
+        },
+        {
+          "row_index": 21,
+          "dimension_label": "2026-10",
+          "metric_name": "net_revenue",
+          "value": 1192653.5,
+          "z_score": 2.64,
+          "direction": "spike"
+        }
+      ]
+    },
+    {
+      "id": "widget_chart_region_donut",
+      "title": "Net Revenue Share by Global Region",
+      "subtitle": "Regional Contribution Breakdown",
+      "widget_type": "echarts",
+      "chart_type": "donut",
+      "step_id": "step_6_chart_region_donut",
+      "sql_query": "SELECT region, ROUND(SUM(net_revenue), 2) AS net_revenue FROM orders GROUP BY region ORDER BY net_revenue DESC LIMIT 2000",
+      "data_hash": "sha256:13438bbf7b78c702",
+      "columns": [
+        "region",
+        "net_revenue"
+      ],
+      "rows": [
+        {
+          "region": "North America",
+          "net_revenue": 7570223.0,
+          "net_revenue_ma3": 7570223.0,
+          "net_revenue_zscore": 1.36
+        },
+        {
+          "region": "Europe",
+          "net_revenue": 3596947.5,
+          "net_revenue_ma3": 5583585.25,
+          "net_revenue_zscore": -0.07
+        },
+        {
+          "region": "APAC",
+          "net_revenue": 3068172.5,
+          "net_revenue_ma3": 4745114.33,
+          "net_revenue_zscore": -0.26
+        },
+        {
+          "region": "LATAM",
+          "net_revenue": 925974.5,
+          "net_revenue_ma3": 2530364.83,
+          "net_revenue_zscore": -1.03
+        }
+      ],
+      "x_field": "region",
+      "y_fields": [
+        "net_revenue"
+      ],
+      "series_field": null,
+      "kpi_payload": null,
+      "echarts_option": {
+        "color": [
+          "#6366f1",
+          "#06b6d4",
+          "#10b981",
+          "#f59e0b",
+          "#ec4899",
+          "#8b5cf6",
+          "#3b82f6",
+          "#14b8a6"
+        ],
+        "tooltip": {
+          "trigger": "item",
+          "backgroundColor": "rgba(15, 23, 42, 0.94)",
+          "borderColor": "rgba(99, 102, 241, 0.35)",
+          "borderWidth": 1,
+          "textStyle": {
+            "color": "#f8fafc",
+            "fontSize": 12
+          },
+          "confine": true
+        },
+        "legend": {
+          "orient": "vertical",
+          "right": 8,
+          "top": "middle",
+          "textStyle": {
+            "color": "#94a3b8",
+            "fontSize": 11
+          }
+        },
+        "series": [
+          {
+            "name": "Net Revenue",
+            "type": "pie",
+            "radius": [
+              "42%",
+              "74%"
+            ],
+            "center": [
+              "38%",
+              "52%"
+            ],
+            "roseType": false,
+            "itemStyle": {
+              "borderRadius": 6,
+              "borderColor": "#0f172a",
+              "borderWidth": 2
+            },
+            "label": {
+              "show": false
+            },
+            "emphasis": {
+              "label": {
+                "show": true,
+                "fontSize": 13,
+                "fontWeight": "bold",
+                "color": "#f8fafc"
+              }
+            },
+            "data": [
+              {
+                "name": "North America",
+                "value": 7570223.0
+              },
+              {
+                "name": "Europe",
+                "value": 3596947.5
+              },
+              {
+                "name": "APAC",
+                "value": 3068172.5
+              },
+              {
+                "name": "LATAM",
+                "value": 925974.5
+              }
+            ]
+          }
+        ]
+      },
+      "insight_summary": "Net Revenue ranges from $926.0K to $7.57M (-87.77% trajectory).",
+      "anomalies": []
+    },
+    {
+      "id": "widget_chart_product_ranking",
+      "title": "Product Revenue & Profit Performance",
+      "subtitle": "Top Performing Software Products",
+      "widget_type": "echarts",
+      "chart_type": "horizontal_bar",
+      "step_id": "step_7_chart_product_ranking",
+      "sql_query": "SELECT p.product_name, ROUND(SUM(o.net_revenue), 2) AS net_revenue, ROUND(SUM(o.profit_usd), 2) AS profit_usd FROM orders AS o JOIN products AS p ON o.product_id = p.product_id GROUP BY p.product_name ORDER BY net_revenue DESC LIMIT 2000",
+      "data_hash": "sha256:eece3fe73274c4f3",
+      "columns": [
+        "product_name",
+        "net_revenue",
+        "profit_usd"
+      ],
+      "rows": [
+        {
+          "product_name": "Lakehouse Query Accelerator",
+          "net_revenue": 4330440.0,
+          "profit_usd": 3291134.4,
+          "net_revenue_ma3": 4330440.0,
+          "net_revenue_zscore": 1.88
+        },
+        {
+          "product_name": "InsightForge Enterprise AI",
+          "net_revenue": 3260162.5,
+          "profit_usd": 2868943.0,
+          "net_revenue_ma3": 3795301.25,
+          "net_revenue_zscore": 1.05
+        },
+        {
+          "product_name": "DataShield Governance Guard",
+          "net_revenue": 2007240.0,
+          "profit_usd": 1726226.4,
+          "net_revenue_ma3": 3199280.83,
+          "net_revenue_zscore": 0.09
+        },
+        {
+          "product_name": "EmbedKit React SDK",
+          "net_revenue": 1748049.0,
+          "profit_usd": 1555763.83,
+          "net_revenue_ma3": 2338483.83,
+          "net_revenue_zscore": -0.11
+        },
+        {
+          "product_name": "HyperStream ETL Connectors",
+          "net_revenue": 1332664.0,
+          "profit_usd": 1052804.56,
+          "net_revenue_ma3": 1695984.33,
+          "net_revenue_zscore": -0.43
+        },
+        {
+          "product_name": "Pulse Anomaly Monitor",
+          "net_revenue": 1158288.0,
+          "profit_usd": 984544.67,
+          "net_revenue_ma3": 1413000.33,
+          "net_revenue_zscore": -0.57
+        },
+        {
+          "product_name": "InsightForge Core BI",
+          "net_revenue": 738427.5,
+          "profit_usd": 620279.1,
+          "net_revenue_ma3": 1076459.83,
+          "net_revenue_zscore": -0.89
+        },
+        {
+          "product_name": "CloudSync CDC Pipeline",
+          "net_revenue": 586046.5,
+          "profit_usd": 433674.41,
+          "net_revenue_ma3": 827587.33,
+          "net_revenue_zscore": -1.01
+        }
+      ],
+      "x_field": "product_name",
+      "y_fields": [
+        "net_revenue"
+      ],
+      "series_field": null,
+      "kpi_payload": null,
+      "echarts_option": {
+        "color": [
+          "#6366f1",
+          "#06b6d4",
+          "#10b981",
+          "#f59e0b",
+          "#ec4899",
+          "#8b5cf6",
+          "#3b82f6",
+          "#14b8a6"
+        ],
+        "tooltip": {
+          "trigger": "axis",
+          "backgroundColor": "rgba(15, 23, 42, 0.94)",
+          "borderColor": "rgba(99, 102, 241, 0.35)",
+          "borderWidth": 1,
+          "textStyle": {
+            "color": "#f8fafc",
+            "fontSize": 12
+          },
+          "confine": true
+        },
+        "grid": {
+          "top": 16,
+          "right": 32,
+          "bottom": 24,
+          "left": 16,
+          "containLabel": true
+        },
+        "xAxis": {
+          "type": "value",
+          "axisLabel": {
+            "color": "#94a3b8",
+            "fontSize": 11
+          },
+          "splitLine": {
+            "lineStyle": {
+              "color": "rgba(148,163,184,0.12)",
+              "type": "dashed"
+            }
+          }
+        },
+        "yAxis": {
+          "type": "category",
+          "data": [
+            "CloudSync CDC Pipeline",
+            "InsightForge Core BI",
+            "Pulse Anomaly Monitor",
+            "HyperStream ETL Connectors",
+            "EmbedKit React SDK",
+            "DataShield Governance Guard",
+            "InsightForge Enterprise AI",
+            "Lakehouse Query Accelerator"
+          ],
+          "axisLabel": {
+            "color": "#cbd5e1",
+            "fontSize": 11,
+            "width": 110,
+            "overflow": "truncate"
+          },
+          "axisLine": {
+            "lineStyle": {
+              "color": "rgba(148,163,184,0.2)"
+            }
+          }
+        },
+        "series": [
+          {
+            "name": "Net Revenue",
+            "type": "bar",
+            "data": [
+              586046.5,
+              738427.5,
+              1158288.0,
+              1332664.0,
+              1748049.0,
+              2007240.0,
+              3260162.5,
+              4330440.0
+            ],
+            "barMaxWidth": 22,
+            "itemStyle": {
+              "borderRadius": [
+                0,
+                6,
+                6,
+                0
+              ],
+              "color": {
+                "type": "linear",
+                "x": 0,
+                "y": 0,
+                "x2": 1,
+                "y2": 0,
+                "colorStops": [
+                  {
+                    "offset": 0,
+                    "color": "#4f46e5"
+                  },
+                  {
+                    "offset": 1,
+                    "color": "#06b6d4"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "insight_summary": "Net Revenue ranges from $586.0K to $4.33M (-86.47% trajectory). Outlier spike at Lakehouse Query Accelerator (Z=1.88).",
+      "anomalies": [
+        {
+          "row_index": 0,
+          "dimension_label": "Lakehouse Query Accelerator",
+          "metric_name": "net_revenue",
+          "value": 4330440.0,
+          "z_score": 1.88,
+          "direction": "spike"
+        }
+      ]
+    },
+    {
+      "id": "widget_chart_segment_channel_heatmap",
+      "title": "Revenue Matrix: Customer Segment × Acquisition Channel",
+      "subtitle": "Cross-Dimensional Revenue Density",
+      "widget_type": "echarts",
+      "chart_type": "heatmap",
+      "step_id": "step_8_chart_segment_channel_heatmap",
+      "sql_query": "SELECT channel, segment, ROUND(SUM(net_revenue), 2) AS net_revenue FROM orders GROUP BY channel, segment LIMIT 2000",
+      "data_hash": "sha256:7c92e4f2ed843893",
+      "columns": [
+        "channel",
+        "segment",
+        "net_revenue"
+      ],
+      "rows": [
+        {
+          "channel": "LinkedIn Ads",
+          "segment": "Enterprise",
+          "net_revenue": 1065736.0,
+          "net_revenue_ma3": 1065736.0,
+          "net_revenue_zscore": 0.91
+        },
+        {
+          "channel": "LinkedIn Ads",
+          "segment": "Mid-Market",
+          "net_revenue": 1326972.0,
+          "net_revenue_ma3": 1196354.0,
+          "net_revenue_zscore": 1.46
+        },
+        {
+          "channel": "LinkedIn Ads",
+          "segment": "SMB",
+          "net_revenue": 357846.0,
+          "net_revenue_ma3": 916851.33,
+          "net_revenue_zscore": -0.57
+        },
+        {
+          "channel": "LinkedIn Ads",
+          "segment": "Startup",
+          "net_revenue": 127668.5,
+          "net_revenue_ma3": 604162.17,
+          "net_revenue_zscore": -1.06
+        },
+        {
+          "channel": "Organic Search",
+          "segment": "Enterprise",
+          "net_revenue": 1459200.0,
+          "net_revenue_ma3": 648238.17,
+          "net_revenue_zscore": 1.74
+        },
+        {
+          "channel": "Organic Search",
+          "segment": "Mid-Market",
+          "net_revenue": 880772.0,
+          "net_revenue_ma3": 822546.83,
+          "net_revenue_zscore": 0.52
+        },
+        {
+          "channel": "Organic Search",
+          "segment": "SMB",
+          "net_revenue": 311265.5,
+          "net_revenue_ma3": 883745.83,
+          "net_revenue_zscore": -0.67
+        },
+        {
+          "channel": "Organic Search",
+          "segment": "Startup",
+          "net_revenue": 153935.5,
+          "net_revenue_ma3": 448657.67,
+          "net_revenue_zscore": -1.0
+        },
+        {
+          "channel": "Outbound Sales",
+          "segment": "Enterprise",
+          "net_revenue": 1739392.5,
+          "net_revenue_ma3": 734864.5,
+          "net_revenue_zscore": 2.32
+        },
+        {
+          "channel": "Outbound Sales",
+          "segment": "Mid-Market",
+          "net_revenue": 1026768.0,
+          "net_revenue_ma3": 973365.33,
+          "net_revenue_zscore": 0.83
+        },
+        {
+          "channel": "Outbound Sales",
+          "segment": "SMB",
+          "net_revenue": 340901.5,
+          "net_revenue_ma3": 1035687.33,
+          "net_revenue_zscore": -0.61
+        },
+        {
+          "channel": "Outbound Sales",
+          "segment": "Startup",
+          "net_revenue": 151891.5,
+          "net_revenue_ma3": 506520.33,
+          "net_revenue_zscore": -1.01
+        },
+        {
+          "channel": "Paid Search",
+          "segment": "Enterprise",
+          "net_revenue": 704044.5,
+          "net_revenue_ma3": 398945.83,
+          "net_revenue_zscore": 0.15
+        },
+        {
+          "channel": "Paid Search",
+          "segment": "Mid-Market",
+          "net_revenue": 746082.0,
+          "net_revenue_ma3": 534006.0,
+          "net_revenue_zscore": 0.24
+        },
+        {
+          "channel": "Paid Search",
+          "segment": "SMB",
+          "net_revenue": 397809.0,
+          "net_revenue_ma3": 615978.5,
+          "net_revenue_zscore": -0.49
+        },
+        {
+          "channel": "Paid Search",
+          "segment": "Startup",
+          "net_revenue": 58534.0,
+          "net_revenue_ma3": 400808.33,
+          "net_revenue_zscore": -1.2
+        },
+        {
+          "channel": "Partner Referral",
+          "segment": "Enterprise",
+          "net_revenue": 1107567.0,
+          "net_revenue_ma3": 521303.33,
+          "net_revenue_zscore": 1.0
+        },
+        {
+          "channel": "Partner Referral",
+          "segment": "Mid-Market",
+          "net_revenue": 608227.5,
+          "net_revenue_ma3": 591442.83,
+          "net_revenue_zscore": -0.05
+        },
+        {
+          "channel": "Partner Referral",
+          "segment": "SMB",
+          "net_revenue": 325737.5,
+          "net_revenue_ma3": 680510.67,
+          "net_revenue_zscore": -0.64
+        },
+        {
+          "channel": "Partner Referral",
+          "segment": "Startup",
+          "net_revenue": 114541.5,
+          "net_revenue_ma3": 349502.17,
+          "net_revenue_zscore": -1.09
+        },
+        {
+          "channel": "Product-Led",
+          "segment": "Enterprise",
+          "net_revenue": 622143.5,
+          "net_revenue_ma3": 354140.83,
+          "net_revenue_zscore": -0.02
+        },
+        {
+          "channel": "Product-Led",
+          "segment": "Mid-Market",
+          "net_revenue": 1022707.5,
+          "net_revenue_ma3": 586464.17,
+          "net_revenue_zscore": 0.82
+        },
+        {
+          "channel": "Product-Led",
+          "segment": "SMB",
+          "net_revenue": 358698.0,
+          "net_revenue_ma3": 667849.67,
+          "net_revenue_zscore": -0.57
+        },
+        {
+          "channel": "Product-Led",
+          "segment": "Startup",
+          "net_revenue": 152876.5,
+          "net_revenue_ma3": 511427.33,
+          "net_revenue_zscore": -1.0
+        }
+      ],
+      "x_field": "channel",
+      "y_fields": [
+        "net_revenue"
+      ],
+      "series_field": null,
+      "kpi_payload": null,
+      "echarts_option": {
+        "tooltip": {
+          "position": "top",
+          "trigger": "axis",
+          "backgroundColor": "rgba(15, 23, 42, 0.94)",
+          "borderColor": "rgba(99, 102, 241, 0.35)",
+          "borderWidth": 1,
+          "textStyle": {
+            "color": "#f8fafc",
+            "fontSize": 12
+          },
+          "confine": true
+        },
+        "grid": {
+          "top": 20,
+          "bottom": 50,
+          "left": 85,
+          "right": 24
+        },
+        "xAxis": {
+          "type": "category",
+          "data": [
+            "LinkedIn Ads",
+            "Organic Search",
+            "Outbound Sales",
+            "Paid Search",
+            "Partner Referral",
+            "Product-Led"
+          ],
+          "axisLabel": {
+            "color": "#94a3b8",
+            "fontSize": 10
+          }
+        },
+        "yAxis": {
+          "type": "category",
+          "data": [
+            "Enterprise",
+            "Mid-Market",
+            "SMB",
+            "Startup"
+          ],
+          "axisLabel": {
+            "color": "#94a3b8",
+            "fontSize": 10
+          }
+        },
+        "visualMap": {
+          "min": 0,
+          "max": 1739392.5,
+          "calculable": true,
+          "orient": "horizontal",
+          "left": "center",
+          "bottom": 0,
+          "inRange": {
+            "color": [
+              "#1e1b4b",
+              "#4f46e5",
+              "#06b6d4",
+              "#10b981"
+            ]
+          },
+          "textStyle": {
+            "color": "#94a3b8",
+            "fontSize": 10
+          }
+        },
+        "series": [
+          {
+            "name": "Net Revenue",
+            "type": "heatmap",
+            "data": [
+              [
+                0,
+                0,
+                1065736.0
+              ],
+              [
+                0,
+                1,
+                1326972.0
+              ],
+              [
+                0,
+                2,
+                357846.0
+              ],
+              [
+                0,
+                3,
+                127668.5
+              ],
+              [
+                1,
+                0,
+                1459200.0
+              ],
+              [
+                1,
+                1,
+                880772.0
+              ],
+              [
+                1,
+                2,
+                311265.5
+              ],
+              [
+                1,
+                3,
+                153935.5
+              ],
+              [
+                2,
+                0,
+                1739392.5
+              ],
+              [
+                2,
+                1,
+                1026768.0
+              ],
+              [
+                2,
+                2,
+                340901.5
+              ],
+              [
+                2,
+                3,
+                151891.5
+              ],
+              [
+                3,
+                0,
+                704044.5
+              ],
+              [
+                3,
+                1,
+                746082.0
+              ],
+              [
+                3,
+                2,
+                397809.0
+              ],
+              [
+                3,
+                3,
+                58534.0
+              ],
+              [
+                4,
+                0,
+                1107567.0
+              ],
+              [
+                4,
+                1,
+                608227.5
+              ],
+              [
+                4,
+                2,
+                325737.5
+              ],
+              [
+                4,
+                3,
+                114541.5
+              ],
+              [
+                5,
+                0,
+                622143.5
+              ],
+              [
+                5,
+                1,
+                1022707.5
+              ],
+              [
+                5,
+                2,
+                358698.0
+              ],
+              [
+                5,
+                3,
+                152876.5
+              ]
+            ],
+            "label": {
+              "show": true,
+              "color": "#f8fafc",
+              "fontSize": 10
+            }
+          }
+        ]
+      },
+      "insight_summary": "Net Revenue ranges from $58.5K to $1.74M (-85.66% trajectory). Outlier spike at Outbound Sales (Z=2.32).",
+      "anomalies": [
+        {
+          "row_index": 8,
+          "dimension_label": "Outbound Sales",
+          "metric_name": "net_revenue",
+          "value": 1739392.5,
+          "z_score": 2.32,
+          "direction": "spike"
+        }
+      ]
+    },
+    {
+      "id": "widget_table_top_customers",
+      "title": "Top Revenue Customer Accounts & Health Ledger",
+      "subtitle": "Enterprise Account Performance & Margin Breakdown",
+      "widget_type": "table",
+      "chart_type": "table",
+      "step_id": "step_9_table_top_customers",
+      "sql_query": "SELECT c.company_name, c.segment, c.industry, c.region, c.account_health_score, COUNT(o.order_id) AS total_orders, ROUND(SUM(o.net_revenue), 2) AS lifetime_net_revenue, ROUND(SUM(o.profit_usd), 2) AS lifetime_profit FROM customers AS c JOIN orders AS o ON c.customer_id = o.customer_id GROUP BY c.customer_id, c.company_name, c.segment, c.industry, c.region, c.account_health_score ORDER BY lifetime_net_revenue DESC LIMIT 50",
+      "data_hash": "sha256:a1f19c7212b90e2b",
+      "columns": [
+        "company_name",
+        "segment",
+        "industry",
+        "region",
+        "account_health_score",
+        "total_orders",
+        "lifetime_net_revenue",
+        "lifetime_profit"
+      ],
+      "rows": [
+        {
+          "company_name": "MediCore Can #041",
+          "segment": "Enterprise",
+          "industry": "Media",
+          "region": "North America",
+          "account_health_score": 63,
+          "total_orders": 12,
+          "lifetime_net_revenue": 224487.5,
+          "lifetime_profit": 178903.16,
+          "lifetime_net_revenue_ma3": 224487.5,
+          "lifetime_net_revenue_zscore": 3.72
+        },
+        {
+          "company_name": "MediCore Net #203",
+          "segment": "Enterprise",
+          "industry": "Media",
+          "region": "Europe",
+          "account_health_score": 85,
+          "total_orders": 11,
+          "lifetime_net_revenue": 182761.0,
+          "lifetime_profit": 151128.42,
+          "lifetime_net_revenue_ma3": 203624.25,
+          "lifetime_net_revenue_zscore": 2.35
+        },
+        {
+          "company_name": "MediCore Can #060",
+          "segment": "Enterprise",
+          "industry": "Media",
+          "region": "North America",
+          "account_health_score": 80,
+          "total_orders": 14,
+          "lifetime_net_revenue": 168089.0,
+          "lifetime_profit": 145562.79,
+          "lifetime_net_revenue_ma3": 191779.17,
+          "lifetime_net_revenue_zscore": 1.86
+        },
+        {
+          "company_name": "SaaSCore Uni #053",
+          "segment": "Enterprise",
+          "industry": "SaaS",
+          "region": "North America",
+          "account_health_score": 84,
+          "total_orders": 10,
+          "lifetime_net_revenue": 161638.0,
+          "lifetime_profit": 131310.92,
+          "lifetime_net_revenue_ma3": 170829.33,
+          "lifetime_net_revenue_zscore": 1.65
+        },
+        {
+          "company_name": "LogiCore Ger #016",
+          "segment": "Enterprise",
+          "industry": "Logistics",
+          "region": "Europe",
+          "account_health_score": 72,
+          "total_orders": 13,
+          "lifetime_net_revenue": 157402.0,
+          "lifetime_profit": 129884.98,
+          "lifetime_net_revenue_ma3": 162376.33,
+          "lifetime_net_revenue_zscore": 1.51
+        },
+        {
+          "company_name": "MediCore Uni #183",
+          "segment": "Enterprise",
+          "industry": "Media",
+          "region": "North America",
+          "account_health_score": 88,
+          "total_orders": 14,
+          "lifetime_net_revenue": 151737.5,
+          "lifetime_profit": 120114.86,
+          "lifetime_net_revenue_ma3": 156925.83,
+          "lifetime_net_revenue_zscore": 1.33
+        },
+        {
+          "company_name": "FinTCore Can #187",
+          "segment": "Enterprise",
+          "industry": "FinTech",
+          "region": "North America",
+          "account_health_score": 71,
+          "total_orders": 10,
+          "lifetime_net_revenue": 149276.5,
+          "lifetime_profit": 123440.8,
+          "lifetime_net_revenue_ma3": 152805.33,
+          "lifetime_net_revenue_zscore": 1.24
+        },
+        {
+          "company_name": "E-CoCore Sin #094",
+          "segment": "Enterprise",
+          "industry": "E-Commerce",
+          "region": "APAC",
+          "account_health_score": 94,
+          "total_orders": 9,
+          "lifetime_net_revenue": 143830.0,
+          "lifetime_profit": 119275.35,
+          "lifetime_net_revenue_ma3": 148281.33,
+          "lifetime_net_revenue_zscore": 1.06
+        },
+        {
+          "company_name": "LogiCore Ger #098",
+          "segment": "Enterprise",
+          "industry": "Logistics",
+          "region": "Europe",
+          "account_health_score": 76,
+          "total_orders": 8,
+          "lifetime_net_revenue": 143051.5,
+          "lifetime_profit": 113507.57,
+          "lifetime_net_revenue_ma3": 145386.0,
+          "lifetime_net_revenue_zscore": 1.04
+        },
+        {
+          "company_name": "MediCore Can #234",
+          "segment": "Enterprise",
+          "industry": "Media",
+          "region": "North America",
+          "account_health_score": 89,
+          "total_orders": 7,
+          "lifetime_net_revenue": 132331.5,
+          "lifetime_profit": 102823.86,
+          "lifetime_net_revenue_ma3": 139737.67,
+          "lifetime_net_revenue_zscore": 0.69
+        },
+        {
+          "company_name": "FinTCore Net #292",
+          "segment": "Enterprise",
+          "industry": "FinTech",
+          "region": "Europe",
+          "account_health_score": 87,
+          "total_orders": 15,
+          "lifetime_net_revenue": 129567.5,
+          "lifetime_profit": 112013.65,
+          "lifetime_net_revenue_ma3": 134983.5,
+          "lifetime_net_revenue_zscore": 0.59
+        },
+        {
+          "company_name": "SaaSCore Can #246",
+          "segment": "Enterprise",
+          "industry": "SaaS",
+          "region": "North America",
+          "account_health_score": 64,
+          "total_orders": 14,
+          "lifetime_net_revenue": 127493.0,
+          "lifetime_profit": 105391.72,
+          "lifetime_net_revenue_ma3": 129797.33,
+          "lifetime_net_revenue_zscore": 0.53
+        },
+        {
+          "company_name": "FinTCore Swe #150",
+          "segment": "Enterprise",
+          "industry": "FinTech",
+          "region": "Europe",
+          "account_health_score": 60,
+          "total_orders": 9,
+          "lifetime_net_revenue": 125357.5,
+          "lifetime_profit": 106026.79,
+          "lifetime_net_revenue_ma3": 127472.67,
+          "lifetime_net_revenue_zscore": 0.46
+        },
+        {
+          "company_name": "MediCore Col #038",
+          "segment": "Enterprise",
+          "industry": "Media",
+          "region": "LATAM",
+          "account_health_score": 99,
+          "total_orders": 13,
+          "lifetime_net_revenue": 124649.5,
+          "lifetime_profit": 103172.38,
+          "lifetime_net_revenue_ma3": 125833.33,
+          "lifetime_net_revenue_zscore": 0.43
+        },
+        {
+          "company_name": "HealCore Ger #226",
+          "segment": "Enterprise",
+          "industry": "Healthcare",
+          "region": "Europe",
+          "account_health_score": 86,
+          "total_orders": 7,
+          "lifetime_net_revenue": 119852.0,
+          "lifetime_profit": 96070.44,
+          "lifetime_net_revenue_ma3": 123286.33,
+          "lifetime_net_revenue_zscore": 0.27
+        },
+        {
+          "company_name": "LogiCore Ind #260",
+          "segment": "Enterprise",
+          "industry": "Logistics",
+          "region": "APAC",
+          "account_health_score": 97,
+          "total_orders": 9,
+          "lifetime_net_revenue": 116035.5,
+          "lifetime_profit": 96894.57,
+          "lifetime_net_revenue_ma3": 120179.0,
+          "lifetime_net_revenue_zscore": 0.15
+        },
+        {
+          "company_name": "SaaSCore Can #121",
+          "segment": "Enterprise",
+          "industry": "SaaS",
+          "region": "North America",
+          "account_health_score": 78,
+          "total_orders": 9,
+          "lifetime_net_revenue": 115897.0,
+          "lifetime_profit": 92860.0,
+          "lifetime_net_revenue_ma3": 117261.5,
+          "lifetime_net_revenue_zscore": 0.14
+        },
+        {
+          "company_name": "SaaSCore Net #280",
+          "segment": "Enterprise",
+          "industry": "SaaS",
+          "region": "Europe",
+          "account_health_score": 76,
+          "total_orders": 8,
+          "lifetime_net_revenue": 112108.0,
+          "lifetime_profit": 86638.67,
+          "lifetime_net_revenue_ma3": 114680.17,
+          "lifetime_net_revenue_zscore": 0.02
+        },
+        {
+          "company_name": "ManuCore Col #108",
+          "segment": "Enterprise",
+          "industry": "Manufacturing",
+          "region": "LATAM",
+          "account_health_score": 85,
+          "total_orders": 11,
+          "lifetime_net_revenue": 112015.0,
+          "lifetime_profit": 94675.26,
+          "lifetime_net_revenue_ma3": 113340.0,
+          "lifetime_net_revenue_zscore": 0.02
+        },
+        {
+          "company_name": "LogiCore Can #168",
+          "segment": "Enterprise",
+          "industry": "Logistics",
+          "region": "North America",
+          "account_health_score": 99,
+          "total_orders": 8,
+          "lifetime_net_revenue": 108993.0,
+          "lifetime_profit": 88333.32,
+          "lifetime_net_revenue_ma3": 111038.67,
+          "lifetime_net_revenue_zscore": -0.08
+        },
+        {
+          "company_name": "SaaSCore Can #248",
+          "segment": "Enterprise",
+          "industry": "SaaS",
+          "region": "North America",
+          "account_health_score": 72,
+          "total_orders": 14,
+          "lifetime_net_revenue": 107206.0,
+          "lifetime_profit": 91766.27,
+          "lifetime_net_revenue_ma3": 109404.67,
+          "lifetime_net_revenue_zscore": -0.14
+        },
+        {
+          "company_name": "MediCore Can #171",
+          "segment": "Enterprise",
+          "industry": "Media",
+          "region": "North America",
+          "account_health_score": 77,
+          "total_orders": 12,
+          "lifetime_net_revenue": 105870.0,
+          "lifetime_profit": 88410.18,
+          "lifetime_net_revenue_ma3": 107356.33,
+          "lifetime_net_revenue_zscore": -0.19
+        },
+        {
+          "company_name": "HealCore Can #057",
+          "segment": "Enterprise",
+          "industry": "Healthcare",
+          "region": "North America",
+          "account_health_score": 84,
+          "total_orders": 12,
+          "lifetime_net_revenue": 105642.5,
+          "lifetime_profit": 86887.1,
+          "lifetime_net_revenue_ma3": 106239.5,
+          "lifetime_net_revenue_zscore": -0.19
+        },
+        {
+          "company_name": "E-CoCore Can #096",
+          "segment": "Enterprise",
+          "industry": "E-Commerce",
+          "region": "North America",
+          "account_health_score": 75,
+          "total_orders": 6,
+          "lifetime_net_revenue": 103899.5,
+          "lifetime_profit": 86060.69,
+          "lifetime_net_revenue_ma3": 105137.33,
+          "lifetime_net_revenue_zscore": -0.25
+        },
+        {
+          "company_name": "FinTCore Bra #169",
+          "segment": "Mid-Market",
+          "industry": "FinTech",
+          "region": "LATAM",
+          "account_health_score": 77,
+          "total_orders": 17,
+          "lifetime_net_revenue": 103429.0,
+          "lifetime_profit": 87221.06,
+          "lifetime_net_revenue_ma3": 104323.67,
+          "lifetime_net_revenue_zscore": -0.27
+        },
+        {
+          "company_name": "ManuCore Uni #215",
+          "segment": "Enterprise",
+          "industry": "Manufacturing",
+          "region": "North America",
+          "account_health_score": 83,
+          "total_orders": 8,
+          "lifetime_net_revenue": 102823.0,
+          "lifetime_profit": 87333.67,
+          "lifetime_net_revenue_ma3": 103383.83,
+          "lifetime_net_revenue_zscore": -0.29
+        },
+        {
+          "company_name": "ManuCore Can #154",
+          "segment": "Enterprise",
+          "industry": "Manufacturing",
+          "region": "North America",
+          "account_health_score": 99,
+          "total_orders": 9,
+          "lifetime_net_revenue": 100238.0,
+          "lifetime_profit": 83845.02,
+          "lifetime_net_revenue_ma3": 102163.33,
+          "lifetime_net_revenue_zscore": -0.37
+        },
+        {
+          "company_name": "FinTCore Jap #029",
+          "segment": "Mid-Market",
+          "industry": "FinTech",
+          "region": "APAC",
+          "account_health_score": 45,
+          "total_orders": 20,
+          "lifetime_net_revenue": 95548.5,
+          "lifetime_profit": 79289.13,
+          "lifetime_net_revenue_ma3": 99536.5,
+          "lifetime_net_revenue_zscore": -0.53
+        },
+        {
+          "company_name": "E-CoCore Can #085",
+          "segment": "Enterprise",
+          "industry": "E-Commerce",
+          "region": "North America",
+          "account_health_score": 69,
+          "total_orders": 9,
+          "lifetime_net_revenue": 95361.5,
+          "lifetime_profit": 81407.27,
+          "lifetime_net_revenue_ma3": 97049.33,
+          "lifetime_net_revenue_zscore": -0.53
+        },
+        {
+          "company_name": "HealCore Aus #305",
+          "segment": "Enterprise",
+          "industry": "Healthcare",
+          "region": "APAC",
+          "account_health_score": 79,
+          "total_orders": 7,
+          "lifetime_net_revenue": 94696.0,
+          "lifetime_profit": 73896.84,
+          "lifetime_net_revenue_ma3": 95202.0,
+          "lifetime_net_revenue_zscore": -0.55
+        },
+        {
+          "company_name": "ManuCore Ger #023",
+          "segment": "Enterprise",
+          "industry": "Manufacturing",
+          "region": "Europe",
+          "account_health_score": 78,
+          "total_orders": 9,
+          "lifetime_net_revenue": 94417.0,
+          "lifetime_profit": 74630.79,
+          "lifetime_net_revenue_ma3": 94824.83,
+          "lifetime_net_revenue_zscore": -0.56
+        },
+        {
+          "company_name": "LogiCore Uni #213",
+          "segment": "Enterprise",
+          "industry": "Logistics",
+          "region": "North America",
+          "account_health_score": 78,
+          "total_orders": 11,
+          "lifetime_net_revenue": 92991.5,
+          "lifetime_profit": 74335.55,
+          "lifetime_net_revenue_ma3": 94034.83,
+          "lifetime_net_revenue_zscore": -0.61
+        },
+        {
+          "company_name": "HealCore Uni #190",
+          "segment": "Mid-Market",
+          "industry": "Healthcare",
+          "region": "North America",
+          "account_health_score": 78,
+          "total_orders": 14,
+          "lifetime_net_revenue": 92902.0,
+          "lifetime_profit": 78538.23,
+          "lifetime_net_revenue_ma3": 93436.83,
+          "lifetime_net_revenue_zscore": -0.61
+        },
+        {
+          "company_name": "ManuCore Can #251",
+          "segment": "Enterprise",
+          "industry": "Manufacturing",
+          "region": "North America",
+          "account_health_score": 99,
+          "total_orders": 7,
+          "lifetime_net_revenue": 92110.0,
+          "lifetime_profit": 75527.83,
+          "lifetime_net_revenue_ma3": 92667.83,
+          "lifetime_net_revenue_zscore": -0.64
+        },
+        {
+          "company_name": "E-CoCore Aus #126",
+          "segment": "Enterprise",
+          "industry": "E-Commerce",
+          "region": "APAC",
+          "account_health_score": 78,
+          "total_orders": 8,
+          "lifetime_net_revenue": 91652.5,
+          "lifetime_profit": 72714.59,
+          "lifetime_net_revenue_ma3": 92221.5,
+          "lifetime_net_revenue_zscore": -0.65
+        },
+        {
+          "company_name": "HealCore Sin #240",
+          "segment": "Enterprise",
+          "industry": "Healthcare",
+          "region": "APAC",
+          "account_health_score": 98,
+          "total_orders": 11,
+          "lifetime_net_revenue": 90982.5,
+          "lifetime_profit": 77565.06,
+          "lifetime_net_revenue_ma3": 91581.67,
+          "lifetime_net_revenue_zscore": -0.68
+        },
+        {
+          "company_name": "FinTCore Uni #216",
+          "segment": "Enterprise",
+          "industry": "FinTech",
+          "region": "North America",
+          "account_health_score": 91,
+          "total_orders": 10,
+          "lifetime_net_revenue": 90671.5,
+          "lifetime_profit": 75410.99,
+          "lifetime_net_revenue_ma3": 91102.17,
+          "lifetime_net_revenue_zscore": -0.69
+        },
+        {
+          "company_name": "MediCore Jap #092",
+          "segment": "Enterprise",
+          "industry": "Media",
+          "region": "APAC",
+          "account_health_score": 97,
+          "total_orders": 10,
+          "lifetime_net_revenue": 90547.0,
+          "lifetime_profit": 76253.64,
+          "lifetime_net_revenue_ma3": 90733.67,
+          "lifetime_net_revenue_zscore": -0.69
+        },
+        {
+          "company_name": "HealCore Can #249",
+          "segment": "Enterprise",
+          "industry": "Healthcare",
+          "region": "North America",
+          "account_health_score": 74,
+          "total_orders": 8,
+          "lifetime_net_revenue": 89833.5,
+          "lifetime_profit": 78568.25,
+          "lifetime_net_revenue_ma3": 90350.67,
+          "lifetime_net_revenue_zscore": -0.71
+        },
+        {
+          "company_name": "ManuCore Uni #320",
+          "segment": "Mid-Market",
+          "industry": "Manufacturing",
+          "region": "North America",
+          "account_health_score": 83,
+          "total_orders": 12,
+          "lifetime_net_revenue": 88955.0,
+          "lifetime_profit": 75069.05,
+          "lifetime_net_revenue_ma3": 89778.5,
+          "lifetime_net_revenue_zscore": -0.74
+        },
+        {
+          "company_name": "ManuCore Can #072",
+          "segment": "Enterprise",
+          "industry": "Manufacturing",
+          "region": "North America",
+          "account_health_score": 82,
+          "total_orders": 11,
+          "lifetime_net_revenue": 87801.0,
+          "lifetime_profit": 74707.49,
+          "lifetime_net_revenue_ma3": 88863.17,
+          "lifetime_net_revenue_zscore": -0.78
+        },
+        {
+          "company_name": "HealCore Uni #059",
+          "segment": "Enterprise",
+          "industry": "Healthcare",
+          "region": "North America",
+          "account_health_score": 87,
+          "total_orders": 9,
+          "lifetime_net_revenue": 86897.0,
+          "lifetime_profit": 74408.1,
+          "lifetime_net_revenue_ma3": 87884.33,
+          "lifetime_net_revenue_zscore": -0.81
+        },
+        {
+          "company_name": "ManuCore Uni #270",
+          "segment": "Mid-Market",
+          "industry": "Manufacturing",
+          "region": "Europe",
+          "account_health_score": 99,
+          "total_orders": 15,
+          "lifetime_net_revenue": 86339.5,
+          "lifetime_profit": 73778.57,
+          "lifetime_net_revenue_ma3": 87012.5,
+          "lifetime_net_revenue_zscore": -0.83
+        },
+        {
+          "company_name": "E-CoCore Uni #162",
+          "segment": "Enterprise",
+          "industry": "E-Commerce",
+          "region": "North America",
+          "account_health_score": 99,
+          "total_orders": 13,
+          "lifetime_net_revenue": 85722.0,
+          "lifetime_profit": 71249.08,
+          "lifetime_net_revenue_ma3": 86319.5,
+          "lifetime_net_revenue_zscore": -0.85
+        },
+        {
+          "company_name": "FinTCore Can #005",
+          "segment": "Enterprise",
+          "industry": "FinTech",
+          "region": "North America",
+          "account_health_score": 77,
+          "total_orders": 9,
+          "lifetime_net_revenue": 84681.0,
+          "lifetime_profit": 72645.84,
+          "lifetime_net_revenue_ma3": 85580.83,
+          "lifetime_net_revenue_zscore": -0.88
+        },
+        {
+          "company_name": "E-CoCore Can #267",
+          "segment": "Enterprise",
+          "industry": "E-Commerce",
+          "region": "North America",
+          "account_health_score": 96,
+          "total_orders": 11,
+          "lifetime_net_revenue": 83404.5,
+          "lifetime_profit": 71051.23,
+          "lifetime_net_revenue_ma3": 84602.5,
+          "lifetime_net_revenue_zscore": -0.93
+        },
+        {
+          "company_name": "LogiCore Can #135",
+          "segment": "Mid-Market",
+          "industry": "Logistics",
+          "region": "North America",
+          "account_health_score": 56,
+          "total_orders": 15,
+          "lifetime_net_revenue": 81678.5,
+          "lifetime_profit": 68371.58,
+          "lifetime_net_revenue_ma3": 83254.67,
+          "lifetime_net_revenue_zscore": -0.98
+        },
+        {
+          "company_name": "HealCore Aus #008",
+          "segment": "Enterprise",
+          "industry": "Healthcare",
+          "region": "APAC",
+          "account_health_score": 90,
+          "total_orders": 8,
+          "lifetime_net_revenue": 81081.5,
+          "lifetime_profit": 65458.44,
+          "lifetime_net_revenue_ma3": 82054.83,
+          "lifetime_net_revenue_zscore": -1.0
+        },
+        {
+          "company_name": "LogiCore Can #125",
+          "segment": "Enterprise",
+          "industry": "Logistics",
+          "region": "North America",
+          "account_health_score": 82,
+          "total_orders": 8,
+          "lifetime_net_revenue": 81070.5,
+          "lifetime_profit": 66418.62,
+          "lifetime_net_revenue_ma3": 81276.83,
+          "lifetime_net_revenue_zscore": -1.0
+        },
+        {
+          "company_name": "E-CoCore Fra #182",
+          "segment": "Mid-Market",
+          "industry": "E-Commerce",
+          "region": "Europe",
+          "account_health_score": 76,
+          "total_orders": 12,
+          "lifetime_net_revenue": 80784.5,
+          "lifetime_profit": 68054.04,
+          "lifetime_net_revenue_ma3": 80978.83,
+          "lifetime_net_revenue_zscore": -1.01
+        }
+      ],
+      "x_field": "company_name",
+      "y_fields": [
+        "lifetime_net_revenue",
+        "lifetime_profit",
+        "account_health_score"
+      ],
+      "series_field": null,
+      "kpi_payload": null,
+      "echarts_option": null,
+      "insight_summary": "Lifetime Net Revenue ranges from $80.8K to $224.5K (-64.01% trajectory). Outlier spike at MediCore Can #041 (Z=3.72).",
+      "anomalies": [
+        {
+          "row_index": 0,
+          "dimension_label": "MediCore Can #041",
+          "metric_name": "lifetime_net_revenue",
+          "value": 224487.5,
+          "z_score": 3.72,
+          "direction": "spike"
+        },
+        {
+          "row_index": 1,
+          "dimension_label": "MediCore Net #203",
+          "metric_name": "lifetime_net_revenue",
+          "value": 182761.0,
+          "z_score": 2.35,
+          "direction": "spike"
+        },
+        {
+          "row_index": 2,
+          "dimension_label": "MediCore Can #060",
+          "metric_name": "lifetime_net_revenue",
+          "value": 168089.0,
+          "z_score": 1.86,
+          "direction": "spike"
+        }
+      ]
+    }
+  ],
+  "layouts": {
+    "lg": [
+      {
+        "i": "widget_kpi_net_rev",
+        "x": 0,
+        "y": 0,
+        "w": 3,
+        "h": 3,
+        "minW": 2,
+        "minH": 3
+      },
+      {
+        "i": "widget_kpi_net_profit",
+        "x": 3,
+        "y": 0,
+        "w": 3,
+        "h": 3,
+        "minW": 2,
+        "minH": 3
+      },
+      {
+        "i": "widget_kpi_active_arr",
+        "x": 6,
+        "y": 0,
+        "w": 3,
+        "h": 3,
+        "minW": 2,
+        "minH": 3
+      },
+      {
+        "i": "widget_kpi_order_vol",
+        "x": 9,
+        "y": 0,
+        "w": 3,
+        "h": 3,
+        "minW": 2,
+        "minH": 3
+      },
+      {
+        "i": "widget_chart_rev_trajectory",
+        "x": 0,
+        "y": 3,
+        "w": 8,
+        "h": 8,
+        "minW": 4,
+        "minH": 6
+      },
+      {
+        "i": "widget_chart_region_donut",
+        "x": 8,
+        "y": 3,
+        "w": 4,
+        "h": 8,
+        "minW": 3,
+        "minH": 6
+      },
+      {
+        "i": "widget_chart_product_ranking",
+        "x": 0,
+        "y": 11,
+        "w": 6,
+        "h": 8,
+        "minW": 4,
+        "minH": 6
+      },
+      {
+        "i": "widget_chart_segment_channel_heatmap",
+        "x": 6,
+        "y": 11,
+        "w": 6,
+        "h": 8,
+        "minW": 4,
+        "minH": 6
+      },
+      {
+        "i": "widget_table_top_customers",
+        "x": 0,
+        "y": 19,
+        "w": 12,
+        "h": 8,
+        "minW": 6,
+        "minH": 5
+      }
+    ],
+    "md": [
+      {
+        "i": "widget_kpi_net_rev",
+        "x": 0,
+        "y": 0,
+        "w": 4,
+        "h": 3,
+        "minW": 2,
+        "minH": 3
+      },
+      {
+        "i": "widget_kpi_net_profit",
+        "x": 4,
+        "y": 0,
+        "w": 4,
+        "h": 3,
+        "minW": 2,
+        "minH": 3
+      },
+      {
+        "i": "widget_kpi_active_arr",
+        "x": 0,
+        "y": 3,
+        "w": 4,
+        "h": 3,
+        "minW": 2,
+        "minH": 3
+      },
+      {
+        "i": "widget_kpi_order_vol",
+        "x": 4,
+        "y": 3,
+        "w": 4,
+        "h": 3,
+        "minW": 2,
+        "minH": 3
+      },
+      {
+        "i": "widget_chart_rev_trajectory",
+        "x": 0,
+        "y": 6,
+        "w": 4,
+        "h": 8,
+        "minW": 4,
+        "minH": 6
+      },
+      {
+        "i": "widget_chart_region_donut",
+        "x": 4,
+        "y": 6,
+        "w": 4,
+        "h": 8,
+        "minW": 4,
+        "minH": 6
+      },
+      {
+        "i": "widget_chart_product_ranking",
+        "x": 0,
+        "y": 14,
+        "w": 4,
+        "h": 8,
+        "minW": 4,
+        "minH": 6
+      },
+      {
+        "i": "widget_chart_segment_channel_heatmap",
+        "x": 4,
+        "y": 14,
+        "w": 4,
+        "h": 8,
+        "minW": 4,
+        "minH": 6
+      },
+      {
+        "i": "widget_table_top_customers",
+        "x": 0,
+        "y": 22,
+        "w": 8,
+        "h": 8,
+        "minW": 4,
+        "minH": 5
+      }
+    ],
+    "sm": [
+      {
+        "i": "widget_kpi_net_rev",
+        "x": 0,
+        "y": 0,
+        "w": 4,
+        "h": 3,
+        "minW": 2,
+        "minH": 3
+      },
+      {
+        "i": "widget_kpi_net_profit",
+        "x": 0,
+        "y": 3,
+        "w": 4,
+        "h": 3,
+        "minW": 2,
+        "minH": 3
+      },
+      {
+        "i": "widget_kpi_active_arr",
+        "x": 0,
+        "y": 6,
+        "w": 4,
+        "h": 3,
+        "minW": 2,
+        "minH": 3
+      },
+      {
+        "i": "widget_kpi_order_vol",
+        "x": 0,
+        "y": 9,
+        "w": 4,
+        "h": 3,
+        "minW": 2,
+        "minH": 3
+      },
+      {
+        "i": "widget_chart_rev_trajectory",
+        "x": 0,
+        "y": 12,
+        "w": 4,
+        "h": 8,
+        "minW": 4,
+        "minH": 6
+      },
+      {
+        "i": "widget_chart_region_donut",
+        "x": 0,
+        "y": 20,
+        "w": 4,
+        "h": 8,
+        "minW": 4,
+        "minH": 6
+      },
+      {
+        "i": "widget_chart_product_ranking",
+        "x": 0,
+        "y": 28,
+        "w": 4,
+        "h": 8,
+        "minW": 4,
+        "minH": 6
+      },
+      {
+        "i": "widget_chart_segment_channel_heatmap",
+        "x": 0,
+        "y": 36,
+        "w": 4,
+        "h": 8,
+        "minW": 4,
+        "minH": 6
+      },
+      {
+        "i": "widget_table_top_customers",
+        "x": 0,
+        "y": 44,
+        "w": 4,
+        "h": 8,
+        "minW": 4,
+        "minH": 5
+      }
+    ]
+  },
+  "executive_summary": "Analysis of InsightForge SaaS & Commerce (SQLite) (SQLITE) across 9 reproducible SQL pipeline steps: Total Net Revenue: $15.16M (+157.91% change) | Gross Operating Profit: $12.53M (+158.14% change) | Active SaaS ARR: $13.88M (-78.45% change)",
+  "key_insights": [
+    "Total Net Revenue: $15.16M (+157.91% change)",
+    "Gross Operating Profit: $12.53M (+158.14% change)",
+    "Active SaaS ARR: $13.88M (-78.45% change)",
+    "Total Enterprise Orders: 2,952 (+180.0% change)",
+    "Monthly Net Revenue & Operating Profit Trend: Net Revenue ranges from $462.4K to $1.19M (+157.91% trajectory). Outlier spike at 2026-08 (Z=2.03)."
+  ],
+  "suggested_followups": [
+    "Break down SaaS churn reasons and ARR exposure by customer segment",
+    "Analyze marketing attribution funnel, ROAS, and regional campaign conversions",
+    "Inspect customer support SLA breaches, P1-Critical tickets, and CSAT scores"
+  ],
+  "reproducibility_verified": true,
+  "data_drifted": false
+}
